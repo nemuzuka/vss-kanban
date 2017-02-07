@@ -1,6 +1,6 @@
 package domain.user
 
-import domain.{ Enum, EnumEntry, ValueObject }
+import domain.{ Entity, Enum, EnumEntry, ValueObject }
 
 /**
  * ユーザ情報.
@@ -16,11 +16,11 @@ case class User(
     name: String,
     authority: UserAuthority,
     lockVersion: Long = 1L
-) extends ValueObject[User] {
+) extends Entity[User] {
   /**
    * @inheritdoc
    */
-  override def sameValueAs(other: User): Boolean = (for {
+  override def sameIdentityAs(other: User): Boolean = (for {
     thisId <- this.userId
     otherId <- other.userId
   } yield thisId.sameValueAs(otherId)) getOrElse false

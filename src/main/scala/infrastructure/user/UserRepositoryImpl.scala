@@ -116,6 +116,21 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   /**
+   * @inheritdoc
+   */
+  override def existsUser(implicit session: DBSession): Boolean = LoginUserInfo.existsUser
+
+  /**
+   * @inheritdoc
+   */
+  override def findAll(): Seq[User] = throw new RuntimeException("呼んではいけません")
+
+  /**
+   * @inheritdoc
+   */
+  override def deleteAll(): Unit = throw new RuntimeException("呼んではいけません")
+
+  /**
    * Userドメイン生成.
    * @param loginUserInfo ログインユーザ情報
    * @return Userドメイン

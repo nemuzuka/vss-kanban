@@ -81,4 +81,11 @@ object LoginUserInfo extends SkinnyCRUDMapper[LoginUserInfo] with OptimisticLock
       'lastUpdateAt -> entity.lastUpdateAt
     )
   }
+
+  /**
+   * 登録されているユーザが存在するか?
+   * @param session Session
+   * @return 1件以上登録されている場合、true
+   */
+  def existsUser(implicit session: DBSession): Boolean = LoginUserInfo.findAllByWithLimitOffset(sqls"1 = 1", limit = 1, offset = 0).headOption exists { _ => true }
 }

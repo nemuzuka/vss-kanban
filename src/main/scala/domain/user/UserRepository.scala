@@ -1,12 +1,12 @@
 package domain.user
 
-import domain.ApplicationException
+import domain.{ ApplicationException, Repository }
 import scalikejdbc._
 
 /**
  * Userに関するRepository.
  */
-trait UserRepository {
+trait UserRepository extends Repository[User] {
 
   /**
    * ログインIDからの取得.
@@ -53,4 +53,10 @@ trait UserRepository {
    */
   def update(user: User, password: Option[String])(implicit session: DBSession): Either[ApplicationException, Long]
 
+  /**
+   * 登録されているユーザが存在するか?
+   * @param session Session
+   * @return 1件以上登録されている場合、true
+   */
+  def existsUser(implicit session: DBSession): Boolean
 }
