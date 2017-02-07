@@ -43,4 +43,16 @@ object LoginUserPassword extends SkinnyCRUDMapper[LoginUserPassword] {
       'password -> entity.password
     )
   }
+
+  /**
+   * 更新.
+   * @param loginUserInfoId ログインユーザ情報ID
+   * @param password 暗号化パスワード
+   * @param session Session
+   */
+  def update(loginUserInfoId: Long, password: String)(implicit session: DBSession): Unit = {
+    LoginUserPassword.updateById(loginUserInfoId).withAttributes(
+      'password -> password
+    )
+  }
 }

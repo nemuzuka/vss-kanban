@@ -4,7 +4,6 @@ import skinny.orm._
 import feature._
 import scalikejdbc._
 import org.joda.time._
-import util.CurrentDateUtil
 
 case class LoginUserInfo(
   id: Long,
@@ -16,7 +15,7 @@ case class LoginUserInfo(
   lockVersion: Long
 )
 
-object LoginUserInfo extends SkinnyCRUDMapper[LoginUserInfo] {
+object LoginUserInfo extends SkinnyCRUDMapper[LoginUserInfo] with OptimisticLockWithVersionFeature[LoginUserInfo] {
   override lazy val tableName = "login_user_info"
   override lazy val defaultAlias = createAlias("lui")
 
@@ -60,14 +59,26 @@ object LoginUserInfo extends SkinnyCRUDMapper[LoginUserInfo] {
    * @return 生成ID
    */
   def create(entity: LoginUserInfo)(implicit session: DBSession): Long = {
-    val now = CurrentDateUtil.nowDateTime
     LoginUserInfo.createWithAttributes(
       'loginId -> entity.loginId,
       'userName -> entity.userName,
       'applicationAdminFlg -> entity.applicationAdminFlg,
-      'createAt -> now,
-      'lastUpdateAt -> now,
+      'createAt -> entity.createAt,
+      'lastUpdateAt -> entity.lastUpdateAt,
       'lockVersion -> 1L
+    )
+  }
+
+  /**
+   * 更新.
+   * @param entity 対象Entity
+   * @param session Session
+   */
+  def update(entity: LoginUserInfo)(implicit session: DBSession): Unit = {
+    LoginUserInfo.updateByIdAndVersion(entity.id, entity.lockVersion).withAttributes(
+      'userName -> entity.userName,
+      'applicationAdminFlg -> entity.applicationAdminFlg,
+      'lastUpdateAt -> entity.lastUpdateAt
     )
   }
 }

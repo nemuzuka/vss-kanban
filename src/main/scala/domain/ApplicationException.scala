@@ -2,8 +2,7 @@ package domain
 
 /**
  * 例外の基底クラス.
+ * @param messageKey メッセージKey
+ * @param paramKey パラメータKeySeq
  */
-abstract class ApplicationException extends RuntimeException {
-  /** メッセージKey. */
-  val messageKey: String
-}
+class ApplicationException(messageKey: String, paramKey: Seq[String]) extends RuntimeException

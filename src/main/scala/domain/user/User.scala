@@ -6,11 +6,13 @@ import domain.{ Enum, EnumEntry, ValueObject }
  * ユーザ情報.
  * @param userId ユーザID
  * @param name ユーザ名
+ * @param loginId ログインID
  * @param authority ユーザ権限
  * @param lockVersion lockVersion
  */
 case class User(
     userId: Option[UserId],
+    loginId: String,
     name: String,
     authority: UserAuthority,
     lockVersion: Long = 1L
