@@ -5,12 +5,12 @@ import domain.user.UserRepository
 import infrastructure.user.UserRepositoryImpl
 
 /**
-  * DI設定Module.
-  */
+ * DI設定Module.
+ */
 class BindModule extends AbstractModule {
   /**
-    * DI設定定義
-    */
+   * DI設定定義
+   */
   override def configure() = {
     //traitに対するインスタンスの解決を定義
     bind(classOf[UserRepository]).to(classOf[UserRepositoryImpl]).in(classOf[Singleton])
@@ -18,8 +18,8 @@ class BindModule extends AbstractModule {
 }
 
 /**
-  * DI設定インスタンス管理.
-  */
+ * DI設定インスタンス管理.
+ */
 object BindModule {
-  val injector:Injector = Guice.createInjector(new BindModule())
+  val injector: Injector = Guice.createInjector(new BindModule())
 }

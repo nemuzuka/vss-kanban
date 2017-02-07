@@ -16,8 +16,8 @@ case class User(
     lockVersion: Long = 1L
 ) extends ValueObject[User] {
   /**
-    * @inheritdoc
-    */
+   * @inheritdoc
+   */
   override def sameValueAs(other: User): Boolean = (for {
     thisId <- this.userId
     otherId <- other.userId

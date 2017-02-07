@@ -36,8 +36,8 @@ case class LaneId(
     id: Long
 ) extends ValueObject[LaneId] {
   /**
-    * @inheritdoc
-    */
+   * @inheritdoc
+   */
   override def sameValueAs(other: LaneId): Boolean = this.id == other.id
 }
 

@@ -16,8 +16,8 @@ case class Kanban(
 ) extends Entity[Kanban] {
 
   /**
-    * @inheritdoc
-    */
+   * @inheritdoc
+   */
   override def sameIdentityAs(other: Kanban): Boolean = (for {
     thisId <- this.kanbanId
     otherId <- other.kanbanId

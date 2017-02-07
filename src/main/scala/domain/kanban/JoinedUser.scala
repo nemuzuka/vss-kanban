@@ -15,8 +15,8 @@ case class JoinedUser(
     name: String
 ) extends ValueObject[JoinedUser] {
   /**
-    * @inheritdoc
-    */
+   * @inheritdoc
+   */
   override def sameValueAs(order: JoinedUser): Boolean = this.userId.sameValueAs(order.userId)
 }
 

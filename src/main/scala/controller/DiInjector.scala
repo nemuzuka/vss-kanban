@@ -4,9 +4,9 @@ import com.google.inject.Injector
 import module.BindModule
 
 /**
-  * DIでインスタンスを注入する際のtrait.
-  */
+ * DIでインスタンスを注入する際のtrait.
+ */
 trait DiInjector {
   /** Injector. */
-  val injector:Injector = BindModule.injector
+  val injector: Injector = BindModule.injector
 }
