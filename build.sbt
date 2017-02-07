@@ -37,6 +37,8 @@ lazy val baseSettings = servletSettings ++ Seq(
     "org.skinny-framework"    %  "skinny-logback"       % "1.0.10",
     "org.postgresql"          %  "postgresql"           % "9.4.1212",
     "com.google.inject"       %  "guice"                % "4.1.0",
+    "commons-codec"           %  "commons-codec"        % "1.10",
+    "commons-io"              %  "commons-io"           % "2.4",
     "org.skinny-framework"    %% "skinny-factory-girl"  % skinnyVersion   % "test",
     "org.skinny-framework"    %% "skinny-test"          % skinnyVersion   % "test",
     "org.eclipse.jetty"       %  "jetty-webapp"         % jettyVersion    % "container",

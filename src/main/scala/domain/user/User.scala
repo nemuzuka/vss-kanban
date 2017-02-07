@@ -24,6 +24,10 @@ case class User(
     thisId <- this.userId
     otherId <- other.userId
   } yield thisId.sameValueAs(otherId)) getOrElse false
+
+  /** ユーザ権限取得. */
+  def authentications: Seq[UserAuthority] = Seq(authority)
+
 }
 
 //ユーザに対する権限

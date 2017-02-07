@@ -1,12 +1,13 @@
 package controller
 
+import domain.user.User
 import skinny._
 import skinny.filter._
 
 /**
- * The base controller for API endpoints.
+ * JSONを返すControllerの基底クラス
  */
-trait ApiController extends SkinnyApiController {
+trait ApiController extends SkinnyApiController with CommonControllerFeature {
 
   /*
    * Handles when unexpected exceptions are thrown from controllers.
@@ -18,4 +19,22 @@ trait ApiController extends SkinnyApiController {
       haltWithBody(500)
   }
 
+  //共通処理
+  beforeAction() {
+    contentType = "application/json"
+    if (loginCheck) {
+      //ログインチェックを行う場合のみ実施
+      session.getAs[User](Keys.Session.UserInfo) match {
+        case Some(v) =>
+          //存在する場合、チェック対象権限Seqのチェックを行い、使用権限が無ければ、406のレスポンス
+          if (!executeAuthenticationsCheck(v.authentications, authentications, authenticationCheck)) {
+            logger.error(s"406 status loginId:${v.loginId}:name:${v.name}:path:${request.getRequestURL}")
+            halt(406)
+          }
+        case _ =>
+          //未ログインなので、400のレスポンス
+          halt(400)
+      }
+    }
+  }
 }
