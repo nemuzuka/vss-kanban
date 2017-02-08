@@ -76,20 +76,9 @@
         }).then(
           function (data) {
             //エラーが存在する場合、その旨記述
-
-            const vueInstance = self;
-            const errorMsg = data.errorMsg;
-            Object.keys(errorMsg).forEach(function(key) {
-              this[key].forEach(function(val, i){
-                vueInstance.msg[key+"ErrMsg"] += val + '<br>';
-              });
-            }, errorMsg);
-
-            //正常終了時、topへ遷移
-            if(Object.keys(errorMsg).length != 0) {
+            if(Utils.writeErrorMsg(self, data)) {
                 return;
             }
-
             Utils.moveUrl("/top");
           }
         );

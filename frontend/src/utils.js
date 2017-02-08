@@ -140,9 +140,31 @@ export default class Utils {
     });
   }
 
+  /**
+   * 指定URLへ遷移.
+   * @param url URL
+   */
   static moveUrl(url) {
     Utils.viewLoadingMsg();
     document.location.href = url;
   }
 
+  /**
+   * エラーメッセージ描画.
+   * @param self Vueコンポーネント
+   * @param data レスポンスデータ
+   * @returns {boolean} エラーメッセージが存在する場合、true
+   */
+  static writeErrorMsg(self, data) {
+    const vueInstance = self;
+    const errorMsg = data.errorMsg;
+    Object.keys(errorMsg).forEach(function(key) {
+      this[key].forEach(function(val, i){
+        vueInstance.msg[key+"ErrMsg"] += val + '<br>';
+      });
+    }, errorMsg);
+
+    //正常終了時、topへ遷移
+    return Object.keys(errorMsg).length !== 0;
+  }
 }
