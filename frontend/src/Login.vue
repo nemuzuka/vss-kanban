@@ -8,13 +8,13 @@
 
           <div class="notification is-danger" v-if="msg.globalErrMsg !== ''" v-html="msg.globalErrMsg"></div>
 
-          <label class="label">ログインID</label>
+          <label class="label">ログインID <span class="tag is-danger">必須</span></label>
           <p class="control">
             <input class="input" type="text" placeholder="ログインIDを入力してください" v-model="form.loginId">
             <span class="help is-danger" v-html="msg.loginIdErrMsg"></span>
           </p>
 
-          <label class="label">パスワード</label>
+          <label class="label">パスワード <span class="tag is-danger">必須</span></label>
           <p class="control">
             <input class="input" type="password" placeholder="パスワードを入力してください" v-model="form.password" @keyup.enter="login">
             <span class="help is-danger" v-html="msg.passwordErrMsg"></span>
