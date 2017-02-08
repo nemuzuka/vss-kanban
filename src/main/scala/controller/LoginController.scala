@@ -14,7 +14,10 @@ class LoginController extends ApiController {
 
   protectFromForgery()
 
-  def execute = {
+  /**
+   * ログイン実行.
+   */
+  def execute: String = {
 
     logger.debug(request.getParameterMap)
 

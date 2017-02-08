@@ -6,5 +6,5 @@ class IndexController extends ApplicationController {
 
   override val authentications = None
 
-  def index = render("/top/index")
+  def index: String = render("/top/index")
 }

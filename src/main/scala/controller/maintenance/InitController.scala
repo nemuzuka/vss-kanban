@@ -15,7 +15,7 @@ class InitController extends ApiController {
   /**
    * 初期データ作成.
    */
-  def index = {
+  def create: String = {
     DB.localTx { implicit session =>
       val maintenanceService = injector.getInstance(classOf[MaintenanceService])
       maintenanceService.createAdminUser()

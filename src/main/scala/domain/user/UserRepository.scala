@@ -59,4 +59,13 @@ trait UserRepository extends Repository[User] {
    * @return 1件以上登録されている場合、true
    */
   def existsUser(implicit session: DBSession): Boolean
+
+  /**
+   * 削除.
+   * @param userId ユーザID
+   * @param lockVersion バージョンNo
+   * @param session Session
+   * @return Right:ユーザID, Left:エラー情報
+   */
+  def delete(userId: UserId, lockVersion: Long)(implicit session: DBSession): Either[ApplicationException, Long]
 }

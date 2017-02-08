@@ -19,7 +19,7 @@ object Controllers {
   }
 
   object maintenanceInit extends _root_.controller.maintenance.InitController with Routes {
-    val indexUrl: Route = get("/maintenance/?")(index).as('index)
+    val indexUrl: Route = get("/maintenance/?")(create).as('create)
   }
 
   object login extends _root_.controller.LoginController with Routes {

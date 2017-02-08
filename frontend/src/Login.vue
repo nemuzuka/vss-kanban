@@ -6,7 +6,9 @@
       <div class="message is-dark">
         <div class="message-body">
 
-          <div class="notification is-danger" v-if="msg.globalErrMsg !== ''" v-html="msg.globalErrMsg"></div>
+          <article class="message is-danger" v-if="msg.globalErrMsg !== ''">
+            <div class="message-body" v-html="msg.globalErrMsg"></div>
+          </article>
 
           <label class="label">ログインID <span class="tag is-danger">必須</span></label>
           <p class="control">
@@ -76,7 +78,7 @@
         }).then(
           function (data) {
             //エラーが存在する場合、その旨記述
-            if(Utils.writeErrorMsg(self, data)) {
+            if(Utils.writeErrorMsg(self, data, false)) {
                 return;
             }
             Utils.moveUrl("/top");

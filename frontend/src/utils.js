@@ -153,9 +153,10 @@ export default class Utils {
    * エラーメッセージ描画.
    * @param self Vueコンポーネント
    * @param data レスポンスデータ
+   * @param viewAlert エラー発生時、alert表示する場合、ture
    * @returns {boolean} エラーメッセージが存在する場合、true
    */
-  static writeErrorMsg(self, data) {
+  static writeErrorMsg(self, data, viewAlert = true) {
     const vueInstance = self;
     const errorMsg = data.errorMsg;
     Object.keys(errorMsg).forEach(function(key) {
@@ -164,7 +165,10 @@ export default class Utils {
       });
     }, errorMsg);
 
-    //正常終了時、topへ遷移
-    return Object.keys(errorMsg).length !== 0;
+    const errorKeyCount = Object.keys(errorMsg).length;
+    if(errorKeyCount > 0 && viewAlert) {
+      alert("入力内容にエラーがありました。ご確認ください");
+    }
+    return errorKeyCount !== 0;
   }
 }

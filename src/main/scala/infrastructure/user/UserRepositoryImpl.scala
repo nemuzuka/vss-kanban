@@ -31,7 +31,7 @@ class UserRepositoryImpl extends UserRepository {
    */
   override def create(user: User, password: String)(implicit session: DBSession): Either[ApplicationException, Long] = {
 
-    val result = Try {
+    Try {
       val now = CurrentDateUtil.nowDateTime
       val loginUserInfo = LoginUserInfo(
         id = -1L,
@@ -51,8 +51,7 @@ class UserRepositoryImpl extends UserRepository {
       )
       LoginUserPassword.create(loginUserPassword)
       loginUserInfoId
-    }
-    result match {
+    } match {
       case Success(id) => Right(id)
       case _ => Left(new ApplicationException("error.duplicate", Seq("loginId")))
     }
@@ -87,7 +86,7 @@ class UserRepositoryImpl extends UserRepository {
    */
   override def update(user: User, password: Option[String])(implicit session: DBSession): Either[ApplicationException, Long] = {
 
-    val result = Try {
+    Try {
       val now = CurrentDateUtil.nowDateTime
       val loginUserInfo = LoginUserInfo(
         id = user.userId.get.id,
@@ -108,8 +107,7 @@ class UserRepositoryImpl extends UserRepository {
         LoginUserPassword.update(loginUserInfo.id, passwordDigest)
       }
       loginUserInfo.id
-    }
-    result match {
+    } match {
       case Success(id) => Right(id)
       case _ => Left(new ApplicationException("error.invalidVersion", Seq()))
     }
@@ -119,6 +117,19 @@ class UserRepositoryImpl extends UserRepository {
    * @inheritdoc
    */
   override def existsUser(implicit session: DBSession): Boolean = LoginUserInfo.existsUser
+
+  /**
+   * @inheritdoc
+   */
+  override def delete(userId: UserId, lockVersion: Long)(implicit session: DBSession): Either[ApplicationException, Long] = {
+    Try {
+      LoginUserInfo.deleteByIdAndVersion(userId.id, lockVersion)
+      userId.id
+    } match {
+      case Success(id) => Right(id)
+      case _ => Left(new ApplicationException("error.invalidVersion", Seq()))
+    }
+  }
 
   /**
    * @inheritdoc
