@@ -1,6 +1,9 @@
-<h3>Hello World!</h3>
-<hr/>
-<p>
-Your first Skinny app works!
-</p>
+<%@ val appVersion:String = util.ConfigHelper.appVersion %>
+<link href="/assets/css/index.css?version=${appVersion}" rel="stylesheet" type="text/css">
 
+<div id="main-content">
+    <app-header></app-header>
+    <login></login>
+</div>
+
+<script type="text/javascript" src="/assets/js/index.js?version=${appVersion}"></script>

@@ -15,6 +15,9 @@ class LoginController extends ApiController {
   protectFromForgery()
 
   def execute = {
+
+    logger.debug(request.getParameterMap)
+
     validateAndParam match {
       case Right(form) =>
         val userRepository = injector.getInstance(classOf[UserRepository])

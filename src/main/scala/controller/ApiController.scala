@@ -45,6 +45,20 @@ trait ApiController extends SkinnyApiController with CommonControllerFeature wit
 
   /**
    * JSON戻り値生成.
+   * エラーが存在する際のメッセージを設定します。
+   * @param errorMsg エラーメッセージMap
+   * @return JSON形式の戻り値
+   */
+  def createJsonResult(errorMsg: Map[String, Seq[String]]): String = {
+    toJSONString(JsonResult(
+      msgs = Seq(),
+      errorMsg = errorMsg,
+      result = ""
+    ), underscoreKeys = false)
+  }
+
+  /**
+   * JSON戻り値生成.
    * @param result 戻り値
    * @return JSON形式の戻り値
    */

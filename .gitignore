@@ -43,6 +43,8 @@ null
 dist
 test-output
 build.log
+!frontend/build
+
 
 # other scm
 .svn
@@ -69,3 +71,6 @@ node_modules
 # ensime
 .ensime*
 .sbtconfig
+
+# css/jsは自動生成
+src/main/webapp/assets

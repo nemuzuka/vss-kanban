@@ -1,0 +1,134 @@
+<template>
+
+  <div class="columns is-mobile">
+    <div class="column is-half is-offset-one-quarter">
+
+      <div class="message is-dark">
+        <div class="message-body">
+
+          <div class="notification is-danger" v-if="msg.globalErrMsg !== ''" v-html="msg.globalErrMsg"></div>
+
+          <label class="label">ログインID</label>
+          <p class="control">
+            <input class="input" type="text" placeholder="ログインIDを入力してください" v-model="form.loginId">
+            <span class="help is-danger" v-html="msg.loginIdErrMsg"></span>
+          </p>
+
+          <label class="label">パスワード</label>
+          <p class="control">
+            <input class="input" type="password" placeholder="パスワードを入力してください" v-model="form.password" @keyup.enter="login">
+            <span class="help is-danger" v-html="msg.passwordErrMsg"></span>
+          </p>
+
+          <p class="control">
+            <label class="checkbox">
+              <input type="checkbox" v-model="form.rememberMe">
+              ログイン情報を記憶する
+            </label>
+          </p>
+
+          <p class="control has-addons has-addons-centered">
+            <button class="button is-info is-large login" @click="login">
+              <span class="icon">
+                <i class="fa fa-sign-in"></i>
+              </span>
+              <span>ログイン</span>
+            </button>
+          </p>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</template>
+
+<script>
+
+  import Utils from './utils'
+
+  export default {
+    name: 'login',
+    methods: {
+      login : function(e) {
+        const self = this;
+        if(self.form.rememberMe === true) {
+          //localStorageの値を書き換える
+          const memoryLoginInfoJson = {
+            loginId: self.form.loginId,
+            password: self.form.password,
+            rememberMe: self.form.rememberMe
+          };
+          localStorage.setItem("kanbanMemoryLoginInfo", JSON.stringify(memoryLoginInfoJson));
+        } else {
+          //localstrageの値を削除
+          localStorage.removeItem("kanbanMemoryLoginInfo")
+        }
+
+        self.clearMsg();
+
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: self.form,
+          method: 'POST',
+          url: "/login/execute"
+        }).then(
+          function (data) {
+            //エラーが存在する場合、その旨記述
+
+            const vueInstance = self;
+            const errorMsg = data.errorMsg;
+            Object.keys(errorMsg).forEach(function(key) {
+              this[key].forEach(function(val, i){
+                vueInstance.msg[key+"ErrMsg"] += val + '<br>';
+              });
+            }, errorMsg);
+
+            //正常終了時、topへ遷移
+            if(Object.keys(errorMsg).length != 0) {
+                return;
+            }
+
+            Utils.moveUrl("/top");
+          }
+        );
+      }
+    },
+    data() {
+      return {
+        form:{
+          loginId:"",
+          password:"",
+          rememberMe:false
+        },
+        msg:{
+          globalErrMsg:"",
+          loginIdErrMsg:"",
+          passwordErrMsg:""
+        },
+        clearMsg:function(){
+          this.msg.globalErrMsg = "";
+          this.msg.loginIdErrMsg = "";
+          this.msg.passwordErrMsg = "";
+        }
+      }
+    },
+    created: function() {
+      const self = this;
+      const memoryLoginInfo = localStorage.getItem("kanbanMemoryLoginInfo");
+      if(memoryLoginInfo !== null) {
+        const memoryLoginInfoJson = JSON.parse(memoryLoginInfo);
+        self.form.loginId = memoryLoginInfoJson.loginId;
+        self.form.password = memoryLoginInfoJson.password;
+        self.form.rememberMe = memoryLoginInfoJson.rememberMe;
+      }
+    }
+  }
+</script>
+
+<style scoped>
+  .control.has-addons .button.login {
+    border-radius: 3px;
+  }
+</style>

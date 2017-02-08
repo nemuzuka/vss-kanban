@@ -8,6 +8,7 @@ object Controllers {
 
   def mount(ctx: ServletContext): Unit = {
     root.mount(ctx)
+    top.mount(ctx)
     maintenanceInit.mount(ctx)
     login.mount(ctx)
     AssetsController.mount(ctx)
@@ -23,6 +24,10 @@ object Controllers {
 
   object login extends _root_.controller.LoginController with Routes {
     val executeUrl: Route = post("/login/execute")(execute).as('execute)
+  }
+
+  object top extends _root_.controller.top.IndexController with Routes {
+    val indexUrl: Route = get("/top/?")(index).as('index)
   }
 
 }

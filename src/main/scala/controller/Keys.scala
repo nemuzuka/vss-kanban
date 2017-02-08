@@ -18,6 +18,6 @@ object Keys {
    */
   object ErrMsg {
     /** グローバル領域. */
-    val Key = "global_message"
+    val Key = "global"
   }
 }

@@ -1,22 +1,22 @@
 <%@val body: String %>
 <%@val s: skinny.Skinny %>
+<%@ val appVersion:String = util.ConfigHelper.appVersion %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
   <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name=”robots” content=”noindex”>
+    <title>VSS Kanban</title>
     ${unescape(s.csrfMetaTags)}
-    <script type="text/javascript" src="//code.jquery.com/jquery-2.2.4.min.js"></script>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link href="/assets/css/base.css?version=${appVersion}" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="/assets/js/manifest.js?version=${appVersion}"></script>
+    <script type="text/javascript" src="/assets/js/vendor.js?version=${appVersion}"></script>
+    <script type="text/javascript" src="/assets/js/base.js?version=${appVersion}"></script>
   </head>
   <body>
-    <div class="container span12">
+    <div>
       ${unescape(body)}
-      <hr/>
-      <a class="btn btn-default" href="${uri("/")}">TOP</a>
     </div>
-    <script type="text/javascript" src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="${uri("/assets/js/skinny-framework.js")}"></script>
-    <!-- Scala.js default JS filename -->
-    <!--<script type="text/javascript" src="${uri("/assets/js/application-fastopt.js")}"></script>-->
   </body>
 </html>

@@ -1,0 +1,7 @@
+<%@ val appVersion:String = util.ConfigHelper.appVersion %>
+
+<div id="main-content">
+だっしゅぼーどん
+</div>
+
+<script type="text/javascript" src="/assets/js/top/index.js?version=${appVersion}"></script>
