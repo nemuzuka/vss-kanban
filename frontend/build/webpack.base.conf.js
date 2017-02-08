@@ -14,6 +14,7 @@ module.exports = {
   entry: {
     base: './src/base.js',
     index: './src/index.js',
+    top: './src/top.js',
   },
   output: {
     path: config.build.assetsRoot,

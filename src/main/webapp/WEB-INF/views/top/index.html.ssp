@@ -2,7 +2,8 @@
 ${include("/WEB-INF/views/loginUser.ssp")}
 
 <div id="main-content">
-だっしゅぼーどん
+    <app-header></app-header>
+    <dashboard></dashboard>
 </div>
 
-<script type="text/javascript" src="/assets/js/top/index.js?version=${appVersion}"></script>
+<script type="text/javascript" src="/assets/js/top.js?version=${appVersion}"></script>

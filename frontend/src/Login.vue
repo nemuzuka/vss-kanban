@@ -74,7 +74,7 @@
         $.ajax({
           data: self.form,
           method: 'POST',
-          url: "/login/execute"
+          url: "/login"
         }).then(
           function (data) {
             //エラーが存在する場合、その旨記述

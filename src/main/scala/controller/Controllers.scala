@@ -11,6 +11,7 @@ object Controllers {
     top.mount(ctx)
     maintenanceInit.mount(ctx)
     login.mount(ctx)
+    logout.mount(ctx)
     AssetsController.mount(ctx)
   }
 
@@ -23,7 +24,11 @@ object Controllers {
   }
 
   object login extends _root_.controller.LoginController with Routes {
-    val executeUrl: Route = post("/login/execute")(execute).as('execute)
+    val executeUrl: Route = post("/login")(execute).as('execute)
+  }
+
+  object logout extends _root_.controller.LogoutController with Routes {
+    val logoutUrl: Route = get("/logout")(execute).as('execute)
   }
 
   object top extends _root_.controller.top.IndexController with Routes {

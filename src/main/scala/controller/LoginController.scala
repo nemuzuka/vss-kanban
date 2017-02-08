@@ -19,8 +19,6 @@ class LoginController extends ApiController {
    */
   def execute: String = {
 
-    logger.debug(request.getParameterMap)
-
     validateAndParam match {
       case Right(form) =>
         val userRepository = injector.getInstance(classOf[UserRepository])
