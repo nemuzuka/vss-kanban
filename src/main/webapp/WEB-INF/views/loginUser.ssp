@@ -1,0 +1,10 @@
+<%@ val userInfo:domain.user.User %>
+
+<script type="text/javascript">
+<!--
+localStorage.setItem("kanbanUserInfo", JSON.stringify({
+  authority: '${userInfo.authority.code}',
+  name: '${unescape(userInfo.name)}'
+}));
+//-->
+</script>

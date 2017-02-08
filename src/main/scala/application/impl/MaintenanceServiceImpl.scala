@@ -23,7 +23,7 @@ class MaintenanceServiceImpl @Inject() (
       val adminUser = User(
         userId = None,
         loginId = "admin@vss-kanban",
-        name = "admin@vss-kanban",
+        name = "このユーザは早めに削除するか、パスワードを変更して下さい",
         authority = ApplicationAdministrator
       )
       userRepository.create(adminUser, "vss-kanban-admin")

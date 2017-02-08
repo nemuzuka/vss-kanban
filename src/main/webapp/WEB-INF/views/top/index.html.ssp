@@ -1,4 +1,5 @@
 <%@ val appVersion:String = util.ConfigHelper.appVersion %>
+${include("/WEB-INF/views/loginUser.ssp")}
 
 <div id="main-content">
 だっしゅぼーどん
