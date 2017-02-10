@@ -9,6 +9,9 @@ object Controllers {
   def mount(ctx: ServletContext): Unit = {
     root.mount(ctx)
     top.mount(ctx)
+    user.mount(ctx)
+    userListAjax.mount(ctx)
+    userEditAjax.mount(ctx)
     maintenanceInit.mount(ctx)
     login.mount(ctx)
     logout.mount(ctx)
@@ -35,4 +38,15 @@ object Controllers {
     val indexUrl: Route = get("/top/?")(index).as('index)
   }
 
+  object user extends _root_.controller.user.IndexController with Routes {
+    val indexUrl: Route = get("/user/?")(index).as('index)
+  }
+
+  object userListAjax extends _root_.controller.user.ListController with Routes {
+    val allUrl: Route = get("/user/all")(all).as('all)
+  }
+
+  object userEditAjax extends _root_.controller.user.EditController with Routes {
+    val detailUrl: Route = get("/user/detail")(detail).as('detail)
+  }
 }

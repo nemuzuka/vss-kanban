@@ -88,4 +88,11 @@ object LoginUserInfo extends SkinnyCRUDMapper[LoginUserInfo] with OptimisticLock
    * @return 1件以上登録されている場合、true
    */
   def existsUser(implicit session: DBSession): Boolean = LoginUserInfo.findAllByWithLimitOffset(sqls"1 = 1", limit = 1, offset = 0).headOption exists { _ => true }
+
+  /**
+   * 全件取得.
+   * @param session Session
+   * @return 該当データ
+   */
+  def findAll(implicit session: DBSession): Seq[LoginUserInfo] = LoginUserInfo.findAll(Seq(defaultAlias.id.asc))
 }

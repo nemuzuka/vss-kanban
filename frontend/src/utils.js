@@ -171,4 +171,30 @@ export default class Utils {
     }
     return errorKeyCount !== 0;
   }
+
+  /**
+   * エラーメッセージalert表示.
+   * グローバル領域にメッセージが設定されている場合、alert表示します
+   * @param data レスポンスデータ
+   * @returns {boolean} エラーメッセージが存在する場合、true
+   */
+  static alertErrorMsg(data) {
+    const errorMsg = data.errorMsg;
+    var msg = "";
+    Object.keys(errorMsg).forEach(function(key) {
+      if(key !== 'global') {
+        return;
+      }
+      this[key].forEach(function(val, i){
+        msg += val + '\n';
+      });
+    }, errorMsg);
+
+    if(msg !== '') {
+      alert(msg);
+      return true;
+    }
+    return false;
+  }
+
 }

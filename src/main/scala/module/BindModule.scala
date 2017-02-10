@@ -13,11 +13,12 @@ class BindModule extends AbstractModule {
   /**
    * DI設定定義
    */
-  override def configure() = {
+  override def configure(): Unit = {
     //traitに対するインスタンスの解決を定義
     bind(classOf[UserRepository]).to(classOf[UserRepositoryImpl]).in(classOf[Singleton])
 
     bind(classOf[MaintenanceService]).to(classOf[MaintenanceServiceImpl]).in(classOf[Singleton])
+    bind(classOf[UserSerivce]).to(classOf[UserSerivceImpl]).in(classOf[Singleton])
   }
 }
 

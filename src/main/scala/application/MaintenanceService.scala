@@ -3,7 +3,7 @@ package application
 import scalikejdbc.DBSession
 
 /**
- * メンテナンス用のService.
+ * メンテナンス用のApplicationService.
  */
 trait MaintenanceService {
 

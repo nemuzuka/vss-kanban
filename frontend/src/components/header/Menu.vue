@@ -1,24 +1,26 @@
 <template>
-  <nav class="nav" style="margin-bottom:1em;">
-    <div class="nav-left">
-      <a class="nav-item" @click="moveTop">
-        VSS Kanban
-      </a>
-    </div>
 
-    <span class="nav-toggle" @click="toggleNavMenu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </span>
+  <div>
+    <nav class="nav" style="margin-bottom:1em;">
+      <div class="nav-left">
+        <a class="nav-item" @click="moveTop">
+          VSS Kanban
+        </a>
+      </div>
 
-    <div class="nav-right nav-menu"
-         :class="{'is-active': isMenuShow}">
-      <a class="nav-item" @click="moveAdmin" v-if="authority === '1'">
-        管理者機能へ
-      </a>
+      <span class="nav-toggle" @click="toggleNavMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
 
-      <span class="nav-item">
+      <div class="nav-right nav-menu"
+           :class="{'is-active': isMenuShow}">
+        <a class="nav-item" @click="moveAdmin" v-if="authority === '1'">
+          管理者機能へ
+        </a>
+
+        <span class="nav-item">
         <a class="button" @click="logout">
           <span class="icon">
             <i class="fa fa-sign-out"></i>
@@ -26,9 +28,12 @@
           <span>ログアウト</span>
         </a>
       </span>
-    </div>
+      </div>
 
-  </nav>
+    </nav>
+
+  </div>
+
 </template>
 
 <script>

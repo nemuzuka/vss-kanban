@@ -19,3 +19,53 @@ body {
   height:100%;
   background-image: url(./assets/texture.png);
 }
+
+.container {
+  position: relative;
+}
+
+@media screen and (min-width: 1000px) {
+  .container {
+    margin: 0 auto;
+    max-width: 960px;
+  }
+  .container.is-fluid {
+    margin: 0 20px;
+    max-width: none;
+  }
+}
+
+@media screen and (min-width: 1192px) {
+  .container {
+    max-width: 95%;
+  }
+}
+
+.content {
+  border: solid 1px #563F2E;
+  background-color: #fff8e1;
+  background-image: url(./assets/absurdity.png);
+  padding: 1rem;
+}
+
+.content table td, .content table th {
+  border: 1px solid #363636;
+}
+
+.content table th {
+  background-color: #f5f5f5;
+}
+
+
+.level-right .level-item .button + .button {
+  margin-left: 0.75rem;
+}
+
+.control {
+  margin-bottom: 0.75rem;
+}
+
+.modal-card-body {
+  background-color: #fff8e1;
+  background-image: url(./assets/absurdity.png);
+}

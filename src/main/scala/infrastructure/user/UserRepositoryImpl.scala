@@ -37,7 +37,7 @@ class UserRepositoryImpl extends UserRepository {
         id = -1L,
         loginId = user.loginId,
         userName = user.name,
-        applicationAdminFlg = if (user.authority == UserAuthority.ApplicationAdministrator) "1" else "0",
+        applicationAdminFlg = user.authority.code,
         createAt = now,
         lastUpdateAt = now,
         lockVersion = -1L
@@ -92,7 +92,7 @@ class UserRepositoryImpl extends UserRepository {
         id = user.userId.get.id,
         loginId = user.loginId,
         userName = user.name,
-        applicationAdminFlg = if (user.authority == UserAuthority.ApplicationAdministrator) "1" else "0",
+        applicationAdminFlg = user.authority.code,
         createAt = now,
         lastUpdateAt = now,
         lockVersion = user.lockVersion
@@ -134,12 +134,14 @@ class UserRepositoryImpl extends UserRepository {
   /**
    * @inheritdoc
    */
-  override def findAll(): Seq[User] = throw new RuntimeException("呼んではいけません")
+  override def findAll(implicit session: DBSession): Seq[User] = {
+    LoginUserInfo.findAll map createUser
+  }
 
   /**
    * @inheritdoc
    */
-  override def deleteAll(): Unit = throw new RuntimeException("呼んではいけません")
+  override def deleteAll()(implicit session: DBSession): Unit = throw new RuntimeException("呼んではいけません")
 
   /**
    * Userドメイン生成.
@@ -151,7 +153,7 @@ class UserRepositoryImpl extends UserRepository {
       userId = Option(UserId(loginUserInfo.id)),
       loginId = loginUserInfo.loginId,
       name = loginUserInfo.userName,
-      authority = if (loginUserInfo.applicationAdminFlg == "1") UserAuthority.ApplicationAdministrator else UserAuthority.Normal,
+      authority = UserAuthority.withCode(loginUserInfo.applicationAdminFlg).get,
       lockVersion = loginUserInfo.lockVersion
     )
   }

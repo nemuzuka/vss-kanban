@@ -36,6 +36,6 @@ object UserAuthority extends Enum[UserAuthority] {
   /** Application管理者. */
   case object ApplicationAdministrator extends UserAuthority("1")
   /** 一般. */
-  case object Normal extends UserAuthority("2")
+  case object Normal extends UserAuthority("0")
   protected val values = Seq(ApplicationAdministrator, Normal)
 }
