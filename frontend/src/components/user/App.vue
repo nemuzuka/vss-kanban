@@ -16,7 +16,7 @@
       'user-edit-dialog': UserEditDialog,
     },
     methods: {
-      refresh : function(e) {
+      refresh(e) {
         const self = this;
         Utils.setAjaxDefault();
         $.ajax({
@@ -34,7 +34,7 @@
           }
         );
       },
-      openEditDialog:function(e, id) {
+      openEditDialog(e, id) {
         const self = this;
         self.$refs.editDialog.openEditDialog(id);
       }
@@ -47,7 +47,7 @@
         }
       }
     },
-    created: function() {
+    created() {
       const self = this;
       self.refresh();
     }

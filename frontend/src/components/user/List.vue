@@ -56,11 +56,11 @@
     },
     props:["listData", "refresh"],
     methods:{
-      openEditDialog:function(e, id) {
+      openEditDialog(e, id) {
         const self = this;
         self.$emit("OpenEditDialog", e, id);
       },
-      refresh: function(e) {
+      refresh(e) {
         const self = this;
         self.$emit("Refresh", e);
       }

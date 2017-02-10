@@ -21,7 +21,7 @@
     name: 'user-list-row',
     props: ["row"],
     methods: {
-      openEditDialog:function(e){
+      openEditDialog(e){
         if (e && (e.target.tagName.toLocaleLowerCase() === 'a' || e.target.tagName.toLocaleLowerCase() === 'span' || e.target.tagName.toLocaleLowerCase() === 'i')) {
           //aタグの場合、処理終了
           return;
@@ -29,7 +29,7 @@
         const self = this;
         self.$emit("OpenEditDialog", e, self.row.id);
       },
-      deleteRow:function(e){
+      deleteRow(e){
         const self = this;
         if(!window.confirm("ユーザ「" + self.row.name + "」を削除します。本当によろしいですか？")) {
             return;
@@ -61,7 +61,7 @@
       }
     },
     computed: {
-      authority:function() {
+      authority() {
         const self = this;
         return self.row.authority === '1' ? '◯' : '';
       }

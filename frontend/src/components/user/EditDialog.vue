@@ -87,7 +87,7 @@
           passwordErrMsg:"",
           passwordConfirmErrMsg:""
         },
-        clearMsg:function(){
+        clearMsg(){
           this.msg.globalErrMsg = "";
           this.msg.loginIdErrMsg = "";
           this.msg.userNameErrMsg = "";
@@ -97,7 +97,7 @@
       }
     },
     methods: {
-      openEditDialog: function (id) {
+      openEditDialog(id) {
         const param = {
           userId: id === null ? '' : id
         };
@@ -119,7 +119,7 @@
           }
         );
       },
-      setFormData: function(form) {
+      setFormData(form) {
         const self = this;
         self.form.loginId = form.loginId;
         self.form.userName = form.userName;
@@ -129,10 +129,10 @@
         self.form.id = form.id;
         self.form.lockVersion = form.lockVersion;
       },
-      closeDialog: function () {
+      closeDialog() {
         Utils.closeDialog('user-edit-dialog');
       },
-      saveDialog: function (e) {
+      saveDialog(e) {
         const self = this;
         self.clearMsg();
 
@@ -158,11 +158,11 @@
       }
     },
     computed: {
-      buttonLabel:function() {
+      buttonLabel() {
         const self = this;
         return self.form.id === "" ? '登録' : '変更';
       },
-      loginIdDisabledCondition:function() {
+      loginIdDisabledCondition() {
         const self = this;
         return self.form.id !== "";
       }

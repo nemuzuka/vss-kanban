@@ -53,7 +53,7 @@
   export default {
     name: 'login',
     methods: {
-      login : function(e) {
+      login(e) {
         const self = this;
         if(self.form.rememberMe === true) {
           //localStorageの値を書き換える
@@ -98,14 +98,14 @@
           loginIdErrMsg:"",
           passwordErrMsg:""
         },
-        clearMsg:function(){
+        clearMsg(){
           this.msg.globalErrMsg = "";
           this.msg.loginIdErrMsg = "";
           this.msg.passwordErrMsg = "";
         }
       }
     },
-    created: function() {
+    created() {
       const self = this;
       const memoryLoginInfo = localStorage.getItem("kanbanMemoryLoginInfo");
       if(memoryLoginInfo !== null) {

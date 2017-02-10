@@ -43,17 +43,17 @@
   export default {
     name: 'app-header',
     methods: {
-      moveAdmin:function(e) {
+      moveAdmin(e) {
         Utils.moveUrl("/user");
       },
-      moveTop:function(e) {
+      moveTop(e) {
         Utils.moveUrl("/top");
       },
-      toggleNavMenu:function(e){
+      toggleNavMenu(e){
         const self = this;
         self.isMenuShow = !self.isMenuShow
       },
-      logout:function(e) {
+      logout(e) {
         if(!window.confirm("ログアウトしてもよろしいですか？")) {
             return;
         }
@@ -75,7 +75,7 @@
         isMenuShow:false
       }
     },
-    created: function() {
+    created() {
       const userInfo = JSON.parse(localStorage.getItem("kanbanUserInfo"));
       const self = this;
       self.authority = userInfo.authority;
