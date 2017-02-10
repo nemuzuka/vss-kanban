@@ -19,7 +19,7 @@ class LoginController extends ApiController {
    */
   def execute: String = {
 
-    validateAndParam match {
+    validateAndCreateForm match {
       case Right(form) =>
         val userRepository = injector.getInstance(classOf[UserRepository])
         DB localTx { implicit dbSession =>
@@ -42,7 +42,7 @@ class LoginController extends ApiController {
    * validate & 入力パラメータ取得.
    * @return Right:入力Form / Left:validateエラーメッセージ
    */
-  private def validateAndParam: Either[Map[String, Seq[String]], Login] = {
+  private def validateAndCreateForm: Either[Map[String, Seq[String]], Login] = {
     val validator = Validator(
       param("loginId" -> params("loginId")) is required,
       param("password" -> params("password")) is required
