@@ -15,7 +15,7 @@
         <div>
           <label class="label">ログインID <span class="tag is-danger" v-if="form.id === ''">必須</span></label>
           <p class="control">
-            <input class="input" type="text" v-model="form.loginId" :disabled="loginIdDisabledCondition">
+            <input class="input" type="text" v-model="form.loginId" :disabled="loginIdDisabledCondition" placeholder="ログインの際に使用するIDです">
             <span class="help is-danger" v-html="msg.loginIdErrMsg"></span>
           </p>
         </div>
@@ -23,7 +23,7 @@
         <div>
           <label class="label">ユーザ名 <span class="tag is-danger">必須</span></label>
           <p class="control">
-            <input class="input" type="text" v-model="form.userName">
+            <input class="input" type="text" v-model="form.userName" placeholder="その人だとわかりやすい名前を入力してください">
             <span class="help is-danger" v-html="msg.userNameErrMsg"></span>
           </p>
         </div>
@@ -31,7 +31,7 @@
         <div>
           <label class="label">パスワード <span class="tag is-danger" v-if="form.id === ''">必須</span></label>
           <p class="control">
-            <input class="input" type="password" v-model="form.password">
+            <input class="input" type="password" v-model="form.password" placeholder="ログインの際に使用するパスワードです">
             <span class="help is-danger" v-html="msg.passwordErrMsg"></span>
           </p>
         </div>
@@ -136,9 +136,25 @@
         const self = this;
         self.clearMsg();
 
-        alert("登録します");
-        Utils.closeDialog('user-detail-dialog');
-        self.$emit("Refresh", e);
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: self.form,
+          method: 'POST',
+          url: "/user/store"
+        }).then(
+          function (data) {
+            //エラーが存在する場合、その旨記述
+            if(Utils.writeErrorMsg(self, data)) {
+              return;
+            }
+
+            Utils.viewInfoMsg(data);
+            setTimeout(function(){
+              Utils.closeDialog('user-edit-dialog');
+              self.$emit("Refresh", e);
+            },1500);
+          }
+        );
       }
     },
     computed: {

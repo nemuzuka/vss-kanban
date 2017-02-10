@@ -48,5 +48,7 @@ object Controllers {
 
   object userEditAjax extends _root_.controller.user.EditController with Routes {
     val detailUrl: Route = get("/user/detail")(detail).as('detail)
+    val storeUrl: Route = post("/user/store")(store).as('store)
+    val deleteUrl: Route = post("/user/delete")(delete).as('delete)
   }
 }

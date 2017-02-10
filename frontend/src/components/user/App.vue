@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <user-list :listData="listData" @Refresh="refresh" @OpenEditDialog="openEditDialog"></user-list>
-    <user-edit-dialog ref="editDialog"></user-edit-dialog>
+    <user-edit-dialog ref="editDialog" @Refresh="refresh"></user-edit-dialog>
   </div>
 </template>
 

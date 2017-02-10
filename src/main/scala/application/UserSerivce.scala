@@ -1,5 +1,6 @@
 package application
 
+import domain.ApplicationException
 import form.user.Edit
 import scalikejdbc.DBSession
 
@@ -22,6 +23,23 @@ trait UserSerivce {
    * @return Form情報(ID指定で該当データが存在しない場合、None)
    */
   def getForm(idOpt: Option[Long])(implicit session: DBSession): Option[Edit]
+
+  /**
+   * 登録・変更
+   * @param form Form情報
+   * @param session Session
+   * @return Right:ユーザID, Left:エラー情報
+   */
+  def store(form: Edit)(implicit session: DBSession): Either[ApplicationException, Long]
+
+  /**
+   * 削除.
+   * @param userId ユーザID
+   * @param lockVersion バージョンNo
+   * @param session Session
+   * @return Right:ユーザID, Left:エラー情報
+   */
+  def delete(userId: Long, lockVersion: Long)(implicit session: DBSession): Either[ApplicationException, Long]
 
   /**
    * UserDto

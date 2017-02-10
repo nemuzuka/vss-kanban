@@ -14,6 +14,9 @@
 </template>
 
 <script>
+
+  import Utils from '../../utils'
+
   export default {
     name: 'user-list-row',
     props: ["row"],
@@ -27,7 +30,34 @@
         self.$emit("OpenEditDialog", e, self.row.id);
       },
       deleteRow:function(e){
-          alert("消せって言われたよ");
+        const self = this;
+        if(!window.confirm("ユーザ「" + self.row.name + "」を削除します。本当によろしいですか？")) {
+            return;
+        }
+
+        const param = {
+          userId:self.row.id,
+          lockVersion:self.row.lockVersion
+        };
+
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: param,
+          method: 'POST',
+          url: "/user/delete"
+        }).then(
+          function (data) {
+            //エラーが存在する場合、alert表示
+            if(Utils.alertErrorMsg(data)) {
+              return;
+            }
+
+            Utils.viewInfoMsg(data);
+            setTimeout(function(){
+              self.$emit("Refresh", e);
+            },1500);
+          }
+        );
       }
     },
     computed: {

@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import toastr from 'toastr/toastr';
 
 export default class Utils {
   /**
@@ -197,4 +197,41 @@ export default class Utils {
     return false;
   }
 
+  /**
+   * メッセージ表示.
+   * メッセージが設定されている場合、toast表示します
+   * @param data レスポンスデータ
+   */
+  static viewInfoMsg(data) {
+    const msg = data.msgs.join("<br>");
+    if(msg !== "") {
+      this._viewToastMsg(msg);
+    }
+  }
+
+  /**
+   * メッセージtoast表示.
+   * toast形式でメッセージを表示します。
+   * @param {String} msg 表示メッセージ
+   */
+  static _viewToastMsg(msg) {
+    toastr.options = {
+      "closeButton": false,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": false,
+      "positionClass": "toast-top-right",
+      "preventDuplicates": false,
+      "onclick": null,
+      "showDuration": "300",
+      "hideDuration": "1000",
+      "timeOut": "2000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "fadeIn",
+      "hideMethod": "fadeOut"
+    };
+    toastr.success(msg);
+  }
 }

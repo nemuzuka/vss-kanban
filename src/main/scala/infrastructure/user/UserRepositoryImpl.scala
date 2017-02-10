@@ -53,7 +53,7 @@ class UserRepositoryImpl extends UserRepository {
       loginUserInfoId
     } match {
       case Success(id) => Right(id)
-      case _ => Left(new ApplicationException("error.duplicate", Seq("loginId")))
+      case _ => Left(new ApplicationException("duplicate", Seq("loginId")))
     }
   }
 
@@ -109,7 +109,7 @@ class UserRepositoryImpl extends UserRepository {
       loginUserInfo.id
     } match {
       case Success(id) => Right(id)
-      case _ => Left(new ApplicationException("error.invalidVersion", Seq()))
+      case _ => Left(new ApplicationException("invalidVersion", Seq()))
     }
   }
 
@@ -127,7 +127,7 @@ class UserRepositoryImpl extends UserRepository {
       userId.id
     } match {
       case Success(id) => Right(id)
-      case _ => Left(new ApplicationException("error.invalidVersion", Seq()))
+      case _ => Left(new ApplicationException("invalidVersion", Seq()))
     }
   }
 

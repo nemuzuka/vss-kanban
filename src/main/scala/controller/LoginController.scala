@@ -30,8 +30,8 @@ class LoginController extends ApiController {
               session += Keys.Session.UserInfo -> user
               createJsonResult("")
             case _ =>
-              val errorMsgs = Map(Keys.ErrMsg.Key -> List(getLabel("error.login")))
-              createJsonResult(errorMsgs)
+              val errorMsg = createErrorMsg(Keys.ErrMsg.Key, "login", Seq())
+              createJsonResult(errorMsg)
           }
         }
       case Left(v) => createJsonResult(v)
@@ -42,7 +42,7 @@ class LoginController extends ApiController {
    * validate & 入力パラメータ取得.
    * @return Right:入力Form / Left:validateエラーメッセージ
    */
-  private def validateAndCreateForm: Either[Map[String, Seq[String]], Login] = {
+  private[this] def validateAndCreateForm: Either[Map[String, Seq[String]], Login] = {
     val validator = Validator(
       param("loginId" -> params("loginId")) is required,
       param("password" -> params("password")) is required

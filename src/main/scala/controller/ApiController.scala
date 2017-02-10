@@ -115,6 +115,19 @@ trait ApiController extends SkinnyApiController with CommonControllerFeature wit
   }
 
   /**
+   * エラーメッセージMap生成.
+   * @param msgKey エラーメッセージMap用キー
+   * @param errorKey エラーメッセージキー
+   * @param labelKeySeq ラベルキーSeq
+   * @return エラーメッセージMap
+   */
+  protected def createErrorMsg(msgKey: String, errorKey: String, labelKeySeq: Seq[String]): Map[String, Seq[String]] = {
+    val map = mutable.Map[String, Seq[String]]()
+    appendMessage(map, msgKey, createErrorMsg(errorKey, labelKeySeq, Seq()))
+    map.toMap
+  }
+
+  /**
    * label取得.
    * @param key key
    * @return 該当label(存在しない場合、key)
@@ -122,4 +135,15 @@ trait ApiController extends SkinnyApiController with CommonControllerFeature wit
   protected def getLabel(key: String): String = {
     skinny.I18n().get(key) getOrElse key
   }
+
+  /**
+   * エラーメッセージ生成.
+   * @param errorKey エラーメッセージキー
+   * @param labelKeySeq ラベルキーSeq
+   * @return エラーメッセージ
+   */
+  protected def createErrorMsg(errorKey: String, labelKeySeq: Seq[String], paramSeq: Seq[Any]): String = {
+    messages.get(errorKey, (labelKeySeq map getLabel) ++ paramSeq).get
+  }
+
 }

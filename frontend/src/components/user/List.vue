@@ -31,9 +31,9 @@
 
     <div v-if="listData.rows.length > 0">
       <table class="table is-bordered is-striped is-narrow">
-        <thead><tr><th>名前</th><th>ログインID</th><th>アプリケーション管理者</th><th style="width:20px"></th></tr></thead>
+        <thead><tr><th>ユーザ名</th><th>ログインID</th><th style="width:200px">アプリケーション管理者</th><th style="width:20px"></th></tr></thead>
         <tbody>
-        <user-list-row v-for="row in listData.rows" :row="row" @OpenEditDialog="openEditDialog"></user-list-row>
+        <user-list-row v-for="row in listData.rows" :row="row" @OpenEditDialog="openEditDialog" @Refresh="refresh"></user-list-row>
         </tbody>
       </table>
     </div>
