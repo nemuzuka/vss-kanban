@@ -65,7 +65,16 @@ body {
   margin-bottom: 0.75rem;
 }
 
+/** モーダルダイアログ */
 .modal-card-body {
   background-color: #fff8e1;
   background-image: url(./assets/absurdity.png);
+}
+
+.modal-card-foot {
+  justify-content: flex-end;
+}
+
+.modal-card-title {
+  font-weight: bold;
 }

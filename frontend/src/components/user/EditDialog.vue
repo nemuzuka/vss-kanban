@@ -31,7 +31,7 @@
         <div>
           <label class="label">パスワード <span class="tag is-danger" v-if="form.id === ''">必須</span></label>
           <p class="control">
-            <input class="input" type="password" v-model="form.password" placeholder="ログインの際に使用するパスワードです">
+            <input class="input" type="password" v-model="form.password" :placeholder="passwordPlaceholder">
             <span class="help is-danger" v-html="msg.passwordErrMsg"></span>
           </p>
         </div>
@@ -39,7 +39,7 @@
         <div>
           <label class="label">パスワード(確認用) <span class="tag is-danger" v-if="form.id === ''">必須</span></label>
           <p class="control">
-            <input class="input" type="password" v-model="form.passwordConfirm">
+            <input class="input" type="password" v-model="form.passwordConfirm" :placeholder="passwordConfirmPlaceholder">
             <span class="help is-danger" v-html="msg.passwordConfirmErrMsg"></span>
           </p>
         </div>
@@ -165,6 +165,16 @@
       loginIdDisabledCondition() {
         const self = this;
         return self.form.id !== "";
+      },
+      passwordPlaceholder() {
+        const self = this;
+        let msg = 'ログインの際に使用するパスワードです';
+        return self.form.id === "" ? msg : msg + "。変更する時に入力してください";
+      },
+      passwordConfirmPlaceholder() {
+        const self = this;
+        let msg = '念のためもう一度入力してください';
+        return self.form.id === "" ? msg : "変更する時に" + msg;
       }
     }
   }
