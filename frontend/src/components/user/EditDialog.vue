@@ -15,7 +15,7 @@
         <div>
           <label class="label">ログインID <span class="tag is-danger" v-if="form.id === ''">必須</span></label>
           <p class="control">
-            <input class="input" type="text" v-model="form.loginId" :disabled="loginIdDisabledCondition" placeholder="ログインの際に使用するIDです">
+            <input class="input" type="text" v-model="form.loginId" :disabled="loginIdDisabledCondition" placeholder="ログインの際に使用するIDです" id="user-edit-dialog-login-id">
             <span class="help is-danger" v-html="msg.loginIdErrMsg"></span>
           </p>
         </div>
@@ -116,6 +116,12 @@
             self.setFormData(data.result);
             self.clearMsg();
             Utils.openDialog('user-edit-dialog');
+            if(self.form.id === '') {
+              setTimeout(function(){
+                $('#user-edit-dialog-login-id').focus();
+              }, 100);
+            }
+
           }
         );
       },

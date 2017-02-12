@@ -15,7 +15,7 @@
         <div>
           <label class="label">かんばんタイトル <span class="tag is-danger">必須</span></label>
           <p class="control">
-            <input class="input" type="text" v-model="form.kanbanTitle" placeholder="かんばんのタイトルを入力してください">
+            <input class="input" type="text" v-model="form.kanbanTitle" placeholder="かんばんのタイトルを入力してください" id="kanban-edit-dialog-kanban-title">
             <span class="help is-danger" v-html="msg.kanbanTitleErrMsg"></span>
           </p>
         </div>
@@ -76,8 +76,12 @@
         self.clearMsg();
         Utils.openDialog('kanban-edit-dialog');
 
+        setTimeout(function(){
+          $('#kanban-edit-dialog-kanban-title').focus();
+        }, 100);
         autosize.destroy(document.querySelector('#kanban-edit-dialog textarea'));
         autosize(document.querySelector('#kanban-edit-dialog textarea'));
+
       },
       closeDialog() {
         Utils.closeDialog('kanban-edit-dialog');
