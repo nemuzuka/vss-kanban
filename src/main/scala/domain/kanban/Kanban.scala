@@ -80,13 +80,13 @@ case class KanbanId(
 
 /**
  * かんばん構成情報.
- * @param name かんばん名
+ * @param title かんばんタイトル
  * @param description 説明文
  * @param kanbanStatus かんばんの状態
  * @param lockVersion lockVersion
  */
 case class KanbanConfiguration(
-  name: String,
+  title: String,
   description: String,
   kanbanStatus: KanbanStatus,
   lockVersion: Long = 1L
@@ -96,8 +96,8 @@ case class KanbanConfiguration(
 sealed abstract class KanbanStatus(override val code: String) extends EnumEntry
 object KanbanStatus extends Enum[KanbanStatus] {
   /** Open(デフォルトで表示される). */
-  case object Open extends KanbanStatus("1")
+  case object Open extends KanbanStatus("0")
   /** Archive(検索条件を指定しないと表示されない). */
-  case object Archive extends KanbanStatus("2")
+  case object Archive extends KanbanStatus("1")
   protected val values = Seq(Open, Archive)
 }

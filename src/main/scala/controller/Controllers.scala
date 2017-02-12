@@ -12,6 +12,7 @@ object Controllers {
     user.mount(ctx)
     userListAjax.mount(ctx)
     userEditAjax.mount(ctx)
+    kanbanEditAjax.mount(ctx)
     maintenanceInit.mount(ctx)
     login.mount(ctx)
     logout.mount(ctx)
@@ -50,5 +51,9 @@ object Controllers {
     val detailUrl: Route = get("/user/detail")(detail).as('detail)
     val storeUrl: Route = post("/user/store")(store).as('store)
     val deleteUrl: Route = post("/user/delete")(delete).as('delete)
+  }
+
+  object kanbanEditAjax extends _root_.controller.kanban.EditController with Routes {
+    val createUrl: Route = post("/kanban/create")(create).as('create)
   }
 }

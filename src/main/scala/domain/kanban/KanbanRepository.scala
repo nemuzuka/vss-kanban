@@ -1,6 +1,6 @@
 package domain.kanban
 
-import domain.Repository
+import domain.{ ApplicationException, Repository }
 import scalikejdbc.DBSession
 
 /**
@@ -18,7 +18,7 @@ trait KanbanRepository extends Repository[Kanban] {
   /**
    * 永続処理.
    * @param kanban かんばんドメイン
-   * @return かんばんID(永続化失敗時、None)
+   * @return Right:かんばんID, Left:エラー情報
    */
-  def store(kanban: Kanban)(implicit session: DBSession): Option[KanbanId]
+  def store(kanban: Kanban)(implicit session: DBSession): Either[ApplicationException, Long]
 }

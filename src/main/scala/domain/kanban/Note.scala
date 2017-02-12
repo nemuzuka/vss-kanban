@@ -42,8 +42,8 @@ case class NoteId(
 sealed abstract class NoteStatus(override val code: String) extends EnumEntry
 object NoteStatus extends Enum[NoteStatus] {
   /** Open. */
-  case object Open extends NoteStatus("1")
+  case object Open extends NoteStatus("0")
   /** Archive. */
-  case object Archive extends NoteStatus("2")
+  case object Archive extends NoteStatus("1")
   protected val values = Seq(Open, Archive)
 }

@@ -68,7 +68,7 @@
   import Utils from '../../utils'
 
   export default {
-    name: 'user-edit-modal',
+    name: 'user-edit-dialog',
     data() {
       return {
         form:{

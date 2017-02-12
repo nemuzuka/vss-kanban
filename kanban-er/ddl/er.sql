@@ -7,6 +7,7 @@ DROP INDEX IF EXISTS idx_login_user_info_01;
 
 /* Drop Tables */
 
+DROP TABLE IF EXISTS kanban_joined_user;
 DROP TABLE IF EXISTS note;
 DROP TABLE IF EXISTS lane;
 DROP TABLE IF EXISTS kanban;
@@ -37,6 +38,23 @@ CREATE TABLE kanban
 	last_update_at timestamp NOT NULL,
 	-- バージョンNo
 	lock_version bigint NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
+-- かんばん - 参加者
+CREATE TABLE kanban_joined_user
+(
+	-- id(自動採番)
+	id bigserial NOT NULL,
+	-- かんばんID
+	kanban_id bigint NOT NULL,
+	-- ログインユーザ情報ID
+	login_user_info_id bigint NOT NULL,
+	-- かんばん権限
+	-- 1:管理者
+	-- 0:一般
+	kanban_authority varchar(1) NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
@@ -120,6 +138,14 @@ CREATE TABLE note
 
 /* Create Foreign Keys */
 
+ALTER TABLE kanban_joined_user
+	ADD FOREIGN KEY (kanban_id)
+	REFERENCES kanban (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
 ALTER TABLE lane
 	ADD FOREIGN KEY (kanban_id)
 	REFERENCES kanban (id)
@@ -171,6 +197,13 @@ COMMENT ON COLUMN kanban.archive_status IS 'アーカイブステータス
 COMMENT ON COLUMN kanban.create_at IS '作成日時';
 COMMENT ON COLUMN kanban.last_update_at IS '最終更新日時';
 COMMENT ON COLUMN kanban.lock_version IS 'バージョンNo';
+COMMENT ON TABLE kanban_joined_user IS 'かんばん - 参加者';
+COMMENT ON COLUMN kanban_joined_user.id IS 'id(自動採番)';
+COMMENT ON COLUMN kanban_joined_user.kanban_id IS 'かんばんID';
+COMMENT ON COLUMN kanban_joined_user.login_user_info_id IS 'ログインユーザ情報ID';
+COMMENT ON COLUMN kanban_joined_user.kanban_authority IS 'かんばん権限
+1:管理者
+0:一般';
 COMMENT ON TABLE lane IS 'レーン';
 COMMENT ON COLUMN lane.id IS 'id(自動採番)';
 COMMENT ON COLUMN lane.kanban_id IS 'かんばんID';

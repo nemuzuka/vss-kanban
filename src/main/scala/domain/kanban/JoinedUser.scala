@@ -26,7 +26,7 @@ object KanbanAuthority extends Enum[KanbanAuthority] {
   /** かんばん管理者. */
   case object Administrator extends KanbanAuthority("1")
   /** メンバー. */
-  case object Member extends KanbanAuthority("2")
+  case object Member extends KanbanAuthority("0")
   protected val values = Seq(Administrator, Member)
 }
 

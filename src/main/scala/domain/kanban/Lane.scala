@@ -59,8 +59,8 @@ case class LaneConfiguration(
 sealed abstract class LaneStatus(override val code: String) extends EnumEntry
 object LaneStatus extends Enum[LaneStatus] {
   /** Open. */
-  case object Open extends LaneStatus("1")
+  case object Open extends LaneStatus("0")
   /** Archive. */
-  case object Archive extends LaneStatus("2")
+  case object Archive extends LaneStatus("1")
   protected val values = Seq(Open, Archive)
 }
