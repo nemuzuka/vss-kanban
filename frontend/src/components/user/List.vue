@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content-view">
 
     <nav class="level">
       <!-- Left side -->
@@ -54,7 +54,7 @@
     components: {
       'user-list-row' : Row
     },
-    props:["listData", "refresh"],
+    props:["listData"],
     methods:{
       openEditDialog(e, id) {
         const self = this;

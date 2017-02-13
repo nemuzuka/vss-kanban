@@ -16,8 +16,18 @@ html {
 }
 body {
   background:#81C7D4;
-  height:100%;
+  height: auto;
+  min-height: 100%;
   background-image: url(./assets/texture.png);
+}
+
+.hide {
+  display: none !important;
+}
+
+/** かんばん詳細用のBody部 */
+body.kanban-detail {
+  height: 100%;
 }
 
 .container {
@@ -41,18 +51,19 @@ body {
   }
 }
 
-.content {
+.content-view {
   border: solid 1px #563F2E;
   background-color: #fff8e1;
   background-image: url(./assets/absurdity.png);
   padding: 1rem;
+  margin-bottom: 1rem;
 }
 
-.content table td, .content table th {
+.content-view table td, .content-view table th {
   border: 1px solid #363636;
 }
 
-.content table th {
+.content-view table th {
   background-color: #f5f5f5;
 }
 
@@ -65,6 +76,37 @@ body {
   margin-bottom: 0.75rem;
 }
 
+/** 戻るボタン. */
+p.back {
+  position: fixed;
+  top: 45%;
+  left: 1%;
+  z-index: 10;
+}
+p.back a:hover {
+  background: #999;
+}
+p.back a:hover {
+  text-decoration: none;
+}
+p.back a {
+  background: #666;
+  color: #fff;
+}
+p.back a {
+  opacity: .75;
+  text-decoration: none;
+  width: 55.5px;
+  height: 55.5px;
+  padding: 5px 0;
+  text-align: center;
+  display: block;
+  border-radius: 5px;
+  font-size: 200%;
+}
+p.back a i {
+  margin-top: 8px;
+}
 /** モーダルダイアログ */
 .modal-card-body {
   background-color: #fff8e1;

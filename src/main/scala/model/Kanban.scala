@@ -58,4 +58,51 @@ object Kanban extends SkinnyCRUDMapper[Kanban] {
     )
   }
 
+  /**
+   * ユーザIDによるかんばん一覧取得.
+   * 指定したユーザIDが担当者に含まれているかんばん一覧を取得します
+   * @param loginUserInfoId ユーザID
+   * @param viewArchiveKanban アーカイブ済みのかんばんも取得する場合、true
+   * @param session Session
+   */
+  def findByloginUserInfoId(loginUserInfoId: Long, viewArchiveKanban: Boolean)(implicit session: DBSession): Seq[(Kanban, KanbanJoinedUser)] = {
+
+    val (k, kju) = (Kanban.defaultAlias, KanbanJoinedUser.defaultAlias)
+
+    withSQL {
+      select.from(Kanban as k)
+        .innerJoin(KanbanJoinedUser as kju).on(k.id, kju.kanbanId)
+        .where(sqls.toAndConditionOpt(
+          Option(sqls"1 = 1"),
+          if (viewArchiveKanban) None else Option(sqls.eq(k.archiveStatus, "0"))
+        ))
+        .and.eq(kju.loginUserInfoId, loginUserInfoId)
+        .orderBy(k.archiveStatus.desc, k.id.desc)
+    }.map { rs =>
+      (Kanban.extract(rs, k.resultName), KanbanJoinedUser.extract(rs, kju.resultName))
+    }.list.apply()
+  }
+
+  /**
+   * 指定ID以外のかんばん一覧取得.
+   * 指定したかんばんID以外のかんばん一覧を取得します。
+   * @param ids 除外かんばんIDSeq
+   * @param viewArchiveKanban アーカイブ済みのかんばんも取得する場合、true
+   * @param session Session
+   */
+  def findByNotExistsIds(ids: Seq[Long], viewArchiveKanban: Boolean)(implicit session: DBSession): Seq[Kanban] = {
+    val k = Kanban.defaultAlias
+    withSQL {
+      select.from(Kanban as k)
+        .where(sqls.toAndConditionOpt(
+          Option(sqls"1 = 1"),
+          if (viewArchiveKanban) None else Option(sqls.eq(k.archiveStatus, "0"))
+        ))
+        .and.notIn(k.id, ids)
+        .orderBy(k.archiveStatus.desc, k.id.desc)
+    }.map { rs =>
+      Kanban.extract(rs, k.resultName)
+    }.list.apply()
+  }
+
 }

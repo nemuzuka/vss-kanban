@@ -22,6 +22,23 @@ export default class Utils {
   }
 
   /**
+   * スクロールをTOPに移動します
+   * @param id 対象ID(未設定の場合、body全体が対象)
+   */
+  static moveTop(id) {
+    let targetId;
+    if(undefined === id || id === '') {
+      targetId = 'body,html';
+    } else {
+      targetId = '#' + id;
+    }
+    $(targetId).animate({
+      scrollTop: 0
+    }, 0);
+    return false;
+  }
+
+  /**
    * エスケープ処理.
    * ・タグ情報をエスケープ
    * ・改行コードを<br>タグに変更

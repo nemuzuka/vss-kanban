@@ -1,7 +1,7 @@
 package infrastructure.kanban
 
 import domain.ApplicationException
-import domain.kanban._
+import domain.kanban.{ KanbanRow, _ }
 import domain.user.UserId
 import model.{ KanbanJoinedUser, LoginUserInfo }
 import scalikejdbc.DBSession
@@ -64,6 +64,37 @@ class KanbanRepositoryImpl extends KanbanRepository {
       //TODO ひとまず
       Left(new ApplicationException("", Seq()))
     }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def findByParam(param: KanbanSearchParam)(implicit session: DBSession): KanbanSearchResult = {
+    val joinedKanbans = model.Kanban.findByloginUserInfoId(param.loginUserId, param.viewArchiveKanban)
+    val joinedKanbanIds = joinedKanbans map (_._1.id)
+    val allKanbans = if (param.viewAllKanban || joinedKanbanIds.isEmpty) Seq() else model.Kanban.findByNotExistsIds(joinedKanbanIds, param.viewArchiveKanban)
+    KanbanSearchResult(
+      joinedKanbans = joinedKanbans map { v =>
+      KanbanRow(
+        id = v._1.id,
+        title = v._1.kanbanTitle,
+        description = v._1.kanbanDescription,
+        archiveStatus = v._1.archiveStatus,
+        lockVersion = v._1.lockVersion,
+        authority = v._2.kanbanAuthority
+      )
+    },
+      otherKanbans = allKanbans map { v =>
+      KanbanRow(
+        id = v.id,
+        title = v.kanbanTitle,
+        description = v.kanbanDescription,
+        archiveStatus = v.archiveStatus,
+        lockVersion = v.lockVersion,
+        authority = "0"
+      )
+    }
+    )
   }
 
   /**

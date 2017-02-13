@@ -4,7 +4,7 @@ import javax.inject.Inject
 
 import application.KanbanService
 import domain.kanban._
-import domain.user.UserId
+import domain.user.{ User, UserAuthority, UserId }
 import scalikejdbc.DBSession
 
 /**
@@ -65,5 +65,21 @@ class KanbanServiceImpl @Inject() (
     )
     lanes foreach model.Lane.create
     kanbanId
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def findByParam(
+    viewArchiveKanban: Boolean,
+    viewAllKanban: Boolean, loginUser: User
+  )(implicit session: DBSession): KanbanSearchResult = {
+
+    val searchParam = KanbanSearchParam(
+      viewArchiveKanban = viewArchiveKanban,
+      viewAllKanban = if (loginUser.authority == UserAuthority.ApplicationAdministrator && viewAllKanban) viewAllKanban else false,
+      loginUserId = loginUser.userId.get.id
+    )
+    kanbanRepository.findByParam(searchParam)
   }
 }

@@ -50,7 +50,8 @@ object KanbanJoinedUser extends SkinnyCRUDMapper[KanbanJoinedUser] {
   }
 
   /**
-   * かんばんIDによる取得
+   * かんばんIDによる取得.
+   * ソート順は、idの昇順です
    * @param kanbanId かんばんID
    * @param session Session
    * @return 該当データ(_1: LoginUserInfo, _2:KanbanJoinedUser)
@@ -60,7 +61,7 @@ object KanbanJoinedUser extends SkinnyCRUDMapper[KanbanJoinedUser] {
     withSQL {
       select.from(LoginUserInfo as lui)
         .innerJoin(KanbanJoinedUser as kju).on(lui.id, kju.loginUserInfoId)
-        .where.eq(kju.kanbanId, kanbanId)
+        .where.eq(kju.kanbanId, kanbanId).orderBy(kju.id.asc)
     }.map { rs =>
       (LoginUserInfo.extract(rs, lui.resultName), KanbanJoinedUser.extract(rs, kju.resultName))
     }.list.apply()

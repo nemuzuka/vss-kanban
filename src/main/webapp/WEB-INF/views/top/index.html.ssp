@@ -1,7 +1,8 @@
 <%@ val appVersion:String = util.ConfigHelper.appVersion %>
 ${include("/WEB-INF/views/loginUser.ssp")}
+<link href="/assets/css/top.css?version=${appVersion}" rel="stylesheet" type="text/css">
 
-<div id="main-content">
+<div id="main-content" style="height: 100%">
     <app-header></app-header>
     <dashboard></dashboard>
 </div>
