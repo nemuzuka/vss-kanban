@@ -39,6 +39,7 @@ lazy val baseSettings = servletSettings ++ Seq(
     "com.google.inject"       %  "guice"                % "4.1.0",
     "commons-codec"           %  "commons-codec"        % "1.10",
     "commons-io"              %  "commons-io"           % "2.4",
+    "net.coobird"             %  "thumbnailator"        % "[0.4, 0.5)",
     "org.skinny-framework"    %% "skinny-factory-girl"  % skinnyVersion   % "test",
     "org.skinny-framework"    %% "skinny-test"          % skinnyVersion   % "test",
     "org.eclipse.jetty"       %  "jetty-webapp"         % jettyVersion    % "container",

@@ -4,14 +4,17 @@ import domain.ApplicationException
 import domain.user.{ User, UserAuthority, UserId, UserRepository }
 import model.{ LoginUserInfo, LoginUserPassword }
 import scalikejdbc.DBSession
+import skinny.logging.Logger
 import util.{ CurrentDateUtil, PasswordDigestUtil }
 
-import scala.util.{ Success, Try }
+import scala.util.{ Failure, Success, Try }
 
 /**
  * UserRepositoryの実装クラス.
  */
 class UserRepositoryImpl extends UserRepository {
+
+  private[this] val logger = Logger(this.getClass)
 
   /**
    * @inheritdoc
@@ -53,7 +56,9 @@ class UserRepositoryImpl extends UserRepository {
       loginUserInfoId
     } match {
       case Success(id) => Right(id)
-      case _ => Left(new ApplicationException("duplicate", Seq("loginId")))
+      case Failure(e) =>
+        logger.error(e.getMessage, e)
+        Left(new ApplicationException("duplicate", Seq("loginId")))
     }
   }
 
@@ -109,7 +114,9 @@ class UserRepositoryImpl extends UserRepository {
       loginUserInfo.id
     } match {
       case Success(id) => Right(id)
-      case _ => Left(new ApplicationException("invalidVersion", Seq()))
+      case Failure(e) =>
+        logger.error(e.getMessage, e)
+        Left(new ApplicationException("invalidVersion", Seq()))
     }
   }
 

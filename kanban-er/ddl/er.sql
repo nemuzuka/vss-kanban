@@ -7,6 +7,10 @@ DROP INDEX IF EXISTS idx_login_user_info_01;
 
 /* Drop Tables */
 
+DROP TABLE IF EXISTS file_imege;
+DROP TABLE IF EXISTS kanban_attachment_file;
+DROP TABLE IF EXISTS note_attachment_file;
+DROP TABLE IF EXISTS attachment_file;
 DROP TABLE IF EXISTS kanban_joined_user;
 DROP TABLE IF EXISTS note;
 DROP TABLE IF EXISTS lane;
@@ -19,13 +23,59 @@ DROP TABLE IF EXISTS login_user_info;
 
 /* Create Tables */
 
+-- 添付ファイル
+CREATE TABLE attachment_file
+(
+	-- id(自動採番)
+	id bigserial NOT NULL,
+	-- 実ファイル名
+	real_file_name varchar(256) NOT NULL,
+	-- MimeType
+	mime_type varchar(256) NOT NULL,
+	-- 添付対象区分
+	-- 1:かんばん
+	-- 2:付箋
+	attachment_target_type varchar(2) NOT NULL,
+	-- ファイルサイズ
+	file_size bigint NOT NULL,
+	-- 横幅
+	width bigint,
+	-- 高さ
+	height bigint,
+	-- 横幅(サムネイル)
+	thumbnail_width bigint,
+	-- 高さ(サムネイル)
+	thumbnail_height bigint,
+	-- 最終更新日時
+	last_update_at timestamp NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
+-- ファイルイメージ
+CREATE TABLE file_imege
+(
+	-- id(自動採番)
+	id bigserial NOT NULL,
+	-- 添付ファイルID
+	attachment_file_id bigint NOT NULL,
+	-- ファイルイメージ区分
+	-- 1:オリジナル
+	-- 2:サムネイル
+	file_image_type varchar(2) NOT NULL,
+	-- イメージ
+	image bytea NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
 -- かんばん
 CREATE TABLE kanban
 (
 	-- id(自動採番)
 	id bigserial NOT NULL,
-	-- かんばん名
-	kanban_name varchar(256) NOT NULL,
+	-- かんばんタイトル
+	kanban_title varchar(256) NOT NULL,
 	-- 説明
 	kanban_description text NOT NULL,
 	-- アーカイブステータス
@@ -38,6 +88,19 @@ CREATE TABLE kanban
 	last_update_at timestamp NOT NULL,
 	-- バージョンNo
 	lock_version bigint NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
+-- かんばん - 添付ファイル
+CREATE TABLE kanban_attachment_file
+(
+	-- id(自動採番)
+	id bigserial NOT NULL,
+	-- かんばんID
+	kanban_id bigint NOT NULL,
+	-- 添付ファイルID
+	attachment_file_id bigint NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
@@ -129,14 +192,71 @@ CREATE TABLE note
 	note_title varchar(256) NOT NULL,
 	-- 説明
 	note_description text NOT NULL,
+	-- 期日
+	fix_date date,
+	-- ソート順
+	sort_num bigint NOT NULL,
+	-- 登録ユーザID
+	create_login_user_info_id bigint NOT NULL,
+	-- 作成日時
+	create_at timestamp NOT NULL,
+	-- 最終更新ユーザID
+	last_update_login_user_info_id bigint NOT NULL,
+	-- 最終更新日時
+	last_update_at timestamp NOT NULL,
 	-- バージョンNo
 	lock_version bigint NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
 
+-- 付箋 - 添付ファイル
+CREATE TABLE note_attachment_file
+(
+	-- id(自動採番)
+	id bigserial NOT NULL,
+	-- 付箋ID
+	note_id bigint NOT NULL,
+	-- 添付ファイルID
+	attachment_file_id bigint NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
 
 /* Create Foreign Keys */
+
+ALTER TABLE file_imege
+	ADD FOREIGN KEY (attachment_file_id)
+	REFERENCES attachment_file (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
+ALTER TABLE kanban_attachment_file
+	ADD FOREIGN KEY (attachment_file_id)
+	REFERENCES attachment_file (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
+ALTER TABLE note_attachment_file
+	ADD FOREIGN KEY (attachment_file_id)
+	REFERENCES attachment_file (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
+ALTER TABLE kanban_attachment_file
+	ADD FOREIGN KEY (kanban_id)
+	REFERENCES kanban (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
 
 ALTER TABLE kanban_joined_user
 	ADD FOREIGN KEY (kanban_id)
@@ -178,6 +298,14 @@ ALTER TABLE login_user_password
 ;
 
 
+ALTER TABLE note_attachment_file
+	ADD FOREIGN KEY (note_id)
+	REFERENCES note (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
 
 /* Create Indexes */
 
@@ -187,9 +315,29 @@ CREATE UNIQUE INDEX idx_login_user_info_01 ON login_user_info (login_id);
 
 /* Comments */
 
+COMMENT ON TABLE attachment_file IS '添付ファイル';
+COMMENT ON COLUMN attachment_file.id IS 'id(自動採番)';
+COMMENT ON COLUMN attachment_file.real_file_name IS '実ファイル名';
+COMMENT ON COLUMN attachment_file.mime_type IS 'MimeType';
+COMMENT ON COLUMN attachment_file.attachment_target_type IS '添付対象区分
+1:かんばん
+2:付箋';
+COMMENT ON COLUMN attachment_file.file_size IS 'ファイルサイズ';
+COMMENT ON COLUMN attachment_file.width IS '横幅';
+COMMENT ON COLUMN attachment_file.height IS '高さ';
+COMMENT ON COLUMN attachment_file.thumbnail_width IS '横幅(サムネイル)';
+COMMENT ON COLUMN attachment_file.thumbnail_height IS '高さ(サムネイル)';
+COMMENT ON COLUMN attachment_file.last_update_at IS '最終更新日時';
+COMMENT ON TABLE file_imege IS 'ファイルイメージ';
+COMMENT ON COLUMN file_imege.id IS 'id(自動採番)';
+COMMENT ON COLUMN file_imege.attachment_file_id IS '添付ファイルID';
+COMMENT ON COLUMN file_imege.file_image_type IS 'ファイルイメージ区分
+1:オリジナル
+2:サムネイル';
+COMMENT ON COLUMN file_imege.image IS 'イメージ';
 COMMENT ON TABLE kanban IS 'かんばん';
 COMMENT ON COLUMN kanban.id IS 'id(自動採番)';
-COMMENT ON COLUMN kanban.kanban_name IS 'かんばん名';
+COMMENT ON COLUMN kanban.kanban_title IS 'かんばんタイトル';
 COMMENT ON COLUMN kanban.kanban_description IS '説明';
 COMMENT ON COLUMN kanban.archive_status IS 'アーカイブステータス
 0:通常
@@ -197,6 +345,10 @@ COMMENT ON COLUMN kanban.archive_status IS 'アーカイブステータス
 COMMENT ON COLUMN kanban.create_at IS '作成日時';
 COMMENT ON COLUMN kanban.last_update_at IS '最終更新日時';
 COMMENT ON COLUMN kanban.lock_version IS 'バージョンNo';
+COMMENT ON TABLE kanban_attachment_file IS 'かんばん - 添付ファイル';
+COMMENT ON COLUMN kanban_attachment_file.id IS 'id(自動採番)';
+COMMENT ON COLUMN kanban_attachment_file.kanban_id IS 'かんばんID';
+COMMENT ON COLUMN kanban_attachment_file.attachment_file_id IS '添付ファイルID';
 COMMENT ON TABLE kanban_joined_user IS 'かんばん - 参加者';
 COMMENT ON COLUMN kanban_joined_user.id IS 'id(自動採番)';
 COMMENT ON COLUMN kanban_joined_user.kanban_id IS 'かんばんID';
@@ -234,7 +386,17 @@ COMMENT ON COLUMN note.lane_id IS 'レーンID';
 COMMENT ON COLUMN note.kanban_id IS 'かんばんID';
 COMMENT ON COLUMN note.note_title IS '付箋タイトル';
 COMMENT ON COLUMN note.note_description IS '説明';
+COMMENT ON COLUMN note.fix_date IS '期日';
+COMMENT ON COLUMN note.sort_num IS 'ソート順';
+COMMENT ON COLUMN note.create_login_user_info_id IS '登録ユーザID';
+COMMENT ON COLUMN note.create_at IS '作成日時';
+COMMENT ON COLUMN note.last_update_login_user_info_id IS '最終更新ユーザID';
+COMMENT ON COLUMN note.last_update_at IS '最終更新日時';
 COMMENT ON COLUMN note.lock_version IS 'バージョンNo';
+COMMENT ON TABLE note_attachment_file IS '付箋 - 添付ファイル';
+COMMENT ON COLUMN note_attachment_file.id IS 'id(自動採番)';
+COMMENT ON COLUMN note_attachment_file.note_id IS '付箋ID';
+COMMENT ON COLUMN note_attachment_file.attachment_file_id IS '添付ファイルID';
 
 
 

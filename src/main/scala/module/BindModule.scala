@@ -3,8 +3,10 @@ package module
 import application._
 import application.impl._
 import com.google.inject._
+import domain.attachment.AttachmentFileRepository
 import domain.kanban.KanbanRepository
 import domain.user.UserRepository
+import infrastructure.attachment.AttachmentFileRepositoryImpl
 import infrastructure.kanban.KanbanRepositoryImpl
 import infrastructure.user.UserRepositoryImpl
 
@@ -19,10 +21,12 @@ class BindModule extends AbstractModule {
     //traitに対するインスタンスの解決を定義
     bind(classOf[UserRepository]).to(classOf[UserRepositoryImpl]).in(classOf[Singleton])
     bind(classOf[KanbanRepository]).to(classOf[KanbanRepositoryImpl]).in(classOf[Singleton])
+    bind(classOf[AttachmentFileRepository]).to(classOf[AttachmentFileRepositoryImpl]).in(classOf[Singleton])
 
     bind(classOf[MaintenanceService]).to(classOf[MaintenanceServiceImpl]).in(classOf[Singleton])
     bind(classOf[UserSerivce]).to(classOf[UserSerivceImpl]).in(classOf[Singleton])
     bind(classOf[KanbanService]).to(classOf[KanbanServiceImpl]).in(classOf[Singleton])
+    bind(classOf[AttachmentFileService]).to(classOf[AttachmentFileServiceImpl]).in(classOf[Singleton])
   }
 }
 

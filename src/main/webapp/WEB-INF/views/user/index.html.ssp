@@ -6,4 +6,4 @@ ${include("/WEB-INF/views/loginUser.ssp")}
     <user-app></user-app>
 </div>
 
-<script type="text/javascript" src="/assets/js/user.js?version=${appVersion}"></script>
+<script type="text/javascript" src="/assets/js/user/index.js?version=${appVersion}"></script>

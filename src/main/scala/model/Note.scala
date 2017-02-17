@@ -10,6 +10,12 @@ case class Note(
   kanbanId: Long,
   noteTitle: String,
   noteDescription: String,
+  fixDate: Option[LocalDate] = None,
+  sortNum: Long,
+  createLoginUserInfoId: Long,
+  createAt: DateTime,
+  lastUpdateLoginUserInfoId: Long,
+  lastUpdateAt: DateTime,
   lockVersion: Long
 )
 
@@ -36,6 +42,12 @@ object Note extends SkinnyCRUDMapper[Note] {
     kanbanId = rs.get(rn.kanbanId),
     noteTitle = rs.get(rn.noteTitle),
     noteDescription = rs.get(rn.noteDescription),
+    fixDate = rs.get(rn.fixDate),
+    sortNum = rs.get(rn.sortNum),
+    createLoginUserInfoId = rs.get(rn.createLoginUserInfoId),
+    createAt = rs.get(rn.createAt),
+    lastUpdateLoginUserInfoId = rs.get(rn.lastUpdateLoginUserInfoId),
+    lastUpdateAt = rs.get(rn.lastUpdateAt),
     lockVersion = rs.get(rn.lockVersion)
   )
 }

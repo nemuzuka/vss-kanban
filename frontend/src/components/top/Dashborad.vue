@@ -3,14 +3,12 @@
     <div id="kanban-dashboard-area" class="container">
       <div class="content-view">
         <nav class="level">
-          <!-- Left side -->
           <div class="level-left">
             <div class="level-item">
               <h1 class="title">参加中のかんばん</h1>
             </div>
           </div>
 
-          <!-- Right side -->
           <div class="level-right">
 
             <p class="level-item">
