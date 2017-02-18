@@ -12,7 +12,9 @@
             </a>
           </div>
           <div class="image is-128x128" v-if="typeof item.thumbnailWidth !== 'undefined'">
-            <img :src="createUrl">
+            <a :href="createOriginalUrl" data-lightbox="sample" :data-title="item.realFileName">
+              <img :src="createUrl">
+            </a>
           </div>
         </div>
       </div>
@@ -21,6 +23,10 @@
 </template>
 
 <script>
+
+  import 'lightbox2/dist/js/lightbox.min.js'
+  import 'lightbox2/dist/css/lightbox.css'
+
   export default {
     name: 'file-item',
     props:["item", "type", "index"],
@@ -48,6 +54,10 @@
       createUrl() {
         const self = this;
         return "/attachment/dl?attachmentFileId=" + self.item.attachmentFileId + "&fileImageType=2"
+      },
+      createOriginalUrl() {
+        const self = this;
+        return "/attachment/dl?attachmentFileId=" + self.item.attachmentFileId + "&fileImageType=1"
       }
     }
   }
