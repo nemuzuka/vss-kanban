@@ -11,6 +11,7 @@ import scalikejdbc.DB
  */
 class DownloadController extends ApplicationController {
 
+  protectFromForgery()
   override val authentications = None
 
   /**

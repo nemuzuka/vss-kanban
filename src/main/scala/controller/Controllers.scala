@@ -73,6 +73,7 @@ object Controllers {
 
   object attachmentFileDownload extends _root_.controller.attachment.DownloadController with Routes {
     val executeUrl: Route = get("/attachment/dl")(execute).as('execute)
+    val executePostUrl: Route = post("/attachment/dl")(execute).as('execute)
   }
 
 }

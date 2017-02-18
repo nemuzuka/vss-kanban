@@ -16,5 +16,6 @@
   </head>
   <body id="body">
     ${unescape(body)}
+    <form id="downloader-form" class="hide" method="POST"></form>
   </body>
 </html>

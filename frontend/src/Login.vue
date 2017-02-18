@@ -31,9 +31,6 @@
 
           <p class="control has-addons has-addons-centered">
             <button class="button is-info is-large login" @click="login">
-              <span class="icon">
-                <i class="fa fa-sign-in"></i>
-              </span>
               <span>ログイン</span>
             </button>
           </p>
