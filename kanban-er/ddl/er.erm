@@ -11,8 +11,8 @@
 	</page_setting>
 	<category_index>0</category_index>
 	<zoom>1.0</zoom>
-	<x>0</x>
-	<y>176</y>
+	<x>451</x>
+	<y>266</y>
 	<default_color>
 		<r>128</r>
 		<g>128</g>
@@ -203,7 +203,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2017-02-05 11:11:48</creation_date>
-			<updated_date>2017-02-17 10:29:19</updated_date>
+			<updated_date>2017-02-18 11:40:38</updated_date>
 			<model_property>
 				<name>プロジェクト名</name>
 				<value></value>
@@ -2741,7 +2741,7 @@
 					<referenced_complex_unique_key>null</referenced_complex_unique_key>
 				</relation>
 			</connections>
-			<physical_name>file_imege</physical_name>
+			<physical_name>file_image</physical_name>
 			<logical_name>ファイルイメージ</logical_name>
 			<description>ファイルイメージ</description>
 			<constraint></constraint>

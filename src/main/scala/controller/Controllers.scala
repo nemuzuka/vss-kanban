@@ -2,11 +2,15 @@ package controller
 
 import skinny._
 import skinny.controller.AssetsController
+import skinny.micro.context.RichServletContext
 import skinny.micro.routing.Route
 
 object Controllers {
 
   def mount(ctx: ServletContext): Unit = {
+
+    RichServletContext(ctx).mount(attachmentFileAjax, "/attachment/file")
+
     root.mount(ctx)
     top.mount(ctx)
     user.mount(ctx)
@@ -60,6 +64,10 @@ object Controllers {
 
   object kanbanListAjax extends _root_.controller.kanban.ListConstoller with Routes {
     val listUrl: Route = get("/kanban/list")(list).as('list)
+  }
+
+  object attachmentFileAjax extends _root_.controller.attachment.UploadController with Routes {
+    val kanbanUrl: Route = post("/kanban")(kanban).as('kanban)
   }
 
 }

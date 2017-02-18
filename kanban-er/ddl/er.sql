@@ -7,7 +7,7 @@ DROP INDEX IF EXISTS idx_login_user_info_01;
 
 /* Drop Tables */
 
-DROP TABLE IF EXISTS file_imege;
+DROP TABLE IF EXISTS file_image;
 DROP TABLE IF EXISTS kanban_attachment_file;
 DROP TABLE IF EXISTS note_attachment_file;
 DROP TABLE IF EXISTS attachment_file;
@@ -53,7 +53,7 @@ CREATE TABLE attachment_file
 
 
 -- ファイルイメージ
-CREATE TABLE file_imege
+CREATE TABLE file_image
 (
 	-- id(自動採番)
 	id bigserial NOT NULL,
@@ -226,7 +226,7 @@ CREATE TABLE note_attachment_file
 
 /* Create Foreign Keys */
 
-ALTER TABLE file_imege
+ALTER TABLE file_image
 	ADD FOREIGN KEY (attachment_file_id)
 	REFERENCES attachment_file (id)
 	ON UPDATE RESTRICT
@@ -328,13 +328,13 @@ COMMENT ON COLUMN attachment_file.height IS '高さ';
 COMMENT ON COLUMN attachment_file.thumbnail_width IS '横幅(サムネイル)';
 COMMENT ON COLUMN attachment_file.thumbnail_height IS '高さ(サムネイル)';
 COMMENT ON COLUMN attachment_file.last_update_at IS '最終更新日時';
-COMMENT ON TABLE file_imege IS 'ファイルイメージ';
-COMMENT ON COLUMN file_imege.id IS 'id(自動採番)';
-COMMENT ON COLUMN file_imege.attachment_file_id IS '添付ファイルID';
-COMMENT ON COLUMN file_imege.file_image_type IS 'ファイルイメージ区分
+COMMENT ON TABLE file_image IS 'ファイルイメージ';
+COMMENT ON COLUMN file_image.id IS 'id(自動採番)';
+COMMENT ON COLUMN file_image.attachment_file_id IS '添付ファイルID';
+COMMENT ON COLUMN file_image.file_image_type IS 'ファイルイメージ区分
 1:オリジナル
 2:サムネイル';
-COMMENT ON COLUMN file_imege.image IS 'イメージ';
+COMMENT ON COLUMN file_image.image IS 'イメージ';
 COMMENT ON TABLE kanban IS 'かんばん';
 COMMENT ON COLUMN kanban.id IS 'id(自動採番)';
 COMMENT ON COLUMN kanban.kanban_title IS 'かんばんタイトル';

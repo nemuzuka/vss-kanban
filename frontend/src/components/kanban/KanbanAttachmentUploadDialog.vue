@@ -62,14 +62,24 @@
         if(files.length <= 0) {
           return;
         }
+
         const fd = new FormData();
-        files.forEach(function(file){
-          fd.append("files", file);
+        Object.keys(files).forEach(function(key){
+          fd.append("attachmentFiles", files[key]);
         });
 
-
-
-        alert("まずはアップロードします");
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: fd,
+          method: 'POST',
+          url: "/attachment/file/kanban",
+          contentType: false,
+          processData: false
+        }).then(
+          function (data) {
+            alert("きたー" + data.result);
+          }
+        );
       }
     }
   }
