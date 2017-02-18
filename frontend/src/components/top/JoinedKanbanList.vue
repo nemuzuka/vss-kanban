@@ -16,7 +16,7 @@
 
 <script>
 
-  import Row from './KanbanRow'
+  import Row from './KanbanItem'
 
   export default {
     name: 'joined-kanban-list',

@@ -204,7 +204,8 @@
       },
       openAttachmentUploadDialog() {
         const self = this;
-        self.$refs.kanbanAttachmentUploadDialog.openDialog();
+        //TODO 本来はかんばんに登録済みのファイル情報を設定する
+        self.$refs.kanbanAttachmentUploadDialog.openDialog([]);
       },
       refresh() {
         const self = this;

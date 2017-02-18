@@ -21,6 +21,7 @@ object Controllers {
     maintenanceInit.mount(ctx)
     login.mount(ctx)
     logout.mount(ctx)
+    attachmentFileDownload.mount(ctx)
     AssetsController.mount(ctx)
   }
 
@@ -68,6 +69,10 @@ object Controllers {
 
   object attachmentFileAjax extends _root_.controller.attachment.UploadController with Routes {
     val kanbanUrl: Route = post("/kanban")(kanban).as('kanban)
+  }
+
+  object attachmentFileDownload extends _root_.controller.attachment.DownloadController with Routes {
+    val executeUrl: Route = get("/attachment/dl")(execute).as('execute)
   }
 
 }

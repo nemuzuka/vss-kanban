@@ -37,4 +37,12 @@ trait AttachmentFileRepository extends Repository[AttachmentFile] {
    * @return 該当ファイル(存在しない場合、None)
    */
   def findByAttachmentFileId(attachmentFileId: Long, fileImageType: FileImageType)(implicit session: DBSession): Option[File]
+
+  /**
+   * 添付ファイルIDによるドメイン取得.
+   * @param attachmentFileId 添付ファイルID
+   * @param session Session
+   * @return 該当データ
+   */
+  def findById(attachmentFileId: Long)(implicit session: DBSession): Option[AttachmentFile]
 }

@@ -2,7 +2,7 @@ package infrastructure.attachment
 
 import java.io.File
 
-import domain.attachment.{ AttachmentFile, AttachmentFileRepository, FileImageType }
+import domain.attachment._
 import model.FileImage
 import scalikejdbc.DBSession
 import util.CurrentDateUtil
@@ -60,6 +60,27 @@ class AttachmentFileRepositoryImpl extends AttachmentFileRepository {
    */
   override def findByAttachmentFileId(attachmentFileId: Long, fileImageType: FileImageType)(implicit session: DBSession): Option[File] = {
     FileImage.findByParams(attachmentFileId, fileImageType.code)
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def findById(attachmentFileId: Long)(implicit session: DBSession): Option[AttachmentFile] = {
+    for (
+      attachmentFile <- model.AttachmentFile.findById(attachmentFileId)
+    ) yield {
+      AttachmentFile(
+        attachmentFileId = Option(AttachmentFileId(attachmentFile.id)),
+        realFileName = attachmentFile.realFileName,
+        mimeType = attachmentFile.mimeType,
+        attachmentTargetType = AttachmentTargetType.withCode(attachmentFile.attachmentTargetType).get,
+        fileSize = attachmentFile.fileSize,
+        width = attachmentFile.width,
+        height = attachmentFile.height,
+        thumbnailWidth = attachmentFile.thumbnailWidth,
+        thumbnailHeight = attachmentFile.thumbnailHeight
+      )
+    }
   }
 
   /**

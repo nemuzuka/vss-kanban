@@ -13,7 +13,7 @@ import skinny.filter._
 trait ApplicationController extends SkinnyController
     // with TxPerRequestFilter
     // with SkinnySessionFilter
-    with ErrorPageFilter with CommonControllerFeature {
+    with ErrorPageFilter with CommonControllerFeature with DiInjector {
 
   addErrorFilter {
     case e: Throwable =>

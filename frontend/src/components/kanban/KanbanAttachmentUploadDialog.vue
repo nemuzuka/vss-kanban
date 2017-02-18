@@ -13,6 +13,7 @@
         </article>
 
         <file-upload @FileUpload="fileUpload"></file-upload>
+        <saved-file-list :fileList="files" type="edit" @DeleteItem="deleteItem"></saved-file-list>
 
       </section>
       <footer class="modal-card-foot">
@@ -27,17 +28,17 @@
 <script>
   import Utils from '../../utils'
   import Upload from '../attachment/Upload'
+  import SavedFileList from '../attachment/List'
 
   export default {
     name: 'kanban-attachment-upload-dialog',
     components: {
       'file-upload': Upload,
+      'saved-file-list':SavedFileList
     },
     data() {
       return {
-        form:{
-          files:[],
-        },
+        files:[],
         msg:{
           globalErrMsg:"",
         },
@@ -47,8 +48,10 @@
       }
     },
     methods: {
-      openDialog() {
+      openDialog(savedFiles) {
         const self = this;
+        self.files.splice(0,self.files.length);
+        self.files.push(...savedFiles);
         self.clearMsg();
         Utils.openDialog('kanban-attachment-upload-dialog');
       },
@@ -58,16 +61,21 @@
       saveDialog() {
         alert("ほぞんするよ");
       },
-      fileUpload(e, files) {
-        if(files.length <= 0) {
+      deleteItem(e, index) {
+        const self = this;
+        self.files.splice(index, 1);
+      },
+      fileUpload(e, targetFiles) {
+        if(targetFiles.length <= 0) {
           return;
         }
 
         const fd = new FormData();
-        Object.keys(files).forEach(function(key){
-          fd.append("attachmentFiles", files[key]);
+        Object.keys(targetFiles).forEach(function(key){
+          fd.append("attachmentFiles", targetFiles[key]);
         });
 
+        const self = this;
         Utils.setAjaxDefault();
         $.ajax({
           data: fd,
@@ -77,9 +85,10 @@
           processData: false
         }).then(
           function (data) {
-            alert("きたー" + data.result);
+            self.files.push(...data.result);
           }
         );
+
       }
     }
   }
