@@ -14,7 +14,7 @@ case class Kanban(
   lockVersion: Long
 )
 
-object Kanban extends SkinnyCRUDMapper[Kanban] {
+object Kanban extends SkinnyCRUDMapper[Kanban] with OptimisticLockWithVersionFeature[Kanban] {
   override lazy val tableName = "kanban"
   override lazy val defaultAlias = createAlias("k")
 

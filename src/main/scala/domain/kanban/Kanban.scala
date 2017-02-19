@@ -69,6 +69,38 @@ case class Kanban(
 }
 
 /**
+ * かんばんObject.
+ */
+object Kanban {
+
+  /**
+   * かんばん初期データ生成.
+   * 登録したユーザをかんばんの管理者として登録します
+   * @param kanbanTitle かんばんタイトル
+   * @param kanbanDescription かんばん説明
+   * @param loginUserId 登録ユーザID
+   * @return かんばんドメイン
+   */
+  def createInitKanban(kanbanTitle: String, kanbanDescription: String, loginUserId: Long): Kanban = {
+    Kanban(
+      kanbanId = None,
+      configuration = KanbanConfiguration(
+        title = kanbanTitle,
+        description = kanbanDescription,
+        kanbanStatus = KanbanStatus.Open
+      ),
+      joinedUsers = Seq(
+        JoinedUser(
+          userId = UserId(loginUserId),
+          authority = KanbanAuthority.Administrator,
+          name = ""
+        )
+      )
+    )
+  }
+}
+
+/**
  * かんばんID.
  * @param id ID値
  */

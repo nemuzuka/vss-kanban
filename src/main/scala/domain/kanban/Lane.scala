@@ -5,12 +5,12 @@ import domain.{ Entity, Enum, EnumEntry, ValueObject }
 /**
  * レーンドメイン.
  * @param laneId レーンID
- * @param sortOrder ソート順
+ * @param sortNum ソート順
  * @param configuration レーン構成情報
  */
 case class Lane(
     laneId: Option[LaneId],
-    sortOrder: Long = Long.MaxValue,
+    sortNum: Long = Long.MaxValue,
     configuration: LaneConfiguration
 ) extends Entity[Lane] {
   override def sameIdentityAs(other: Lane): Boolean = (for {
@@ -26,6 +26,47 @@ case class Lane(
   def updated(configuration: LaneConfiguration): Lane = {
     this.copy(configuration = configuration)
   }
+}
+
+/**
+ * レーンObject.
+ */
+object Lane {
+
+  /**
+   * 初期レーン作成.
+   * 未実施 / 実施中 / 完了のレーンを作成します
+   * @return 初期レーンSeq
+   */
+  def createInitLane: Seq[Lane] = {
+    Seq(
+      Lane(
+        laneId = None,
+        configuration = LaneConfiguration(
+          laneStatus = LaneStatus.Open,
+          completeLane = false,
+          name = "未実施"
+        )
+      ),
+      Lane(
+        laneId = None,
+        configuration = LaneConfiguration(
+          laneStatus = LaneStatus.Open,
+          completeLane = false,
+          name = "実施中"
+        )
+      ),
+      Lane(
+        laneId = None,
+        configuration = LaneConfiguration(
+          laneStatus = LaneStatus.Open,
+          completeLane = true,
+          name = "完了"
+        )
+      )
+    )
+  }
+
 }
 
 /**
@@ -46,13 +87,11 @@ case class LaneId(
  * @param laneStatus レーンの状態
  * @param completeLane 「完了扱いのレーン」か
  * @param name レーン名
- * @param lockVersion lockVersion
  */
 case class LaneConfiguration(
   laneStatus: LaneStatus = LaneStatus.Open,
   completeLane: Boolean,
-  name: String,
-  lockVersion: Long = 1L
+  name: String
 )
 
 //レーンの状態
