@@ -1,6 +1,6 @@
 package application
 
-import domain.attachment.AttachmentTargetType
+import domain.attachment.{ AttachmentFileRow, AttachmentTargetType }
 import scalikejdbc.DBSession
 import skinny.micro.multipart.FileItem
 
@@ -18,29 +18,5 @@ trait AttachmentFileService {
    * @param session Session
    * @return AttachmentFileDtoSeq
    */
-  def create(fileItems: Seq[FileItem], attachmentTargetType: AttachmentTargetType)(implicit session: DBSession): Seq[AttachmentFileDto]
-
-  /**
-   * AttachmentFileDto.
-   * @param attachmentFileId 添付ファイルID
-   * @param realFileName 実ファイル名
-   * @param mimeType mimeType
-   * @param attachmentTargetType 添付対象区分
-   * @param fileSize ファイルサイズ
-   * @param width 横幅
-   * @param height 高さ
-   * @param thumbnailWidth サムネイル横幅
-   * @param thumbnailHeight サムネイル高さ
-   */
-  case class AttachmentFileDto(
-    attachmentFileId: Long,
-    realFileName: String,
-    mimeType: String,
-    attachmentTargetType: String,
-    fileSize: Long,
-    width: Option[Long],
-    height: Option[Long],
-    thumbnailWidth: Option[Long],
-    thumbnailHeight: Option[Long]
-  )
+  def create(fileItems: Seq[FileItem], attachmentTargetType: AttachmentTargetType)(implicit session: DBSession): Seq[AttachmentFileRow]
 }

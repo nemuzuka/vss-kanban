@@ -86,6 +86,22 @@ trait ApiController extends SkinnyApiController with CommonControllerFeature wit
   }
 
   /**
+   * JSON戻り値生成.
+   * 処理が終了した際のメッセージと戻り値を設定します。
+   * @param key メッセージKey
+   * @param result 戻り値
+   * @return JSON形式の戻り値
+   */
+  def createJsonResult(key: String, result: AnyRef): String = {
+    val message = getLabel(key)
+    toJSONString(JsonResult(
+      msgs = Seq(message),
+      errorMsg = Map(),
+      result = result
+    ), underscoreKeys = false)
+  }
+
+  /**
    * validateエラー時戻り値生成.
    * validator.hasErrors が true の場合に本処理を呼び出して下さい
    * @param validator エラーが存在するvalidate

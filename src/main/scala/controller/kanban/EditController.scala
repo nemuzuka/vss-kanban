@@ -16,6 +16,26 @@ class EditController extends ApiController {
   override val authentications = None
 
   /**
+   * 詳細情報取得.
+   */
+  def detail: String = {
+    val kanbanId = params.getAs[Long]("kanbanId").getOrElse(-1L)
+    val includeArchive = params.getAs[Boolean]("includeArchive").getOrElse(false)
+    val userInfo = session.getAs[User](Keys.Session.UserInfo).get
+
+    DB localTx { implicit session =>
+      val kanbanService = injector.getInstance(classOf[KanbanService])
+      kanbanService.findById(kanbanId, includeArchive, userInfo)
+    } match {
+      case Some(detail) =>
+        createJsonResult(detail)
+      case _ =>
+        val errorMsg = createErrorMsg(Keys.ErrMsg.Key, "noData", Seq())
+        createJsonResult(errorMsg)
+    }
+  }
+
+  /**
    * 登録.
    */
   def create: String = {
@@ -26,7 +46,7 @@ class EditController extends ApiController {
           val kanbanService = injector.getInstance(classOf[KanbanService])
           kanbanService.create(form.kanbanTitle, form.kanbanDescription, userInfo.userId.get.id)
         }
-        createJsonResult(Result(kanbanId = kanbanId))
+        createJsonResult("success", Result(kanbanId = kanbanId))
 
       case Left(v) => createJsonResult(v)
     }

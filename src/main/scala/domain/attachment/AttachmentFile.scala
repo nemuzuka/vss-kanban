@@ -53,6 +53,45 @@ object AttachmentFile extends LoanSupport {
   private[this] val ThumbnaiFileSize = 200
 
   /**
+   * AttachmentFileRow生成.
+   * @param attachmentFileId 添付ファイルID
+   * @param attachmentFile 添付ファイルドメイン
+   * @return AttachmentFileRow
+   */
+  def createAttachmentFileRow(attachmentFileId: Long, attachmentFile: AttachmentFile): AttachmentFileRow = {
+    AttachmentFileRow(
+      attachmentFileId = attachmentFileId,
+      realFileName = attachmentFile.realFileName,
+      mimeType = attachmentFile.mimeType,
+      attachmentTargetType = attachmentFile.attachmentTargetType.code,
+      fileSize = attachmentFile.fileSize,
+      width = attachmentFile.width,
+      height = attachmentFile.height,
+      thumbnailWidth = attachmentFile.thumbnailWidth,
+      thumbnailHeight = attachmentFile.thumbnailHeight
+    )
+  }
+
+  /**
+   * AttachmentFileRow生成.
+   * @param attachmentFile 添付ファイルDB値
+   * @return AttachmentFileRow
+   */
+  def createAttachmentFileRow(attachmentFile: model.AttachmentFile): AttachmentFileRow = {
+    AttachmentFileRow(
+      attachmentFileId = attachmentFile.id,
+      realFileName = attachmentFile.realFileName,
+      mimeType = attachmentFile.mimeType,
+      attachmentTargetType = attachmentFile.attachmentTargetType,
+      fileSize = attachmentFile.fileSize,
+      width = attachmentFile.width,
+      height = attachmentFile.height,
+      thumbnailWidth = attachmentFile.thumbnailWidth,
+      thumbnailHeight = attachmentFile.thumbnailHeight
+    )
+  }
+
+  /**
    * 添付ファイルドメイン生成.
    * @param fileItem ファイル
    * @param attachmentTargetType 添付対象区分

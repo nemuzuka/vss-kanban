@@ -37,10 +37,18 @@ object KanbanAttachmentFile extends SkinnyCRUDMapper[KanbanAttachmentFile] {
    * かんばんIDによる検索.
    * @param kanbanId かんばんID
    * @param session Session
-   * @return 該当データ
+   * @return 該当データ(_1: かんばん - 添付ファイル _2:添付ファイル
    */
-  def findByKanbanId(kanbanId: Long)(implicit session: DBSession): Seq[KanbanAttachmentFile] = {
-    KanbanAttachmentFile.where('kanbanId -> kanbanId).orderBy(defaultAlias.id.asc).apply()
+  def findByKanbanId(kanbanId: Long)(implicit session: DBSession): Seq[(KanbanAttachmentFile, AttachmentFile)] = {
+
+    val (kaf, af) = (KanbanAttachmentFile.defaultAlias, AttachmentFile.defaultAlias)
+    withSQL {
+      select.from(KanbanAttachmentFile as kaf)
+        .innerJoin(AttachmentFile as af).on(kaf.attachmentFileId, af.id)
+        .where.eq(kaf.kanbanId, kanbanId).orderBy(kaf.id.asc)
+    }.map { rs =>
+      (KanbanAttachmentFile.extract(rs, kaf.resultName), AttachmentFile.extract(rs, af.resultName))
+    }.list.apply()
   }
 
   /**
@@ -66,5 +74,4 @@ object KanbanAttachmentFile extends SkinnyCRUDMapper[KanbanAttachmentFile] {
       sqls.eq(KanbanAttachmentFile.column.kanbanId, kanbanId)
     )
   }
-
 }

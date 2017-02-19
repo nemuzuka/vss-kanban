@@ -1,6 +1,7 @@
 package application
 
-import domain.kanban.KanbanSearchResult
+import domain.attachment.AttachmentFileRow
+import domain.kanban.{ KanbanRow, KanbanSearchResult, LaneRow, NoteRow }
 import domain.user.User
 import scalikejdbc.DBSession
 
@@ -38,4 +39,30 @@ trait KanbanService {
     viewArchiveKanban: Boolean,
     viewAllKanban: Boolean, loginUser: User
   )(implicit session: DBSession): KanbanSearchResult
+
+  /**
+   * かんばん詳細情報取得.
+   * かんばんが存在しても、ログインユーザが参照可能でない場合、Noneを返します
+   * @param kanbanId かんばんID
+   * @param includeArchive アーカイブ済みのレーンや付箋を含める場合、true
+   * @param loginUser ログインユーザ情報
+   * @param session Session
+   * @return 該当データ(存在しない場合、None)
+   */
+  def findById(kanbanId: Long, includeArchive: Boolean, loginUser: User)(implicit session: DBSession): Option[KanbanDetail]
+
 }
+
+/**
+ * かんばん詳細.
+ * @param kanban かんばんドメイン
+ * @param lanes レーンDtoSeq
+ * @param noteMap 付箋DtoMap(key:レーンID value:付箋DtoSeq)
+ * @param kanbanAttachmentFiles かんばん添付ファイルSeq
+ */
+case class KanbanDetail(
+  kanban: KanbanRow,
+  lanes: Seq[LaneRow],
+  noteMap: Map[String, Seq[NoteRow]],
+  kanbanAttachmentFiles: Seq[AttachmentFileRow]
+)

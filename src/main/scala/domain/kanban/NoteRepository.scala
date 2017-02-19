@@ -18,7 +18,7 @@ trait NoteRepository extends Repository[Note] {
    * @param condition 検索条件
    * @return 該当データ
    */
-  def findByCondition(condition: NoteCondition): Seq[Note]
+  def findByCondition(condition: NoteCondition): Seq[NoteRow]
 
   /**
    * 永続処理.

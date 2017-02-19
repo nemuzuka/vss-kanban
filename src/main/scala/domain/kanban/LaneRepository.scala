@@ -24,7 +24,7 @@ trait LaneRepository extends Repository[Lane] {
    * @param session Session
    * @return 該当データ
    */
-  def findByKanbanId(kanbanId: KanbanId, includeArchive: Boolean)(implicit session: DBSession): Seq[Lane]
+  def findByKanbanId(kanbanId: KanbanId, includeArchive: Boolean)(implicit session: DBSession): Seq[LaneRow]
 
   /**
    * 永続処理.

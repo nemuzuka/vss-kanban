@@ -1,6 +1,6 @@
 package infrastructure.kanban
 
-import domain.kanban.{ KanbanId, Lane, LaneId, LaneRepository }
+import domain.kanban._
 import scalikejdbc.DBSession
 
 /**
@@ -15,7 +15,16 @@ class LaneRepositoryImpl extends LaneRepository {
   /**
    * @inheritdoc
    */
-  override def findByKanbanId(kanbanId: KanbanId, includeArchive: Boolean)(implicit session: DBSession): Seq[Lane] = ???
+  override def findByKanbanId(kanbanId: KanbanId, includeArchive: Boolean)(implicit session: DBSession): Seq[LaneRow] = {
+    model.Lane.findByKanbanId(kanbanId.id) map { v =>
+      LaneRow(
+        laneId = v.id.toString,
+        laneName = v.laneName,
+        archiveStatus = v.archiveStatus,
+        completeLane = if (v.completeLane == "1") true else false
+      )
+    }
+  }
 
   /**
    * @inheritdoc

@@ -60,6 +60,7 @@ object Controllers {
   }
 
   object kanbanEditAjax extends _root_.controller.kanban.EditController with Routes {
+    val detailUrl: Route = get("/kanban/detail")(detail).as('detail)
     val createUrl: Route = post("/kanban/create")(create).as('create)
     val attachmentUrl: Route = post("/kanban/attachmentFile")(attachmentFile).as('attachmentFile)
   }

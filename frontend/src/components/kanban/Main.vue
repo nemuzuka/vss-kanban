@@ -8,7 +8,7 @@
         <!-- Left side -->
         <div class="level-left">
           <div class="level-item">
-            <h1 class="title">かんばんの名前がココに入ります！</h1>
+            <h1 class="title">{{kanban.title}}</h1>
           </div>
         </div>
 
@@ -17,13 +17,22 @@
 
           <p class="level-item">
 
+            <label class="checkbox" style="margin-right: .75rem;">
+              <input type="checkbox" v-model="includeArchive" @change="refresh">
+              アーカイブ済みのレーンや付箋も見る
+            </label>
+
+            <a v-if="kanbanAttachmentFiles.length > 0" @click="openAttachmentDialog">
+              <span class="tag is-black is-large">添付有</span>
+            </a>
+
             <a class="button is-success" @click="openAttachmentUploadDialog">
               <span class="icon">
                 <i class="fa fa-paperclip"></i>
               </span>
             </a>
 
-            <a class="button is-success">
+            <a class="button is-success" v-if="kanban.authority === '1'">
               <span class="icon">
                 <i class="fa fa-cog"></i>
               </span>
@@ -161,6 +170,7 @@
     </div>
 
     <kanban-attachment-upload-dialog ref="kanbanAttachmentUploadDialog" :kanbanId="kanbanId" @Refresh="refresh"></kanban-attachment-upload-dialog>
+    <kanban-attachment-dialog ref="kanbanAttachmentDialog" :kanbanId="kanbanId"></kanban-attachment-dialog>
 
   </div>
 </template>
@@ -169,16 +179,29 @@
 
   import Utils from '../../utils'
   import KanbanAttachmentUploadDialog from './KanbanAttachmentUploadDialog'
+  import KanbanAttachmentDialog from './KanbanAttachmentDialog'
 
   export default {
     name: 'kanban-main',
     components: {
       'kanban-attachment-upload-dialog': KanbanAttachmentUploadDialog,
+      'kanban-attachment-dialog':KanbanAttachmentDialog
     },
     data() {
       return {
         kanbanId:null,
-        hideAreaId:""
+        hideAreaId:"",
+        includeArchive:false,
+        kanban:{
+          title:"",
+          description:"",
+          archiveStatus:"",
+          lockVersion:null,
+          authority:""
+        },
+        lanes:[],
+        noteMap:{},
+        kanbanAttachmentFiles:[]
       }
     },
     methods: {
@@ -186,12 +209,16 @@
         const self = this;
         self.kanbanId = kanbanId;
         self.hideAreaId = hideAreaId;
-        self.refresh();
+        self.includeArchive = false;
 
-        $('#body').addClass("kanban-detail");
-        $("#" + hideAreaId).addClass("hide");
-        $('#kanban-main-area').removeClass("hide");
-        Utils.moveTop();
+        const callBack = () => {
+          $('#body').addClass("kanban-detail");
+          $("#" + hideAreaId).addClass("hide");
+          $('#kanban-main-area').removeClass("hide");
+          Utils.moveTop();
+        }
+
+        self.refresh(callBack);
       },
       hideContext(e) {
         const self = this;
@@ -204,18 +231,63 @@
       },
       openAttachmentUploadDialog() {
         const self = this;
-        //TODO 本来はかんばんに登録済みのファイル情報を設定する
-        self.$refs.kanbanAttachmentUploadDialog.openDialog([]);
+        self.$refs.kanbanAttachmentUploadDialog.openDialog(self.kanbanAttachmentFiles);
       },
-      refresh() {
+      openAttachmentDialog() {
         const self = this;
-        alert(self.kanbanId + " の詳細情報取得しちゃうもんね！");
+        self.$refs.kanbanAttachmentDialog.openDialog(self.kanbanAttachmentFiles);
+      },
+      refresh(callBack) {
+        const self = this;
+        const param = {
+          kanbanId : self.kanbanId,
+          includeArchive: self.includeArchive
+        };
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: param,
+          method: 'GET',
+          url: "/kanban/detail"
+        }).then(
+          function (data) {
+            if(Utils.alertErrorMsg(data)) {
+              return;
+            }
+            self.setKanbanData(data.result);
+
+            if(typeof callBack === 'function') {
+              callBack();
+            }
+
+          }
+        );
+      },
+      setKanbanData(kanbanDetail) {
+        const self = this;
+        const kanban = kanbanDetail.kanban;
+        self.kanban.title = kanban.title;
+        self.kanban.description = kanban.description;
+        self.kanban.archiveStatus = kanban.archiveStatus;
+        self.kanban.lockVersion = kanban.lockVersion;
+        self.kanban.authority = kanban.authority;
+
+        self.lanes.splice(0,self.lanes.length);
+        self.lanes.push(...kanbanDetail.lanes);
+
+        self.noteMap = kanbanDetail.noteMap;
+
+        self.kanbanAttachmentFiles.splice(0,self.kanbanAttachmentFiles.length);
+        self.kanbanAttachmentFiles.push(...kanbanDetail.kanbanAttachmentFiles);
       }
     }
   }
 </script>
 
 <style scoped>
+
+  .level-item > a > .tag {
+    margin-right: 0.75rem;
+  }
 
   .kanban-title-area, .kanban-main-container {
     padding: 1rem 4rem;

@@ -48,7 +48,7 @@
 
     <kanban-main ref="kanbanMain" @Refresh="refresh"></kanban-main>
 
-    <kanban-edit-dialog ref="editDialog" @Refresh="refresh"></kanban-edit-dialog>
+    <kanban-edit-dialog ref="editDialog" @Refresh="refresh" @ViewKanbanMain="viewKanbanMain"></kanban-edit-dialog>
   </div>
 </template>
 

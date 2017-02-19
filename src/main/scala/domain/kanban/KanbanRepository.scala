@@ -1,5 +1,7 @@
 package domain.kanban
 
+import domain.attachment.AttachmentFileRow
+import domain.user.{ User, UserAuthority }
 import domain.{ ApplicationException, Repository }
 import scalikejdbc.DBSession
 
@@ -11,10 +13,20 @@ trait KanbanRepository extends Repository[Kanban] {
   /**
    * かんばん取得.
    * @param kanbanId かんばんID
+   * @param loginUser ログインユーザ情報
    * @param session Session
-   * @return 該当データ
+   * @return 該当データ(ログインユーザの参照権限がない場合もNone)
    */
-  def findById(kanbanId: KanbanId)(implicit session: DBSession): Option[Kanban]
+  def findById(kanbanId: KanbanId, loginUser: User)(implicit session: DBSession): Option[Kanban]
+
+  /**
+   * かんばん取得.
+   * @param kanbanId かんばんID
+   * @param loginUser ログインユーザ情報
+   * @param session Session
+   * @return 該当データ(ログインユーザの参照権限がない場合もNone)
+   */
+  def findRowById(kanbanId: KanbanId, loginUser: User)(implicit session: DBSession): Option[KanbanRow]
 
   /**
    * 永続処理.
@@ -26,6 +38,7 @@ trait KanbanRepository extends Repository[Kanban] {
 
   /**
    * 検索条件に伴う検索.
+   * 引数のログインユーザ権限がアプリケーション管理者の場合、常にかんばんの管理者として判断します
    * @param param 検索条件
    * @param session Session
    * @return 検索結果
@@ -42,16 +55,25 @@ trait KanbanRepository extends Repository[Kanban] {
    */
   def storeKanbanAttachmentFile(kanbanId: Long, attachmentFileIdSeq: Seq[Long])(implicit session: DBSession): Unit
 
+  /**
+   * かんばんに紐づく添付ファイル一覧取得.
+   * @param kanbanId かんばんID
+   * @param session Session
+   * @return 該当データ
+   */
+  def findByKanbanId(kanbanId: KanbanId)(implicit session: DBSession): Seq[AttachmentFileRow]
 }
 
 /**
  * 検索条件.
  * @param loginUserId ログインユーザID
+ * @param userAuthority ログインユーザ権限
  * @param viewArchiveKanban アーカイブ済みのかんばんも取得する場合、true
  * @param viewAllKanban 登録済みのかんばんも取得する場合、true
  */
 case class KanbanSearchParam(
   loginUserId: Long,
+  userAuthority: UserAuthority,
   viewArchiveKanban: Boolean,
   viewAllKanban: Boolean
 )

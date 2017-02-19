@@ -86,7 +86,7 @@
       closeDialog() {
         Utils.closeDialog('kanban-edit-dialog');
       },
-      saveDialog() {
+      saveDialog(e) {
         const self = this;
         Utils.setAjaxDefault();
         $.ajax({
@@ -98,9 +98,12 @@
             if(Utils.writeErrorMsg(self, data)) {
               return;
             }
-            self.clearMsg();
-            self.closeDialog();
-            alert("このかんばんの画面に遷移します！")
+            Utils.viewInfoMsg(data);
+            setTimeout(function(){
+              self.clearMsg();
+              self.closeDialog();
+              self.$emit("ViewKanbanMain", e, data.result.kanbanId);
+            },1500);
           }
         );
       }

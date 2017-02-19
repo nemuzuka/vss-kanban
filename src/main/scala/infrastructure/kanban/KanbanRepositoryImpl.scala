@@ -1,8 +1,9 @@
 package infrastructure.kanban
 
 import domain.ApplicationException
+import domain.attachment.{ AttachmentFile, AttachmentFileRow }
 import domain.kanban.{ KanbanRow, _ }
-import domain.user.UserId
+import domain.user.{ User, UserAuthority, UserId }
 import model.{ KanbanAttachmentFile, KanbanJoinedUser, LoginUserInfo }
 import scalikejdbc.DBSession
 import util.CurrentDateUtil
@@ -15,8 +16,8 @@ class KanbanRepositoryImpl extends KanbanRepository {
   /**
    * @inheritdoc
    */
-  override def findById(kanbanId: KanbanId)(implicit session: DBSession): Option[Kanban] = {
-    for (
+  override def findById(kanbanId: KanbanId, loginUser: User)(implicit session: DBSession): Option[Kanban] = {
+    val result = for (
       kanban <- model.Kanban.findById(kanbanId.id)
     ) yield {
       val joinedUsers = model.KanbanJoinedUser.findByKanbanId(kanbanId.id)
@@ -29,6 +30,31 @@ class KanbanRepositoryImpl extends KanbanRepository {
           lockVersion = kanban.lockVersion
         ),
         joinedUsers = joinedUsers map createJoinedUser
+      )
+    }
+
+    //かんばんが参照できるかチェック
+    for (
+      kanban <- result if kanban.isJoined(loginUser)
+    ) yield {
+      kanban
+    }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def findRowById(kanbanId: KanbanId, loginUser: User)(implicit session: DBSession): Option[KanbanRow] = {
+    for (
+      kanban <- findById(kanbanId, loginUser)
+    ) yield {
+      KanbanRow(
+        id = kanban.kanbanId.get.id,
+        title = kanban.configuration.title,
+        description = kanban.configuration.description,
+        archiveStatus = kanban.configuration.kanbanStatus.code,
+        lockVersion = kanban.configuration.lockVersion,
+        authority = if (kanban.isAdministrator(loginUser)) "1" else "0"
       )
     }
   }
@@ -81,7 +107,7 @@ class KanbanRepositoryImpl extends KanbanRepository {
         description = v._1.kanbanDescription,
         archiveStatus = v._1.archiveStatus,
         lockVersion = v._1.lockVersion,
-        authority = v._2.kanbanAuthority
+        authority = if (param.userAuthority == UserAuthority.ApplicationAdministrator) "1" else v._2.kanbanAuthority
       )
     },
       otherKanbans = allKanbans map { v =>
@@ -91,7 +117,7 @@ class KanbanRepositoryImpl extends KanbanRepository {
         description = v.kanbanDescription,
         archiveStatus = v.archiveStatus,
         lockVersion = v.lockVersion,
-        authority = "0"
+        authority = if (param.userAuthority == UserAuthority.ApplicationAdministrator) "1" else "0"
       )
     }
     )
@@ -111,6 +137,15 @@ class KanbanRepositoryImpl extends KanbanRepository {
         attachmentFileId = attachmentFileId
       ))
     })
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def findByKanbanId(kanbanId: KanbanId)(implicit session: DBSession): Seq[AttachmentFileRow] = {
+    KanbanAttachmentFile.findByKanbanId(kanbanId.id).map { v =>
+      AttachmentFile.createAttachmentFileRow(v._2)
+    }
   }
 
   /**
