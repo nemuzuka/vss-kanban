@@ -31,6 +31,17 @@ trait KanbanRepository extends Repository[Kanban] {
    * @return 検索結果
    */
   def findByParam(param: KanbanSearchParam)(implicit session: DBSession): KanbanSearchResult
+
+  /**
+   * かんばん - 添付ファイル永続処理.
+   * 引数のかんばんIDに紐づく添付ファイルIDを永続化します。
+   * 永続化対象外のかんばんIDと添付ファイルIDの関連は削除します
+   * @param kanbanId かんばんID
+   * @param attachmentFileIdSeq 添付ファイルIDSeq
+   * @param session Session
+   */
+  def storeKanbanAttachmentFile(kanbanId: Long, attachmentFileIdSeq: Seq[Long])(implicit session: DBSession): Unit
+
 }
 
 /**

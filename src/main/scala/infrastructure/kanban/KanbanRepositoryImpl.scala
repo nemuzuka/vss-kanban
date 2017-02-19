@@ -3,7 +3,7 @@ package infrastructure.kanban
 import domain.ApplicationException
 import domain.kanban.{ KanbanRow, _ }
 import domain.user.UserId
-import model.{ KanbanJoinedUser, LoginUserInfo }
+import model.{ KanbanAttachmentFile, KanbanJoinedUser, LoginUserInfo }
 import scalikejdbc.DBSession
 import util.CurrentDateUtil
 
@@ -95,6 +95,22 @@ class KanbanRepositoryImpl extends KanbanRepository {
       )
     }
     )
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def storeKanbanAttachmentFile(kanbanId: Long, attachmentFileIdSeq: Seq[Long])(implicit session: DBSession): Unit = {
+    //かんばんIDに紐づく関連を削除
+    KanbanAttachmentFile.deleteByKanbanId(kanbanId)
+    //引数の情報を登録
+    attachmentFileIdSeq foreach (attachmentFileId => {
+      KanbanAttachmentFile.create(KanbanAttachmentFile(
+        id = -1L,
+        kanbanId = kanbanId,
+        attachmentFileId = attachmentFileId
+      ))
+    })
   }
 
   /**

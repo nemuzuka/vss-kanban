@@ -32,4 +32,39 @@ object KanbanAttachmentFile extends SkinnyCRUDMapper[KanbanAttachmentFile] {
     kanbanId = rs.get(rn.kanbanId),
     attachmentFileId = rs.get(rn.attachmentFileId)
   )
+
+  /**
+   * かんばんIDによる検索.
+   * @param kanbanId かんばんID
+   * @param session Session
+   * @return 該当データ
+   */
+  def findByKanbanId(kanbanId: Long)(implicit session: DBSession): Seq[KanbanAttachmentFile] = {
+    KanbanAttachmentFile.where('kanbanId -> kanbanId).orderBy(defaultAlias.id.asc).apply()
+  }
+
+  /**
+   * 登録.
+   * @param entity 対象Entity
+   * @param session Session
+   * @return 生成ID
+   */
+  def create(entity: KanbanAttachmentFile)(implicit session: DBSession): Long = {
+    KanbanAttachmentFile.createWithAttributes(
+      'kanbanId -> entity.kanbanId,
+      'attachmentFileId -> entity.attachmentFileId
+    )
+  }
+
+  /**
+   * かんばんIDによる削除.
+   * @param kanbanId かんばんID
+   * @param session Session
+   */
+  def deleteByKanbanId(kanbanId: Long)(implicit session: DBSession): Long = {
+    KanbanAttachmentFile.deleteBy(
+      sqls.eq(KanbanAttachmentFile.column.kanbanId, kanbanId)
+    )
+  }
+
 }

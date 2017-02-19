@@ -36,6 +36,7 @@
       'file-upload': Upload,
       'saved-file-list':SavedFileList
     },
+    props:["kanbanId"],
     data() {
       return {
         files:[],
@@ -58,8 +59,27 @@
       closeDialog() {
         Utils.closeDialog('kanban-attachment-upload-dialog');
       },
-      saveDialog() {
-        alert("ほぞんするよ");
+      saveDialog(e) {
+        const self = this;
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: {
+            kanbanId: self.kanbanId,
+            attachmentFileIds: self.files.map(function(element, index, array) {
+              return element.attachmentFileId;
+            })
+          },
+          method: 'POST',
+          url: "/kanban/attachmentFile"
+        }).then(
+          function (data) {
+            Utils.viewInfoMsg(data);
+            setTimeout(function(){
+              self.closeDialog();
+              self.$emit("Refresh", e);
+            },1500);
+          }
+        );
       },
       deleteItem(e, index) {
         const self = this;
@@ -92,7 +112,5 @@
       }
     }
   }
-
-
 
 </script>

@@ -160,7 +160,7 @@
 
     </div>
 
-    <kanban-attachment-upload-dialog ref="kanbanAttachmentUploadDialog"></kanban-attachment-upload-dialog>
+    <kanban-attachment-upload-dialog ref="kanbanAttachmentUploadDialog" :kanbanId="kanbanId" @Refresh="refresh"></kanban-attachment-upload-dialog>
 
   </div>
 </template>
