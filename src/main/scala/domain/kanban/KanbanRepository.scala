@@ -62,6 +62,18 @@ trait KanbanRepository extends Repository[Kanban] {
    * @return 該当データ
    */
   def findByKanbanId(kanbanId: KanbanId)(implicit session: DBSession): Seq[AttachmentFileRow]
+
+  /**
+   * かんばん削除.
+   * かんばんの管理者権限を所有するユーザのみ操作を受け付けます
+   * @param kanbanId かんばんID
+   * @param lockVersion かんばんバージョンNo
+   * @param loginUser ログインユーザ情報
+   * @param session Session
+   * @return Right:かんばんID, Left:エラー情報
+   */
+  def deleteById(kanbanId: KanbanId, lockVersion: Long, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
+
 }
 
 /**

@@ -65,6 +65,10 @@
             </div>
 
             <div class="has-text-right">
+              <a class="button is-danger" @click="deleteKanban">
+                <span class="icon"><i class="fa fa-times"></i></span>
+                <span>削除</span>
+              </a>
               <a class="button is-info" @click="saveBase">変更</a>
             </div>
 
@@ -230,6 +234,34 @@
             Utils.viewInfoMsg(data);
             setTimeout(function(){
               self.refreshBase();
+            },1500);
+          }
+        );
+      },
+      deleteKanban(e) {
+        if(window.confirm("このかんばんを削除して本当によろしいですか？(「アーカイブ」することで見えなくすることもできます)") == false) {
+            return;
+        }
+        const self = this;
+        const param = {
+          id: self.baseForm.id,
+          lockVersion: self.baseForm.lockVersion
+        };
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: param,
+          method: 'POST',
+          url: "/kanban/admin/delete"
+        }).then(
+          function (data) {
+            if(Utils.writeErrorMsg(self, data)) {
+              return;
+            }
+            Utils.viewInfoMsg(data);
+            setTimeout(function(){
+              $('#body').addClass("kanban-detail");
+              $("#kanban-settings-area").addClass("hide");
+              self.$emit("Back", e);
             },1500);
           }
         );

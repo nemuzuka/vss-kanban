@@ -185,6 +185,26 @@ class KanbanRepositoryImpl extends KanbanRepository {
   }
 
   /**
+   * @inheritdoc
+   */
+  override def deleteById(kanbanId: KanbanId, lockVersion: Long, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
+    val result = for (
+      kanban <- findById(kanbanId, loginUser) if kanban.isAdministrator(loginUser)
+    ) yield {
+      Try {
+        model.Kanban.deleteByIdAndVersion(kanbanId.id, lockVersion)
+        kanbanId.id
+      } match {
+        case Success(id) => Right(id)
+        case Failure(e) =>
+          logger.error(e.getMessage, e)
+          Left(new ApplicationException("invalidVersion", Seq()))
+      }
+    }
+    result getOrElse Left(new ApplicationException("noData", Seq()))
+  }
+
+  /**
    * リポジトリ上の全件取得
    *
    * @param session Session

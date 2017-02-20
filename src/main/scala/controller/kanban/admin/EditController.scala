@@ -2,6 +2,7 @@ package controller.kanban.admin
 
 import application.KanbanAdminService
 import controller.Keys
+import domain.kanban.{ KanbanId, KanbanRepository }
 import domain.user.User
 import scalikejdbc.DB
 
@@ -53,4 +54,25 @@ class EditController extends controller.kanban.EditController {
     }
   }
 
+  /**
+   * 削除.
+   */
+  def delete: String = {
+    val kanbanId = params.getAs[Long]("id").getOrElse(-1L)
+    val lockVersion = params.getAs[Long]("lockVersion").getOrElse(-1L)
+    val userInfo = session.getAs[User](Keys.Session.UserInfo).get
+
+    import scalikejdbc.TxBoundary.Either._
+    DB.localTx { implicit session =>
+      val kanbanRepository = injector.getInstance(classOf[KanbanRepository])
+      kanbanRepository.deleteById(KanbanId(kanbanId), lockVersion, userInfo)
+    } match {
+      case Right(_) =>
+        createJsonResult("success")
+      case Left(exception) =>
+        val errorMsg = createErrorMsg(Keys.ErrMsg.Key, exception.messageKey, exception.paramKey)
+        createJsonResult(errorMsg)
+    }
+
+  }
 }

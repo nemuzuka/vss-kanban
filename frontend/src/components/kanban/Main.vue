@@ -61,7 +61,7 @@
 
     </div>
 
-    <kanban-settings ref="kanbanSettings" :kanbanId="kanbanId" @Refresh="refresh"></kanban-settings>
+    <kanban-settings ref="kanbanSettings" :kanbanId="kanbanId" @Refresh="refresh" @Back="hideContext"></kanban-settings>
   </div>
 
 </template>
