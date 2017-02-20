@@ -29,11 +29,14 @@
             </label>
           </p>
 
-          <p class="control has-addons has-addons-centered">
-            <button class="button is-info is-large login" @click="login">
+          <div class="has-text-centered">
+            <a class="button is-info is-large login" @click="login">
+              <span class="icon is-medium">
+                <i class="fa fa-sign-in"></i>
+              </span>
               <span>ログイン</span>
-            </button>
-          </p>
+            </a>
+          </div>
 
         </div>
       </div>
@@ -116,7 +119,7 @@
 </script>
 
 <style scoped>
-  .control.has-addons .button.login {
-    border-radius: 3px;
+  .message-body a {
+    text-decoration: none;
   }
 </style>
