@@ -134,7 +134,7 @@ class KanbanRepositoryImpl extends KanbanRepository {
   override def findByParam(param: KanbanSearchParam)(implicit session: DBSession): KanbanSearchResult = {
     val joinedKanbans = model.Kanban.findByloginUserInfoId(param.loginUserId, param.viewArchiveKanban)
     val joinedKanbanIds = joinedKanbans map (_._1.id)
-    val allKanbans = if (param.viewAllKanban || joinedKanbanIds.isEmpty) Seq() else model.Kanban.findByNotExistsIds(joinedKanbanIds, param.viewArchiveKanban)
+    val allKanbans = if (!param.viewAllKanban || joinedKanbanIds.isEmpty) Seq() else model.Kanban.findByNotExistsIds(joinedKanbanIds, param.viewArchiveKanban)
     KanbanSearchResult(
       joinedKanbans = joinedKanbans map { v =>
       KanbanRow(

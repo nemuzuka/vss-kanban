@@ -69,7 +69,7 @@ trait KanbanRepository extends Repository[Kanban] {
  * @param loginUserId ログインユーザID
  * @param userAuthority ログインユーザ権限
  * @param viewArchiveKanban アーカイブ済みのかんばんも取得する場合、true
- * @param viewAllKanban 登録済みのかんばんも取得する場合、true
+ * @param viewAllKanban 参加していないかんばんも取得する場合、true
  */
 case class KanbanSearchParam(
   loginUserId: Long,

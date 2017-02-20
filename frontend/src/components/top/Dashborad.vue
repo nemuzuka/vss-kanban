@@ -99,13 +99,16 @@
           function (data) {
             const msg = "この条件に合致するかんばんは登録されていません";
             const result = data.result;
-            self.listData.joinedKanbans = result.joinedKanbans;
+
+            self.listData.joinedKanbans.splice(0,self.listData.joinedKanbans.length);
+            self.listData.joinedKanbans.push(...result.joinedKanbans);
             self.listData.joinedKanbanMsg = "";
             if(self.listData.joinedKanbans.length <= 0) {
               self.listData.joinedKanbanMsg = msg;
             }
-            self.listData.otherKanbans = result.otherKanbans;
-            self.listData.otherKanbanMsg = "";
+
+            self.listData.otherKanbans.splice(0,self.listData.otherKanbans.length);
+            self.listData.otherKanbans.push(...result.otherKanbans);
             if(self.listData.otherKanbans.length <= 0) {
               self.listData.otherKanbanMsg = msg;
             }

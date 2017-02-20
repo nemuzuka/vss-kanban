@@ -12,7 +12,7 @@
 
     <div v-if="listData.otherKanbans.length > 0">
       <div class="columns kanban">
-        <kanban-item v-for="item in listData.otherKanbans" :item="item" @ViewKanbanMain="viewKanbanMain"></kanban-item>
+        <kanban-item v-for="item in listData.otherKanbans" :item="item" :key="item.id" @ViewKanbanMain="viewKanbanMain"></kanban-item>
       </div>
     </div>
 

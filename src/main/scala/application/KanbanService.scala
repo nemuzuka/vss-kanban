@@ -27,10 +27,10 @@ trait KanbanService {
   /**
    * かんばん検索.
    * 引数の情報を元に、かんばんを検索します。
-   * ただし、登録済みのかんばんも取得する条件が有効になる場合は、
+   * ただし、参加していないかんばんも取得する条件が有効になる場合は、
    * ログインユーザがアプリケーション管理者の場合のみです
    * @param viewArchiveKanban アーカイブ済みのかんばんも取得する場合、true
-   * @param viewAllKanban 登録済みのかんばんも取得する場合、true
+   * @param viewAllKanban 参加していないかんばんも取得する場合、true
    * @param loginUser ログインユーザ情報
    * @param session Session
    * @return 検索結果
