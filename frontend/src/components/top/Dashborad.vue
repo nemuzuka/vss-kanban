@@ -109,6 +109,7 @@
 
             self.listData.otherKanbans.splice(0,self.listData.otherKanbans.length);
             self.listData.otherKanbans.push(...result.otherKanbans);
+            self.listData.otherKanbanMsg = "";
             if(self.listData.otherKanbans.length <= 0) {
               self.listData.otherKanbanMsg = msg;
             }
