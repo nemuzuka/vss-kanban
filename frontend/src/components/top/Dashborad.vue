@@ -90,6 +90,8 @@
       },
       refresh() {
         const self = this;
+        self.listData.joinedKanbanMsg = "";
+        self.listData.otherKanbanMsg = "";
         Utils.setAjaxDefault();
         $.ajax({
           data: self.form,
@@ -102,14 +104,12 @@
 
             self.listData.joinedKanbans.splice(0,self.listData.joinedKanbans.length);
             self.listData.joinedKanbans.push(...result.joinedKanbans);
-            self.listData.joinedKanbanMsg = "";
             if(self.listData.joinedKanbans.length <= 0) {
               self.listData.joinedKanbanMsg = msg;
             }
 
             self.listData.otherKanbans.splice(0,self.listData.otherKanbans.length);
             self.listData.otherKanbans.push(...result.otherKanbans);
-            self.listData.otherKanbanMsg = "";
             if(self.listData.otherKanbans.length <= 0) {
               self.listData.otherKanbanMsg = msg;
             }
