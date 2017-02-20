@@ -114,8 +114,8 @@ class EditController extends controller.kanban.EditController {
     } match {
       case Right(_) =>
         createJsonResult("success")
-      case _ =>
-        val errorMsg = createErrorMsg(Keys.ErrMsg.Key, "noData", Seq())
+      case Left(exception) =>
+        val errorMsg = createErrorMsg(Keys.ErrMsg.Key, exception.messageKey, exception.paramKey)
         createJsonResult(errorMsg)
     }
   }
