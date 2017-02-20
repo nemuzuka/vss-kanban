@@ -1,5 +1,5 @@
 <template>
-  <div class="column is-3">
+  <div class="column is-3" :class="{ 'archived': item.archiveStatus === '1' }">
 
     <div class="card" @click="viewKanbanMain">
       <header class="card-header">
@@ -29,3 +29,11 @@
     }
   }
 </script>
+
+<style scoped>
+
+  .archived > .card {
+    background-color:#eee;
+  }
+
+</style>

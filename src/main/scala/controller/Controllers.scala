@@ -17,6 +17,7 @@ object Controllers {
     userListAjax.mount(ctx)
     userEditAjax.mount(ctx)
     kanbanEditAjax.mount(ctx)
+    kanbanAdminEditAjax.mount(ctx)
     kanbanListAjax.mount(ctx)
     maintenanceInit.mount(ctx)
     login.mount(ctx)
@@ -63,6 +64,11 @@ object Controllers {
     val detailUrl: Route = get("/kanban/detail")(detail).as('detail)
     val createUrl: Route = post("/kanban/create")(create).as('create)
     val attachmentUrl: Route = post("/kanban/attachmentFile")(attachmentFile).as('attachmentFile)
+  }
+
+  object kanbanAdminEditAjax extends _root_.controller.kanban.admin.EditController with Routes {
+    val baseUrl: Route = get("/kanban/admin/base")(base).as('base)
+    val updateBaseUrl: Route = post("/kanban/admin/updateBase")(updateBase).as('updateBase)
   }
 
   object kanbanListAjax extends _root_.controller.kanban.ListConstoller with Routes {

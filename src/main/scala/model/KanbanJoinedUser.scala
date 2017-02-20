@@ -66,4 +66,16 @@ object KanbanJoinedUser extends SkinnyCRUDMapper[KanbanJoinedUser] {
       (LoginUserInfo.extract(rs, lui.resultName), KanbanJoinedUser.extract(rs, kju.resultName))
     }.list.apply()
   }
+
+  /**
+   * かんばんIDによる削除.
+   * @param kanbanId かんばんID
+   * @param session Session
+   */
+  def deleteByKanbanId(kanbanId: Long)(implicit session: DBSession): Unit = {
+    KanbanJoinedUser.deleteBy(
+      sqls.eq(KanbanJoinedUser.column.kanbanId, kanbanId)
+    )
+  }
+
 }

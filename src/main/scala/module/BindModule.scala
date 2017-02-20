@@ -27,6 +27,7 @@ class BindModule extends AbstractModule {
     bind(classOf[MaintenanceService]).to(classOf[MaintenanceServiceImpl]).in(classOf[Singleton])
     bind(classOf[UserSerivce]).to(classOf[UserSerivceImpl]).in(classOf[Singleton])
     bind(classOf[KanbanService]).to(classOf[KanbanServiceImpl]).in(classOf[Singleton])
+    bind(classOf[KanbanAdminService]).to(classOf[KanbanAdminServiceImpl]).in(classOf[Singleton])
     bind(classOf[AttachmentFileService]).to(classOf[AttachmentFileServiceImpl]).in(classOf[Singleton])
   }
 }

@@ -6,12 +6,17 @@ import domain.kanban.{ KanbanRow, _ }
 import domain.user.{ User, UserAuthority, UserId }
 import model.{ KanbanAttachmentFile, KanbanJoinedUser, LoginUserInfo }
 import scalikejdbc.DBSession
+import skinny.logging.Logger
 import util.CurrentDateUtil
+
+import scala.util.{ Failure, Success, Try }
 
 /**
  * KanbanRepositoryの実装クラス.
  */
 class KanbanRepositoryImpl extends KanbanRepository {
+
+  private[this] val logger = Logger(this.getClass)
 
   /**
    * @inheritdoc
@@ -63,9 +68,9 @@ class KanbanRepositoryImpl extends KanbanRepository {
    * @inheritdoc
    */
   override def store(kanban: Kanban)(implicit session: DBSession): Either[ApplicationException, Long] = {
+    val now = CurrentDateUtil.nowDateTime
     if (kanban.kanbanId.isEmpty) {
       //新規登録
-      val now = CurrentDateUtil.nowDateTime
       val entity = model.Kanban(
         id = -1L,
         kanbanTitle = kanban.configuration.title,
@@ -87,8 +92,39 @@ class KanbanRepositoryImpl extends KanbanRepository {
       }
       Right(kanbanId)
     } else {
-      //TODO ひとまず
-      Left(new ApplicationException("", Seq()))
+      //変更
+      Try {
+        val kanbanId = kanban.kanbanId.get.id
+        val entity = model.Kanban(
+          id = kanbanId,
+          kanbanTitle = kanban.configuration.title,
+          kanbanDescription = kanban.configuration.description,
+          archiveStatus = kanban.configuration.kanbanStatus.code,
+          createAt = now,
+          lastUpdateAt = now,
+          lockVersion = kanban.configuration.lockVersion
+        )
+        model.Kanban.update(entity)
+
+        //かんばん - 参加者は、delete & Insert
+        KanbanJoinedUser.deleteByKanbanId(kanban.kanbanId.get.id)
+        kanban.joinedUsers foreach { v =>
+          val entity = KanbanJoinedUser(
+            id = -1L,
+            kanbanId = kanbanId,
+            loginUserInfoId = v.userId.id,
+            kanbanAuthority = v.authority.code
+          )
+          KanbanJoinedUser.create(entity)
+        }
+        kanbanId
+      } match {
+        case Success(id) => Right(id)
+        case Failure(e) =>
+          logger.error(e.getMessage, e)
+          Left(new ApplicationException("invalidVersion", Seq()))
+      }
+
     }
   }
 

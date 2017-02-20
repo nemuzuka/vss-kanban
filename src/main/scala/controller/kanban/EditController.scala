@@ -70,7 +70,7 @@ class EditController extends ApiController {
    *
    * @return Right:入力Form / Left:validateエラーメッセージ
    */
-  private[this] def validateAndCreateForm: Either[Map[String, Seq[String]], Edit] = {
+  protected def validateAndCreateForm: Either[Map[String, Seq[String]], Edit] = {
     val validator = Validator(
       param("id" -> params("id")) is longValue,
       param("kanbanTitle" -> params("kanbanTitle")) is required & maxLength(256),

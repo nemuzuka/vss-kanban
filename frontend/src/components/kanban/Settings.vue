@@ -39,7 +39,7 @@
                 <div>
                   <label class="label">かんばんタイトル <span class="tag is-danger">必須</span></label>
                   <p class="control">
-                    <input class="input" type="text" v-model="form.kanbanTitle" placeholder="かんばんのタイトルを入力してください">
+                    <input class="input" type="text" v-model="baseForm.kanbanTitle" placeholder="かんばんのタイトルを入力してください">
                     <span class="help is-danger" v-html="msg.kanbanTitleErrMsg"></span>
                   </p>
                 </div>
@@ -47,7 +47,7 @@
                 <div>
                   <label class="label">かんばん説明</label>
                   <p class="control">
-                    <textarea v-model="form.kanbanDescription" placeholder="かんばんの説明を入力してください" class="textarea"></textarea>
+                    <textarea v-model="baseForm.kanbanDescription" placeholder="かんばんの説明を入力してください" class="textarea"></textarea>
                     <span class="help is-danger" v-html="msg.kanbanDescriptionErrMsg"></span>
                   </p>
                 </div>
@@ -56,7 +56,7 @@
                   <label class="label">Appendix</label>
                   <p class="control">
                     <label class="checkbox">
-                      <input type="checkbox" v-model="form.archiveStatus" :true-value="1" :false-value="0">
+                      <input type="checkbox" v-model="baseForm.archiveStatus" :true-value="1" :false-value="0">
                       このかんばんをアーカイブする
                     </label>
                   </p>
@@ -65,7 +65,7 @@
             </div>
 
             <div class="has-text-right">
-              <a class="button is-info">変更</a>
+              <a class="button is-info" @click="saveBase">変更</a>
             </div>
 
           </div>
@@ -131,6 +131,7 @@
 
 <script>
 
+  import autosize from 'autosize/dist/autosize'
   import Utils from '../../utils'
 
   export default {
@@ -139,10 +140,12 @@
     data() {
       return {
         menuType:"1",
-        form:{
+        baseForm:{
+          id:"",
           kanbanTitle:"",
           archiveStatus:"0",
-          kanbanDescription:""
+          kanbanDescription:"",
+          lockVersion:""
         },
         msg:{
           globalErrMsg:"",
@@ -173,6 +176,63 @@
       changeMenu(menuType) {
         const self = this;
         self.menuType = menuType;
+
+        if(self.menuType == "1") {
+          self.refreshBase();
+        } else if(self.menuType == "2") {
+
+        } else if(self.menuType == "3") {
+
+        }
+      },
+      refreshBase() {
+        const self = this;
+        self.clearMsg();
+
+        const param = {
+          kanbanId : self.kanbanId
+        };
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: param,
+          method: 'GET',
+          url: "/kanban/admin/base"
+        }).then(
+          function (data) {
+            if(Utils.alertErrorMsg(data)) {
+              return;
+            }
+
+            const form = data.result;
+            self.baseForm.id = form.id;
+            self.baseForm.kanbanTitle = form.kanbanTitle;
+            self.baseForm.kanbanDescription = form.kanbanDescription;
+            self.baseForm.archiveStatus = form.archiveStatus;
+            self.baseForm.lockVersion = form.lockVersion;
+
+            autosize.destroy(document.querySelector('#kanban-settings-area textarea'));
+            autosize(document.querySelector('#kanban-settings-area textarea'));
+          }
+        );
+      },
+      saveBase() {
+        const self = this;
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: self.baseForm,
+          method: 'POST',
+          url: "/kanban/admin/updateBase"
+        }).then(
+          function (data) {
+            if(Utils.writeErrorMsg(self, data)) {
+              return;
+            }
+            Utils.viewInfoMsg(data);
+            setTimeout(function(){
+              self.refreshBase();
+            },1500);
+          }
+        );
       }
     },
     computed: {
@@ -194,6 +254,9 @@
           'is-active': self.menuType === '3'
         }
       }
+    },
+    created() {
+      autosize(document.querySelector('#kanban-settings-area textarea'));
     }
   }
 

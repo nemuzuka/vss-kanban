@@ -59,6 +59,22 @@ object Kanban extends SkinnyCRUDMapper[Kanban] with OptimisticLockWithVersionFea
   }
 
   /**
+   * 更新.
+   * @param entity 対象Entity
+   * @param session Session
+   * @return かんばんID
+   */
+  def update(entity: Kanban)(implicit session: DBSession): Long = {
+    Kanban.updateByIdAndVersion(entity.id, entity.lockVersion).withAttributes(
+      'kanbanTitle -> entity.kanbanTitle,
+      'kanbanDescription -> entity.kanbanDescription,
+      'archiveStatus -> entity.archiveStatus,
+      'lastUpdateAt -> entity.lastUpdateAt
+    )
+    entity.id
+  }
+
+  /**
    * ユーザIDによるかんばん一覧取得.
    * 指定したユーザIDが担当者に含まれているかんばん一覧を取得します
    * @param loginUserInfoId ユーザID
@@ -77,7 +93,7 @@ object Kanban extends SkinnyCRUDMapper[Kanban] with OptimisticLockWithVersionFea
           if (viewArchiveKanban) None else Option(sqls.eq(k.archiveStatus, "0"))
         ))
         .and.eq(kju.loginUserInfoId, loginUserInfoId)
-        .orderBy(k.archiveStatus.desc, k.id.desc)
+        .orderBy(k.archiveStatus.asc, k.id.desc)
     }.map { rs =>
       (Kanban.extract(rs, k.resultName), KanbanJoinedUser.extract(rs, kju.resultName))
     }.list.apply()
@@ -99,7 +115,7 @@ object Kanban extends SkinnyCRUDMapper[Kanban] with OptimisticLockWithVersionFea
           if (viewArchiveKanban) None else Option(sqls.eq(k.archiveStatus, "0"))
         ))
         .and.notIn(k.id, ids)
-        .orderBy(k.archiveStatus.desc, k.id.desc)
+        .orderBy(k.archiveStatus.asc, k.id.desc)
     }.map { rs =>
       Kanban.extract(rs, k.resultName)
     }.list.apply()
