@@ -4,6 +4,7 @@ import application.KanbanAdminService
 import controller.Keys
 import domain.kanban.{ KanbanId, KanbanRepository }
 import domain.user.User
+import form.kanban.JoinedUser
 import scalikejdbc.DB
 
 /**
@@ -73,6 +74,50 @@ class EditController extends controller.kanban.EditController {
         val errorMsg = createErrorMsg(Keys.ErrMsg.Key, exception.messageKey, exception.paramKey)
         createJsonResult(errorMsg)
     }
-
   }
+
+  /**
+   * 参加者取得.
+   */
+  def joinedUsers: String = {
+    val kanbanId = params.getAs[Long]("kanbanId").getOrElse(-1L)
+    val userInfo = session.getAs[User](Keys.Session.UserInfo).get
+
+    DB localTx { implicit session =>
+      val kanbanAdminService = injector.getInstance(classOf[KanbanAdminService])
+      kanbanAdminService.getJoinedUser(kanbanId, userInfo)
+    } match {
+      case Some(joinedUser) =>
+        createJsonResult(joinedUser)
+      case _ =>
+        val errorMsg = createErrorMsg(Keys.ErrMsg.Key, "noData", Seq())
+        createJsonResult(errorMsg)
+    }
+  }
+
+  /**
+   * 参加者変更.
+   */
+  def updateJoinedUsers: String = {
+    val form = JoinedUser(
+      id = params.getAs[Long]("id").getOrElse(-1L),
+      lockVersion = params.getAs[Long]("lockVersion").getOrElse(-1L),
+      joinedUserIds = multiParams.getAs[Long]("joinedUserIds").getOrElse(Seq()),
+      adminUserIds = multiParams.getAs[Long]("adminUserIds").getOrElse(Seq())
+    )
+    val userInfo = session.getAs[User](Keys.Session.UserInfo).get
+
+    import scalikejdbc.TxBoundary.Either._
+    DB localTx { implicit session =>
+      val kanbanAdminService = injector.getInstance(classOf[KanbanAdminService])
+      kanbanAdminService.updateJoinedUser(form, userInfo)
+    } match {
+      case Right(_) =>
+        createJsonResult("success")
+      case _ =>
+        val errorMsg = createErrorMsg(Keys.ErrMsg.Key, "noData", Seq())
+        createJsonResult(errorMsg)
+    }
+  }
+
 }

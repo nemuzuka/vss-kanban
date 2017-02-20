@@ -9,9 +9,9 @@
           <div class="column is-2">
             <aside class="menu">
               <ul class="menu-list">
-                <li><a :class="selectedBaseMenu" @click="changeMenu('1')">基本情報</a></li>
-                <li><a :class="selectedLaneMenu" @click="changeMenu('2')">レーン</a></li>
-                <li><a :class="selectedJoinMenu" @click="changeMenu('3')">担当者</a></li>
+                <li><a :class="selectedBaseMenu" @click="refreshBase">基本情報</a></li>
+                <li><a :class="selectedLaneMenu" @click="refreshLanes">レーン</a></li>
+                <li><a :class="selectedJoinMenu" @click="refreshJoinedUsers">参加者</a></li>
               </ul>
             </aside>
           </div>
@@ -100,12 +100,12 @@
 
           </div>
 
-          <!-- 担当者 -->
+          <!-- 参加者 -->
           <div class="column is-9 margin" v-if="menuType === '3'">
             <nav class="level">
               <div class="level-left">
                 <div class="level-item">
-                  <h1 class="title">担当者変更</h1>
+                  <h1 class="title">参加者変更</h1>
                 </div>
               </div>
             </nav>
@@ -116,11 +116,28 @@
                 <article class="message is-danger" v-if="msg.globalErrMsg !== ''">
                   <div class="message-body" v-html="msg.globalErrMsg"></div>
                 </article>
+
+
+                <table class="table is-bordered is-striped is-narrow">
+                  <thead><tr><th style="width:170px">このかんばんに参加する</th><th>名前</th><th style="width:140px">かんばんの管理者</th></tr></thead>
+                  <tbody>
+
+                    <template v-for="row in joinedUser.allUsers">
+                      <tr>
+                        <td class="has-text-centered"><input type="checkbox" v-model="joinedUser.joinedUserIds" :value="row.id"></td>
+                        <td>{{row.name}}</td>
+                        <td class="has-text-centered"><input type="checkbox" v-model="joinedUser.adminUserIds" :value="row.id"></td>
+                      </tr>
+                    </template>
+
+                  </tbody>
+                </table>
+
               </div>
             </div>
 
             <div class="has-text-right">
-              <a class="button is-info">変更</a>
+              <a class="button is-info" @click="saveJoinedUsers">変更</a>
             </div>
 
           </div>
@@ -151,6 +168,13 @@
           kanbanDescription:"",
           lockVersion:""
         },
+        joinedUser: {
+          id:null,
+          lockVersion:null,
+          allUsers:[],
+          joinedUserIds:[],
+          adminUserIds:[],
+        },
         msg:{
           globalErrMsg:"",
           kanbanTitleErrMsg:"",
@@ -165,9 +189,9 @@
       }
     },
     methods: {
-      refresh() {
+      refresh(callBack) {
         const self = this;
-        self.changeMenu("1");
+        self.refreshBase(callBack);
       },
       hideContext(e) {
         const self = this;
@@ -177,19 +201,7 @@
         Utils.moveTop();
         self.$emit("Refresh", e);
       },
-      changeMenu(menuType) {
-        const self = this;
-        self.menuType = menuType;
-
-        if(self.menuType == "1") {
-          self.refreshBase();
-        } else if(self.menuType == "2") {
-
-        } else if(self.menuType == "3") {
-
-        }
-      },
-      refreshBase() {
+      refreshBase(callBack) {
         const self = this;
         self.clearMsg();
 
@@ -216,11 +228,17 @@
 
             autosize.destroy(document.querySelector('#kanban-settings-area textarea'));
             autosize(document.querySelector('#kanban-settings-area textarea'));
+
+            self.menuType = "1";
+            if(typeof callBack === 'function') {
+              callBack();
+            }
           }
         );
       },
       saveBase() {
         const self = this;
+        self.clearMsg();
         Utils.setAjaxDefault();
         $.ajax({
           data: self.baseForm,
@@ -247,6 +265,7 @@
           id: self.baseForm.id,
           lockVersion: self.baseForm.lockVersion
         };
+        self.clearMsg();
         Utils.setAjaxDefault();
         $.ajax({
           data: param,
@@ -262,6 +281,80 @@
               $('#body').addClass("kanban-detail");
               $("#kanban-settings-area").addClass("hide");
               self.$emit("Back", e);
+            },1500);
+          }
+        );
+      },
+      refreshLanes(){
+        const self = this;
+        self.menuType = "2";
+      },
+      refreshJoinedUsers() {
+        const self = this;
+        self.clearMsg();
+
+        const param = {
+          kanbanId : self.kanbanId
+        };
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: param,
+          method: 'GET',
+          url: "/kanban/admin/joinedUsers"
+        }).then(
+          function (data) {
+            if(Utils.alertErrorMsg(data)) {
+              return;
+            }
+
+            self.joinedUser.id = data.result.id;
+            self.joinedUser.lockVersion = data.result.lockVersion;
+
+            self.joinedUser.allUsers.splice(0,self.joinedUser.allUsers.length);
+            self.joinedUser.allUsers.push(...data.result.allUsers);
+
+            self.joinedUser.joinedUserIds.splice(0, self.joinedUser.joinedUserIds.length);
+            self.joinedUser.joinedUserIds.push(...data.result.joinedUsers.map(function(element){
+                return element.userId;
+            }));
+
+            self.joinedUser.adminUserIds.splice(0,self.joinedUser.adminUserIds.length);
+            const adminUsers = data.result.joinedUsers.filter(function(element){
+              if(element.authority === '1') return true;
+            });
+            self.joinedUser.adminUserIds.push(...adminUsers.map(function(element){
+                return element.userId;
+            }));
+
+            self.menuType = "3";
+
+          }
+        );
+      },
+      saveJoinedUsers() {
+        const self = this;
+        self.clearMsg();
+
+        const param = {
+          id:self.joinedUser.id,
+          lockVersion:self.joinedUser.lockVersion,
+          joinedUserIds:self.joinedUser.joinedUserIds,
+          adminUserIds:self.joinedUser.adminUserIds
+        };
+
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: param,
+          method: 'POST',
+          url: "/kanban/admin/updateJoinedUsers"
+        }).then(
+          function (data) {
+            if(Utils.writeErrorMsg(self, data)) {
+              return;
+            }
+            Utils.viewInfoMsg(data);
+            setTimeout(function(){
+              self.refreshJoinedUsers();
             },1500);
           }
         );

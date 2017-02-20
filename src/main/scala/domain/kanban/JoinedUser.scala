@@ -20,6 +20,26 @@ case class JoinedUser(
   override def sameValueAs(order: JoinedUser): Boolean = this.userId.sameValueAs(order.userId)
 }
 
+/**
+ * かんばん参加ユーザObject.
+ */
+object JoinedUser {
+  /**
+   * かんばん参加ユーザ作成.
+   * @param userId ユーザID
+   * @param authority かんばん権限
+   * @param name ユーザ名
+   * @return かんばん参加ユーザ
+   */
+  def createJoinedUser(userId: Long, authority: String, name: String = ""): JoinedUser = {
+    JoinedUser(
+      userId = UserId(userId),
+      authority = KanbanAuthority.withCode(authority).get,
+      name = name
+    )
+  }
+}
+
 //かんばんに対する権限
 sealed abstract class KanbanAuthority(override val code: String) extends EnumEntry
 object KanbanAuthority extends Enum[KanbanAuthority] {

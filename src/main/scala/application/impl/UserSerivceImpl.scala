@@ -2,7 +2,7 @@ package application.impl
 
 import javax.inject.Inject
 
-import application.UserSerivce
+import application.{ UserDto, UserSerivce }
 import domain.ApplicationException
 import domain.user.{ User, UserAuthority, UserId, UserRepository }
 import form.user.Edit

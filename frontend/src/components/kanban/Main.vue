@@ -135,13 +135,14 @@
       viewSettings() {
         const self = this;
 
-        $('#body').removeClass("kanban-detail");
-        $('#kanban-main-context').scrollLeft(0);
-        $('#kanban-main-area').addClass("hide");
-        $('#kanban-settings-area').removeClass("hide");
-        Utils.moveTop();
-
-        self.$refs.kanbanSettings.refresh();
+        const callBack = () => {
+          $('#body').removeClass("kanban-detail");
+          $('#kanban-main-context').scrollLeft(0);
+          $('#kanban-main-area').addClass("hide");
+          $('#kanban-settings-area').removeClass("hide");
+          Utils.moveTop();
+        };
+        self.$refs.kanbanSettings.refresh(callBack);
       },
       refresh(callBack) {
         const self = this;

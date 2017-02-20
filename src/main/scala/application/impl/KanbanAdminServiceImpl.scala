@@ -2,17 +2,18 @@ package application.impl
 
 import javax.inject.Inject
 
-import application.KanbanAdminService
+import application.{ JoinedUserDto, JoinedUserTargetDto, KanbanAdminService, UserSerivce }
 import domain.ApplicationException
 import domain.kanban.{ KanbanConfiguration, KanbanId, KanbanRepository, KanbanStatus }
 import domain.user.User
-import form.kanban.Edit
+import form.kanban.{ Edit, JoinedUser }
 import scalikejdbc.DBSession
 
 /**
  * KanbanAdminServiceの実装クラス.
  */
 class KanbanAdminServiceImpl @Inject() (
+    userSerivce: UserSerivce,
     kanbanRepository: KanbanRepository
 ) extends KanbanAdminService {
 
@@ -47,6 +48,51 @@ class KanbanAdminServiceImpl @Inject() (
           kanbanStatus = KanbanStatus.withCode(form.archiveStatus).get,
           lockVersion = form.lockVersion.toLong
         ))
+      kanbanRepository.store(updateKanban)
+    }
+    result getOrElse Left(new ApplicationException("noData", Seq()))
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def getJoinedUser(id: Long, loginUser: User)(implicit session: DBSession): Option[JoinedUserTargetDto] = {
+    for {
+      kanban <- kanbanRepository.findById(KanbanId(id), loginUser) if kanban.isAdministrator(loginUser)
+    } yield {
+      JoinedUserTargetDto(
+        id = id,
+        lockVersion = kanban.configuration.lockVersion,
+        joinedUsers = kanban.joinedUsers map (v => {
+        JoinedUserDto(
+          userId = v.userId.id,
+          authority = v.authority.code
+        )
+      }),
+        allUsers = userSerivce.findAll
+      )
+    }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def updateJoinedUser(form: JoinedUser, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
+    val result = for {
+      kanban <- kanbanRepository.findById(KanbanId(form.id), loginUser) if kanban.isAdministrator(loginUser)
+    } yield {
+
+      val joinedUsers = form.joinedUserIds map { userId =>
+        domain.kanban.JoinedUser.createJoinedUser(
+          userId,
+          if (form.adminUserIds.contains(userId)) "1" else "0"
+        )
+      }
+
+      val updateKanban = kanban.copy(
+        configuration = kanban.configuration.copy(lockVersion = form.lockVersion),
+        joinedUsers = joinedUsers
+      )
       kanbanRepository.store(updateKanban)
     }
     result getOrElse Left(new ApplicationException("noData", Seq()))

@@ -40,20 +40,20 @@ trait UserSerivce {
    * @return Right:ユーザID, Left:エラー情報
    */
   def delete(userId: Long, lockVersion: Long)(implicit session: DBSession): Either[ApplicationException, Long]
-
-  /**
-   * UserDto
-   * @param id ID
-   * @param name ユーザ名
-   * @param loginId ログインID
-   * @param authority ユーザ権限
-   * @param lockVersion バージョンNo
-   */
-  case class UserDto(
-    id: Long,
-    name: String,
-    loginId: String,
-    authority: String,
-    lockVersion: Long
-  )
 }
+
+/**
+ * UserDto
+ * @param id ID
+ * @param name ユーザ名
+ * @param loginId ログインID
+ * @param authority ユーザ権限
+ * @param lockVersion バージョンNo
+ */
+case class UserDto(
+  id: Long,
+  name: String,
+  loginId: String,
+  authority: String,
+  lockVersion: Long
+)
