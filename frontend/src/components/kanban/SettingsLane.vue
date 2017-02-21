@@ -6,23 +6,7 @@
         <thead><tr><th style="width:50px"></th><th>レーン名</th><th style="width:50px"></th></tr></thead>
         <tbody>
 
-        <template v-for="item in lane.lanes">
-          <tr>
-            <td class="has-text-centered handle" style="cursor: move;">
-              <span class="icon">
-                <i class="fa fa-arrows"></i>
-              </span>
-            </td>
-            <td style="cursor: pointer;" @click="openEditDialog">{{item.laneName}}</td>
-            <td class="has-text-centered">
-              <a class="button is-danger is-small" @click="deleteRow">
-                <span class="icon is-small">
-                  <i class="fa fa-times"></i>
-                </span>
-              </a>
-            </td>
-          </tr>
-        </template>
+          <settings-lane-item v-for="item in lane.lanes" :item="item"></settings-lane-item>
 
         </tbody>
       </table>
@@ -38,8 +22,14 @@
 </template>
 
 <script>
+
+  import SettingsLaneItem from './SettingsLaneItem'
+
   export default {
     name: 'settings-lane',
-    props: ["lane"]
+    props: ["lane"],
+    components:{
+      'settings-lane-item':SettingsLaneItem
+    }
   }
 </script>
