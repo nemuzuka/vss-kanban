@@ -98,7 +98,7 @@ class EditController extends controller.kanban.EditController {
   /**
    * 参加者変更.
    */
-  def updateJoinedUsers: String = {
+  def updateJoinedUsers(): String = {
     val form = JoinedUser(
       id = params.getAs[Long]("id").getOrElse(-1L),
       lockVersion = params.getAs[Long]("lockVersion").getOrElse(-1L),
@@ -116,6 +116,25 @@ class EditController extends controller.kanban.EditController {
         createJsonResult("success")
       case Left(exception) =>
         val errorMsg = createErrorMsg(Keys.ErrMsg.Key, exception.messageKey, exception.paramKey)
+        createJsonResult(errorMsg)
+    }
+  }
+
+  /**
+   * レーン取得.
+   */
+  def lanes: String = {
+    val kanbanId = params.getAs[Long]("kanbanId").getOrElse(-1L)
+    val userInfo = session.getAs[User](Keys.Session.UserInfo).get
+
+    DB localTx { implicit session =>
+      val kanbanAdminService = injector.getInstance(classOf[KanbanAdminService])
+      kanbanAdminService.getLane(kanbanId, userInfo)
+    } match {
+      case Some(lane) =>
+        createJsonResult(lane)
+      case _ =>
+        val errorMsg = createErrorMsg(Keys.ErrMsg.Key, "noData", Seq())
         createJsonResult(errorMsg)
     }
   }

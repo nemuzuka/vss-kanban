@@ -1,6 +1,7 @@
 package application
 
 import domain.ApplicationException
+import domain.kanban.LaneRow
 import domain.user.User
 import form.kanban.{ Edit, JoinedUser }
 import scalikejdbc.DBSession
@@ -49,6 +50,15 @@ trait KanbanAdminService {
    */
   def updateJoinedUser(form: JoinedUser, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
 
+  /**
+   * レーン情報取得.
+   * @param id かんばんID
+   * @param loginUser ログインユーザ情報
+   * @param session Session
+   * @return レーン情報Dto(存在しない場合、None)
+   */
+  def getLane(id: Long, loginUser: User)(implicit session: DBSession): Option[LaneTargetDto]
+
 }
 
 /**
@@ -73,4 +83,16 @@ case class JoinedUserTargetDto(
 case class JoinedUserDto(
   userId: Long,
   authority: String
+)
+
+/**
+ * レーン情報Dto.
+ * @param id かんばんID
+ * @param lockVersion バージョンNo
+ * @param lanes レーンSeq
+ */
+case class LaneTargetDto(
+  id: Long,
+  lockVersion: Long,
+  lanes: Seq[LaneRow]
 )

@@ -91,6 +91,9 @@
                 <article class="message is-danger" v-if="msg.globalErrMsg !== ''">
                   <div class="message-body" v-html="msg.globalErrMsg"></div>
                 </article>
+
+                <settings-lane :lane="lane"></settings-lane>
+
               </div>
             </div>
 
@@ -154,10 +157,14 @@
 
   import autosize from 'autosize/dist/autosize'
   import Utils from '../../utils'
+  import SettingsLane from './SettingsLane'
 
   export default {
     name: 'kanban-settings',
     props:["kanbanId"],
+    components:{
+      'settings-lane':SettingsLane
+    },
     data() {
       return {
         menuType:"1",
@@ -174,6 +181,12 @@
           allUsers:[],
           joinedUserIds:[],
           adminUserIds:[],
+        },
+        lane:{
+          id:null,
+          lockVersion:null,
+          lanes:[],
+          lanesMsg:""
         },
         msg:{
           globalErrMsg:"",
@@ -287,7 +300,37 @@
       },
       refreshLanes(){
         const self = this;
-        self.menuType = "2";
+        self.clearMsg();
+        self.lane.lanesMsg = "";
+
+        const param = {
+          kanbanId : self.kanbanId
+        };
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: param,
+          method: 'GET',
+          url: "/kanban/admin/lanes"
+        }).then(
+          function (data) {
+            if(Utils.alertErrorMsg(data)) {
+              return;
+            }
+
+            const msg = "レーンは登録されていません";
+            self.lane.id = data.result.id;
+            self.lane.lockVersion = data.result.lockVersion;
+
+            self.lane.lanes.splice(0,self.lane.lanes.length);
+            self.lane.lanes.push(...data.result.lanes);
+
+            if(self.lane.lanes.length <= 0) {
+              self.lane.lanesMsg = msg;
+            }
+
+            self.menuType = "2";
+          }
+        );
       },
       refreshJoinedUsers() {
         const self = this;

@@ -2,9 +2,9 @@ package application.impl
 
 import javax.inject.Inject
 
-import application.{ JoinedUserDto, JoinedUserTargetDto, KanbanAdminService, UserSerivce }
+import application._
 import domain.ApplicationException
-import domain.kanban.{ KanbanConfiguration, KanbanId, KanbanRepository, KanbanStatus }
+import domain.kanban._
 import domain.user.User
 import form.kanban.{ Edit, JoinedUser }
 import scalikejdbc.DBSession
@@ -14,7 +14,8 @@ import scalikejdbc.DBSession
  */
 class KanbanAdminServiceImpl @Inject() (
     userSerivce: UserSerivce,
-    kanbanRepository: KanbanRepository
+    kanbanRepository: KanbanRepository,
+    laneRepository: LaneRepository
 ) extends KanbanAdminService {
 
   /**
@@ -96,5 +97,21 @@ class KanbanAdminServiceImpl @Inject() (
       kanbanRepository.store(updateKanban)
     }
     result getOrElse Left(new ApplicationException("noData", Seq()))
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def getLane(id: Long, loginUser: User)(implicit session: DBSession): Option[LaneTargetDto] = {
+    val kanbanId = KanbanId(id)
+    for {
+      kanban <- kanbanRepository.findById(kanbanId, loginUser) if kanban.isAdministrator(loginUser)
+    } yield {
+      LaneTargetDto(
+        id = id,
+        lockVersion = kanban.configuration.lockVersion,
+        lanes = laneRepository.findByKanbanId(kanbanId, includeArchive = true)
+      )
+    }
   }
 }
