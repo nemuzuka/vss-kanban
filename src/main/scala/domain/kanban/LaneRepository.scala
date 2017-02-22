@@ -28,18 +28,12 @@ trait LaneRepository extends Repository[Lane] {
 
   /**
    * 永続処理.
-   * @param lane レーンドメイン
+   * レーンIDが未設定のものはinsert/存在するものはupdateします。
+   * また、既にかんばんIDに紐づく形で登録されているレーンの中で今回の更新に含まれていないものは削除します。
+   * @param lanes レーンドメインSeq
    * @param kanbanId かんばんID
    * @param session Session
-   * @return レーンID
    */
-  def store(lane: Lane, kanbanId: KanbanId)(implicit session: DBSession): LaneId
-
-  /**
-   * 削除処理.
-   * @param laneId レーンID
-   * @param session Session
-   */
-  def deleteById(laneId: LaneId)(implicit session: DBSession): Unit
+  def store(lanes: Seq[Lane], kanbanId: KanbanId)(implicit session: DBSession): Unit
 
 }

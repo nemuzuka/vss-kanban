@@ -29,34 +29,33 @@ class LaneRepositoryImpl extends LaneRepository {
   /**
    * @inheritdoc
    */
-  override def store(lane: Lane, kanbanId: KanbanId)(implicit session: DBSession): LaneId = {
-    val id = if (lane.laneId.isEmpty) {
-      model.Lane.create(model.Lane(
-        id = -1L,
-        kanbanId = kanbanId.id,
-        laneName = lane.configuration.name,
-        archiveStatus = lane.configuration.laneStatus.code,
-        sortNum = lane.sortNum,
-        completeLane = if (lane.configuration.completeLane) "1" else "0"
-      ))
-    } else {
-      model.Lane.update(model.Lane(
-        id = lane.laneId.get.id,
-        kanbanId = kanbanId.id,
-        laneName = lane.configuration.name,
-        archiveStatus = lane.configuration.laneStatus.code,
-        sortNum = lane.sortNum,
-        completeLane = if (lane.configuration.completeLane) "1" else "0"
-      ))
-    }
-    LaneId(id)
-  }
+  override def store(lanes: Seq[Lane], kanbanId: KanbanId)(implicit session: DBSession): Unit = {
 
-  /**
-   * @inheritdoc
-   */
-  override def deleteById(laneId: LaneId)(implicit session: DBSession): Unit = {
-    model.Lane.deleteById(laneId.id)
+    val beforeLaneIdSeq = findByKanbanId(kanbanId, includeArchive = true) map (_.laneId.toLong)
+
+    val afterLaneIdSeq = lanes map { lane =>
+      if (lane.laneId.isEmpty) {
+        model.Lane.create(model.Lane(
+          id = -1L,
+          kanbanId = kanbanId.id,
+          laneName = lane.configuration.name,
+          archiveStatus = lane.configuration.laneStatus.code,
+          sortNum = lane.sortNum,
+          completeLane = if (lane.configuration.completeLane) "1" else "0"
+        ))
+      } else {
+        model.Lane.update(model.Lane(
+          id = lane.laneId.get.id,
+          kanbanId = kanbanId.id,
+          laneName = lane.configuration.name,
+          archiveStatus = lane.configuration.laneStatus.code,
+          sortNum = lane.sortNum,
+          completeLane = if (lane.configuration.completeLane) "1" else "0"
+        ))
+      }
+    }
+
+    beforeLaneIdSeq diff afterLaneIdSeq foreach { model.Lane.deleteById }
   }
 
   /**

@@ -128,31 +128,12 @@ class KanbanAdminServiceImpl @Inject() (
         configuration = kanban.configuration.copy(lockVersion = form.lockVersion)
       )
       kanbanRepository.store(updateKanban) match {
-        case Right(_) =>
-          updateLane(kanbanId, form)
+        case Right(id) =>
+          laneRepository.store(domain.kanban.Lane.createLanes(form.laneIds, form.laneNames, form.archiveStatuses, form.completeLanes), kanbanId)
+          Right(id)
         case e => e
       }
     }
     result getOrElse Left(new ApplicationException("noData", Seq()))
   }
-
-  /**
-   * レーン情報更新.
-   * レーンIDが未設定のものはinsert/存在するものはupdateします。
-   * また、既に登録されているレーンの中で今回の更新に含まれていないものは削除します。
-   * @param kanbanId かんばんID
-   * @param form レーン変更Form
-   * @param session Session
-   * @return Right:かんばんID, Left:エラー情報
-   */
-  private[this] def updateLane(kanbanId: KanbanId, form: Lane)(implicit session: DBSession): Either[ApplicationException, Long] = {
-    val beforeLaneIdSeq = laneRepository.findByKanbanId(kanbanId, includeArchive = true) map (_.laneId.toLong)
-    val afterLaneIdSeq = domain.kanban.Lane.createLanes(form.laneIds, form.laneNames, form.archiveStatuses, form.completeLanes) map { v =>
-      laneRepository.store(v, kanbanId).id
-    }
-
-    beforeLaneIdSeq diff afterLaneIdSeq foreach { id => laneRepository.deleteById(LaneId(id)) }
-    Right(kanbanId.id)
-  }
-
 }

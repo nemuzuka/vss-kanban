@@ -25,7 +25,7 @@ class KanbanServiceImpl @Inject() (
       case Left(e) => throw e
     }
     //初期レーンを作成する
-    Lane.createInitLane foreach { lane => laneRepository.store(lane, KanbanId(kanbanId)) }
+    laneRepository.store(Lane.createInitLane, KanbanId(kanbanId))
     kanbanId
   }
 
