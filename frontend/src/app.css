@@ -30,6 +30,14 @@ body.kanban-detail {
   height: 100%;
 }
 
+#main-content {
+  height: 100%
+}
+
+body.kanban-detail > div#main-content {
+  height: 85%
+}
+
 .container {
   position: relative;
 }
