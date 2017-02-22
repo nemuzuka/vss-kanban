@@ -67,6 +67,32 @@ object Lane {
     )
   }
 
+  /**
+   * レーンSeq生成.
+   * @param laneIds レーンIDSeq
+   * @param laneNames レーン名Seq
+   * @param archiveStatuses アーカイブステータスSeq
+   * @param completeLanes 完了扱いのレーンSeq
+   * @return レーンSeq
+   */
+  def createLanes(
+    laneIds: Seq[String],
+    laneNames: Seq[String],
+    archiveStatuses: Seq[String],
+    completeLanes: Seq[Boolean]
+  ): Seq[Lane] = laneIds.zipWithIndex map {
+    case (laneId, index) =>
+      Lane(
+        laneId = if (laneId.isEmpty) None else Option(LaneId(laneId.toLong)),
+        configuration = LaneConfiguration(
+          laneStatus = LaneStatus.withCode(archiveStatuses(index)).get,
+          completeLane = completeLanes(index),
+          name = laneNames(index)
+        ),
+        sortNum = index
+      )
+  }
+
 }
 
 /**

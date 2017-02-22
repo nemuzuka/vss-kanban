@@ -251,4 +251,21 @@ export default class Utils {
     };
     toastr.success(msg);
   }
+
+  /**
+   * ユニーク文字列生成.
+   * @returns {string} "dummy-"で始まるシステム時刻を元にしたユニークと思われる文字列
+   */
+  static getUniqueStr() {
+    return "dummy-" + new Date().getTime().toString(16)  + Math.floor(1000 * Math.random()).toString(16)
+  }
+
+  /**
+   * ユニーク文字列として生成されたものか？
+   * @param org 対象文字列
+   * @returns {boolean} ユニーク文字列として生成されたものはtrue
+   */
+  static isUniqueStr(org) {
+    return org.toString().indexOf("dummy-") === 0
+  }
 }

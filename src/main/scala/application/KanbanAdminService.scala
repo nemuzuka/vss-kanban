@@ -3,7 +3,7 @@ package application
 import domain.ApplicationException
 import domain.kanban.LaneRow
 import domain.user.User
-import form.kanban.{ Edit, JoinedUser }
+import form.kanban.{ Edit, JoinedUser, Lane }
 import scalikejdbc.DBSession
 
 /**
@@ -59,6 +59,15 @@ trait KanbanAdminService {
    */
   def getLane(id: Long, loginUser: User)(implicit session: DBSession): Option[LaneTargetDto]
 
+  /**
+   * レーン情報更新.
+   * かんばんの管理者権限を所有するユーザのみ操作を受け付けます
+   * @param form レーン変更Form
+   * @param loginUser ログインユーザ
+   * @param session Session
+   * @return Right:かんばんID, Left:エラー情報
+   */
+  def updateLane(form: Lane, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
 }
 
 /**

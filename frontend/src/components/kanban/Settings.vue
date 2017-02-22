@@ -98,7 +98,7 @@
             </div>
 
             <div class="has-text-right">
-              <a class="button is-info">変更</a>
+              <a class="button is-info" @click="saveLanes">変更</a>
             </div>
 
           </div>
@@ -329,6 +329,41 @@
             }
 
             self.menuType = "2";
+          }
+        );
+      },
+      saveLanes() {
+        const self = this;
+        const param = {
+          id: self.lane.id,
+          lockVersion: self.lane.lockVersion,
+          laneIds: self.lane.lanes.map( function(element) {
+            return Utils.isUniqueStr(element.laneId) ? "" : element.laneId;
+          }),
+          laneNames:self.lane.lanes.map( function(element) {
+            return element.laneName;
+          }),
+          archiveStatuses:self.lane.lanes.map( function(element) {
+            return element.archiveStatus;
+          }),
+          completeLanes:self.lane.lanes.map( function(element) {
+            return element.completeLane;
+          })
+        };
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: param,
+          method: 'POST',
+          url: "/kanban/admin/updateLanes"
+        }).then(
+          function (data) {
+            if(Utils.writeErrorMsg(self, data)) {
+              return;
+            }
+            Utils.viewInfoMsg(data);
+            setTimeout(function(){
+              self.refreshLanes();
+            },1500);
           }
         );
       },

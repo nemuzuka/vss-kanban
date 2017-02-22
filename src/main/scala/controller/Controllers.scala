@@ -68,11 +68,12 @@ object Controllers {
 
   object kanbanAdminEditAjax extends _root_.controller.kanban.admin.EditController with Routes {
     val baseUrl: Route = get("/kanban/admin/base")(base).as('base)
-    val updateBaseUrl: Route = post("/kanban/admin/updateBase")(updateBase).as('updateBase)
+    val updateBaseUrl: Route = post("/kanban/admin/updateBase")(updateBase()).as('updateBase)
     val deleteUrl: Route = post("/kanban/admin/delete")(delete).as('delete)
     val joinedUsersUrl: Route = get("/kanban/admin/joinedUsers")(joinedUsers).as('joinedUsers)
-    val updateJoinedUsersUrl: Route = post("/kanban/admin/updateJoinedUsers")(updateJoinedUsers).as('updateJoinedUsers)
+    val updateJoinedUsersUrl: Route = post("/kanban/admin/updateJoinedUsers")(updateJoinedUsers()).as('updateJoinedUsers)
     val lanesUrl: Route = get("/kanban/admin/lanes")(lanes).as('lanes)
+    val updateLanesUrl: Route = post("/kanban/admin/updateLanes")(updateLanes()).as('updateLanes)
   }
 
   object kanbanListAjax extends _root_.controller.kanban.ListConstoller with Routes {

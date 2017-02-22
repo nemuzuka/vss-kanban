@@ -31,7 +31,15 @@ trait LaneRepository extends Repository[Lane] {
    * @param lane レーンドメイン
    * @param kanbanId かんばんID
    * @param session Session
-   * @return レーンID(永続化失敗時、None)
+   * @return レーンID
    */
-  def store(lane: Lane, kanbanId: KanbanId)(implicit session: DBSession): Option[LaneId]
+  def store(lane: Lane, kanbanId: KanbanId)(implicit session: DBSession): LaneId
+
+  /**
+   * 削除処理.
+   * @param laneId レーンID
+   * @param session Session
+   */
+  def deleteById(laneId: LaneId)(implicit session: DBSession): Unit
+
 }

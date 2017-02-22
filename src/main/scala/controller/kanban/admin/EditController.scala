@@ -4,7 +4,7 @@ import application.KanbanAdminService
 import controller.Keys
 import domain.kanban.{ KanbanId, KanbanRepository }
 import domain.user.User
-import form.kanban.JoinedUser
+import form.kanban.{ JoinedUser, Lane }
 import scalikejdbc.DB
 
 /**
@@ -135,6 +135,33 @@ class EditController extends controller.kanban.EditController {
         createJsonResult(lane)
       case _ =>
         val errorMsg = createErrorMsg(Keys.ErrMsg.Key, "noData", Seq())
+        createJsonResult(errorMsg)
+    }
+  }
+
+  /**
+   * レーン変更.
+   */
+  def updateLanes(): String = {
+    val form = Lane(
+      id = params.getAs[Long]("id").getOrElse(-1L),
+      lockVersion = params.getAs[Long]("lockVersion").getOrElse(-1L),
+      laneIds = multiParams.getAs[String]("laneIds").getOrElse(Seq()),
+      laneNames = multiParams.getAs[String]("laneNames").getOrElse(Seq()),
+      archiveStatuses = multiParams.getAs[String]("archiveStatuses").getOrElse(Seq()),
+      completeLanes = multiParams.getAs[Boolean]("completeLanes").getOrElse(Seq())
+    )
+    val userInfo = session.getAs[User](Keys.Session.UserInfo).get
+
+    import scalikejdbc.TxBoundary.Either._
+    DB localTx { implicit session =>
+      val kanbanAdminService = injector.getInstance(classOf[KanbanAdminService])
+      kanbanAdminService.updateLane(form, userInfo)
+    } match {
+      case Right(_) =>
+        createJsonResult("success")
+      case Left(exception) =>
+        val errorMsg = createErrorMsg(Keys.ErrMsg.Key, exception.messageKey, exception.paramKey)
         createJsonResult(errorMsg)
     }
   }

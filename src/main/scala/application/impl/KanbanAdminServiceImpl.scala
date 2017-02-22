@@ -6,7 +6,7 @@ import application._
 import domain.ApplicationException
 import domain.kanban._
 import domain.user.User
-import form.kanban.{ Edit, JoinedUser }
+import form.kanban.{ Edit, JoinedUser, Lane }
 import scalikejdbc.DBSession
 
 /**
@@ -114,4 +114,45 @@ class KanbanAdminServiceImpl @Inject() (
       )
     }
   }
+
+  /**
+   * @inheritdoc
+   */
+  override def updateLane(form: Lane, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
+    val kanbanId = KanbanId(form.id)
+    val result = for {
+      kanban <- kanbanRepository.findById(kanbanId, loginUser) if kanban.isAdministrator(loginUser)
+    } yield {
+
+      val updateKanban = kanban.copy(
+        configuration = kanban.configuration.copy(lockVersion = form.lockVersion)
+      )
+      kanbanRepository.store(updateKanban) match {
+        case Right(_) =>
+          updateLane(kanbanId, form)
+        case e => e
+      }
+    }
+    result getOrElse Left(new ApplicationException("noData", Seq()))
+  }
+
+  /**
+   * レーン情報更新.
+   * レーンIDが未設定のものはinsert/存在するものはupdateします。
+   * また、既に登録されているレーンの中で今回の更新に含まれていないものは削除します。
+   * @param kanbanId かんばんID
+   * @param form レーン変更Form
+   * @param session Session
+   * @return Right:かんばんID, Left:エラー情報
+   */
+  private[this] def updateLane(kanbanId: KanbanId, form: Lane)(implicit session: DBSession): Either[ApplicationException, Long] = {
+    val beforeLaneIdSeq = laneRepository.findByKanbanId(kanbanId, includeArchive = true) map (_.laneId.toLong)
+    val afterLaneIdSeq = domain.kanban.Lane.createLanes(form.laneIds, form.laneNames, form.archiveStatuses, form.completeLanes) map { v =>
+      laneRepository.store(v, kanbanId).id
+    }
+
+    beforeLaneIdSeq diff afterLaneIdSeq foreach { id => laneRepository.deleteById(LaneId(id)) }
+    Right(kanbanId.id)
+  }
+
 }

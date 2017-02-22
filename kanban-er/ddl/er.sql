@@ -137,9 +137,9 @@ CREATE TABLE lane
 	archive_status varchar(1) NOT NULL,
 	-- ソート順
 	sort_num bigint NOT NULL,
-	-- 終了扱いのレーンか
-	-- 1:終了扱いのレーン
-	-- 0:終了扱いのレーンでない
+	-- 完了扱いのレーンか
+	-- 1:完了扱いのレーン
+	-- 0:完了扱いのレーンでない
 	complete_lane varchar(1) NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
@@ -196,6 +196,10 @@ CREATE TABLE note
 	fix_date date,
 	-- ソート順
 	sort_num bigint NOT NULL,
+	-- アーカイブステータス
+	-- 0:通常
+	-- 1:アーカイブ
+	archive_status varchar(1) NOT NULL,
 	-- 登録ユーザID
 	create_login_user_info_id bigint NOT NULL,
 	-- 作成日時
@@ -364,9 +368,9 @@ COMMENT ON COLUMN lane.archive_status IS 'アーカイブステータス
 0:通常
 1:アーカイブ';
 COMMENT ON COLUMN lane.sort_num IS 'ソート順';
-COMMENT ON COLUMN lane.complete_lane IS '終了扱いのレーンか
-1:終了扱いのレーン
-0:終了扱いのレーンでない';
+COMMENT ON COLUMN lane.complete_lane IS '完了扱いのレーンか
+1:完了扱いのレーン
+0:完了扱いのレーンでない';
 COMMENT ON TABLE login_user_info IS 'ログインユーザ情報';
 COMMENT ON COLUMN login_user_info.id IS 'id(自動採番)';
 COMMENT ON COLUMN login_user_info.login_id IS 'ログインID';
@@ -388,6 +392,9 @@ COMMENT ON COLUMN note.note_title IS '付箋タイトル';
 COMMENT ON COLUMN note.note_description IS '説明';
 COMMENT ON COLUMN note.fix_date IS '期日';
 COMMENT ON COLUMN note.sort_num IS 'ソート順';
+COMMENT ON COLUMN note.archive_status IS 'アーカイブステータス
+0:通常
+1:アーカイブ';
 COMMENT ON COLUMN note.create_login_user_info_id IS '登録ユーザID';
 COMMENT ON COLUMN note.create_at IS '作成日時';
 COMMENT ON COLUMN note.last_update_login_user_info_id IS '最終更新ユーザID';

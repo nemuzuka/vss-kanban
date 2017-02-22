@@ -56,6 +56,22 @@ object Lane extends SkinnyCRUDMapper[Lane] {
   }
 
   /**
+   * 更新.
+   * @param entity 対象Entity
+   * @param session Session
+   * @return ID
+   */
+  def update(entity: Lane)(implicit session: DBSession): Long = {
+    Lane.updateById(entity.id).withAttributes(
+      'laneName -> entity.laneName,
+      'archiveStatus -> entity.archiveStatus,
+      'sortNum -> entity.sortNum,
+      'completeLane -> entity.completeLane
+    )
+    entity.id
+  }
+
+  /**
    * かんばんIDによる取得.
    * ソート順でソートします
    * @param kanbanId かんばんID

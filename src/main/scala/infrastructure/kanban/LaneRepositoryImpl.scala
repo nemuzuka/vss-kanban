@@ -29,7 +29,7 @@ class LaneRepositoryImpl extends LaneRepository {
   /**
    * @inheritdoc
    */
-  override def store(lane: Lane, kanbanId: KanbanId)(implicit session: DBSession): Option[LaneId] = {
+  override def store(lane: Lane, kanbanId: KanbanId)(implicit session: DBSession): LaneId = {
     val id = if (lane.laneId.isEmpty) {
       model.Lane.create(model.Lane(
         id = -1L,
@@ -40,9 +40,23 @@ class LaneRepositoryImpl extends LaneRepository {
         completeLane = if (lane.configuration.completeLane) "1" else "0"
       ))
     } else {
-      -1L
+      model.Lane.update(model.Lane(
+        id = lane.laneId.get.id,
+        kanbanId = kanbanId.id,
+        laneName = lane.configuration.name,
+        archiveStatus = lane.configuration.laneStatus.code,
+        sortNum = lane.sortNum,
+        completeLane = if (lane.configuration.completeLane) "1" else "0"
+      ))
     }
-    Option(LaneId(id))
+    LaneId(id)
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def deleteById(laneId: LaneId)(implicit session: DBSession): Unit = {
+    model.Lane.deleteById(laneId.id)
   }
 
   /**

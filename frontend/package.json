@@ -14,7 +14,8 @@
     "font-awesome": "^4.7.0",
     "lightbox2": "^2.9.0",
     "toastr": "^2.1.2",
-    "vue": "^2.1.0"
+    "vue": "^2.1.0",
+    "vuedraggable": "^2.8.4"
   },
   "devDependencies": {
     "autoprefixer": "^6.4.0",
