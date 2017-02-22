@@ -241,10 +241,14 @@
             self.baseForm.archiveStatus = form.archiveStatus;
             self.baseForm.lockVersion = form.lockVersion;
 
-            autosize.destroy(document.querySelector('#kanban-settings-area textarea'));
-            autosize(document.querySelector('#kanban-settings-area textarea'));
-
             self.menuType = "1";
+
+            setTimeout(function(){
+              const ta = document.querySelector('#kanban-settings-area textarea');
+              autosize(ta);
+              autosize.update(ta);
+            }, 500);
+
             if(typeof callBack === 'function') {
               callBack();
             }
@@ -459,9 +463,6 @@
           'is-active': self.menuType === '3'
         }
       }
-    },
-    created() {
-      autosize(document.querySelector('#kanban-settings-area textarea'));
     }
   }
 

@@ -78,10 +78,10 @@
 
         setTimeout(function(){
           $('#kanban-edit-dialog-kanban-title').focus();
-        }, 100);
-        autosize.destroy(document.querySelector('#kanban-edit-dialog textarea'));
-        autosize(document.querySelector('#kanban-edit-dialog textarea'));
-
+          const ta = document.querySelector('#kanban-edit-dialog textarea');
+          autosize(ta);
+          autosize.update(ta);
+        }, 500);
       },
       closeDialog() {
         Utils.closeDialog('kanban-edit-dialog');
@@ -114,9 +114,6 @@
         const self = this;
         return self.form.id === "" ? '登録' : '変更';
       },
-    },
-    created() {
-      autosize(document.querySelector('#kanban-edit-dialog textarea'));
     }
   }
 
