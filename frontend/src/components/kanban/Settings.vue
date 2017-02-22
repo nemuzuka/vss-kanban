@@ -207,12 +207,14 @@
         self.refreshBase(callBack);
       },
       hideContext(e) {
+        const calBack = () => {
+          $('#body').addClass("kanban-detail");
+          $("#kanban-settings-area").addClass("hide");
+          $('#kanban-main-area').removeClass("hide");
+          Utils.moveTop();
+        };
         const self = this;
-        $('#body').addClass("kanban-detail");
-        $("#kanban-settings-area").addClass("hide");
-        $('#kanban-main-area').removeClass("hide");
-        Utils.moveTop();
-        self.$emit("Refresh", e);
+        self.$emit("Refresh", e, calBack);
       },
       refreshBase(callBack) {
         const self = this;

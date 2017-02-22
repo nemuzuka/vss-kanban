@@ -118,7 +118,7 @@
       },
       viewKanbanMain(e, id) {
         const self = this;
-        self.$refs.kanbanMain.viewContext(id, "kanban-dashboard-area");
+        self.$refs.kanbanMain.viewContext(e, id, "kanban-dashboard-area");
       }
     },
     created() {

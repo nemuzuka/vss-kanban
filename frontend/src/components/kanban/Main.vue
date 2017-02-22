@@ -100,7 +100,7 @@
       }
     },
     methods: {
-      viewContext(kanbanId, hideAreaId) {
+      viewContext(e, kanbanId, hideAreaId) {
         const self = this;
         self.kanbanId = kanbanId;
         self.hideAreaId = hideAreaId;
@@ -113,7 +113,7 @@
           Utils.moveTop();
         };
 
-        self.refresh(callBack);
+        self.refresh(e, callBack);
       },
       hideContext(e) {
         const self = this;
@@ -132,7 +132,7 @@
         const self = this;
         self.$refs.kanbanAttachmentDialog.openDialog(self.kanbanAttachmentFiles);
       },
-      viewSettings() {
+      viewSettings(e) {
         const self = this;
 
         const callBack = () => {
@@ -144,7 +144,7 @@
         };
         self.$refs.kanbanSettings.refresh(callBack);
       },
-      refresh(callBack) {
+      refresh(e, callBack) {
         const self = this;
         const param = {
           kanbanId : self.kanbanId,
