@@ -1,29 +1,22 @@
 <template>
 
-  <div class="box" :class="{archived : isArchived}">
-    <div class="media">
-      <div class="media-left" style="cursor: move;">
+  <tr :class="{archived : isArchived}">
+    <td style="cursor: move;" class="drag-item">
       <span class="icon">
         <i class="fa fa-arrows"></i>
       </span>
-      </div>
-
-      <div class="media-content" @click="openEditDialog" style="cursor: pointer;">
-        <div class="content">
-          <p>{{item.laneName}} <span class="tag is-danger" v-if="item.completeLane">完了</span></p>
-        </div>
-      </div>
-
-      <div class="media-right">
-        <a class="button is-danger is-small" @click="deleteItem">
+    </td>
+    <td @click="openEditDialog" style="cursor: pointer;">
+      <p>{{item.laneName}} <span class="tag is-danger" v-if="item.completeLane">完了</span></p>
+    </td>
+    <td>
+      <a class="button is-danger is-small" @click="deleteItem">
         <span class="icon">
           <i class="fa fa-times"></i>
         </span>
-        </a>
-      </div>
-
-    </div>
-  </div>
+      </a>
+    </td>
+  </tr>
 
 </template>
 
@@ -59,7 +52,7 @@
 </script>
 
 <style scoped>
-  .box.archived {
+  tr.archived {
     background-color: #eee;
   }
 </style>

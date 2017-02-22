@@ -16,9 +16,14 @@
     </nav>
 
     <div v-if="lane.lanes.length > 0">
-      <draggable :list="lane.lanes" :options="{group:'people'}" @start="drag=true" @end="drag=false">
-        <settings-lane-item v-for="(item, index) in lane.lanes" :item="item" :index="index" :key="item.laneId" @OpenEditDialog="openEditDialog" @DeleteItem="deleteItem"></settings-lane-item>
-      </draggable>
+
+      <table class="table is-bordered is-striped is-narrow">
+        <thead><tr><th style="width:20px"></th><th>レーン名</th><th style="width:20px"></th></tr></thead>
+        <draggable :list="lane.lanes" :options="{handle:'.drag-item'}" element="tbody" @start="drag=true" @end="drag=false">
+          <settings-lane-item v-for="(item, index) in lane.lanes" :item="item" :index="index" :key="item.laneId" @OpenEditDialog="openEditDialog" @DeleteItem="deleteItem"></settings-lane-item>
+        </draggable>
+      </table>
+
     </div>
 
     <div v-if="lane.lanes.length <= 0 && lane.lanesMsg !== ''">
