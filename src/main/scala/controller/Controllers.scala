@@ -18,6 +18,7 @@ object Controllers {
     userEditAjax.mount(ctx)
     kanbanEditAjax.mount(ctx)
     kanbanAdminEditAjax.mount(ctx)
+    noteEditAjax.mount(ctx)
     kanbanListAjax.mount(ctx)
     maintenanceInit.mount(ctx)
     login.mount(ctx)
@@ -74,6 +75,11 @@ object Controllers {
     val updateJoinedUsersUrl: Route = post("/kanban/admin/updateJoinedUsers")(updateJoinedUsers()).as('updateJoinedUsers)
     val lanesUrl: Route = get("/kanban/admin/lanes")(lanes).as('lanes)
     val updateLanesUrl: Route = post("/kanban/admin/updateLanes")(updateLanes()).as('updateLanes)
+  }
+
+  object noteEditAjax extends _root_.controller.kanban.NoteEditController with Routes {
+    val formUrl: Route = get("/kanban/note/form")(form).as('form)
+    val storeUrl: Route = post("/kanban/note/store")(store).as('store)
   }
 
   object kanbanListAjax extends _root_.controller.kanban.ListConstoller with Routes {

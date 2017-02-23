@@ -4,8 +4,8 @@
     <div class="lane-container is-info">
 
       <div class="card-header">
-        <p class="card-header-title">未着手1</p>
-        <a class="card-header-icon button is-success">
+        <p class="card-header-title">{{laneItem.laneName}}</p>
+        <a class="card-header-icon button is-success" @click="openEditDialog">
           <span class="icon"><i class="fa fa-plus"></i></span>
         </a>
       </div>
@@ -117,6 +117,19 @@
 
   </div>
 </template>
+
+<script>
+  import Utils from '../../utils'
+  export default {
+    props:['laneItem', 'noteMap'],
+    methods: {
+      openEditDialog(e) {
+        const self = this;
+        self.$emit("OpenEditDialog", e, self.laneItem.laneId, "");
+      }
+    }
+  }
+</script>
 
 <style scoped>
   .lane-items {

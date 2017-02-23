@@ -53,11 +53,12 @@
       </div>
 
       <div class="columns is-mobile kanban-main-container" id="kanban-main-context">
-        <lane-list v-for="laneItem in lanes" :laneItem="laneItem" :noteMap="noteMap"></lane-list>
+        <lane-list v-for="laneItem in lanes" :laneItem="laneItem" :noteMap="noteMap" @OpenEditDialog="openNoteEditDialog"></lane-list>
       </div>
 
       <kanban-attachment-upload-dialog ref="kanbanAttachmentUploadDialog" :kanbanId="kanbanId" @Refresh="refresh"></kanban-attachment-upload-dialog>
       <kanban-attachment-dialog ref="kanbanAttachmentDialog" :kanbanId="kanbanId"></kanban-attachment-dialog>
+      <note-edit-dialog ref="noteEditDialog" :kanbanId="kanbanId"></note-edit-dialog>
 
     </div>
 
@@ -71,6 +72,7 @@
   import Utils from '../../utils'
   import KanbanAttachmentUploadDialog from './KanbanAttachmentUploadDialog'
   import KanbanAttachmentDialog from './KanbanAttachmentDialog'
+  import NoteEditDialog from './NoteEditDialog'
   import LaneList from './LaneList'
   import KanbanSettings from './Settings'
 
@@ -80,7 +82,8 @@
       'kanban-attachment-upload-dialog': KanbanAttachmentUploadDialog,
       'kanban-attachment-dialog':KanbanAttachmentDialog,
       'lane-list':LaneList,
-      'kanban-settings':KanbanSettings
+      'kanban-settings':KanbanSettings,
+      'note-edit-dialog': NoteEditDialog
     },
     data() {
       return {
@@ -131,6 +134,10 @@
       openAttachmentDialog() {
         const self = this;
         self.$refs.kanbanAttachmentDialog.openDialog(self.kanbanAttachmentFiles);
+      },
+      openNoteEditDialog(e, laneId, noteId) {
+        const self = this;
+        self.$refs.noteEditDialog.openDialog(e, laneId, noteId);
       },
       viewSettings(e) {
         const self = this;

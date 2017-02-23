@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS kanban_attachment_file;
 DROP TABLE IF EXISTS note_attachment_file;
 DROP TABLE IF EXISTS attachment_file;
 DROP TABLE IF EXISTS kanban_joined_user;
+DROP TABLE IF EXISTS note_charged_user;
 DROP TABLE IF EXISTS note;
 DROP TABLE IF EXISTS lane;
 DROP TABLE IF EXISTS kanban;
@@ -227,6 +228,19 @@ CREATE TABLE note_attachment_file
 ) WITHOUT OIDS;
 
 
+-- 付箋担当者
+CREATE TABLE note_charged_user
+(
+	-- id(自動採番)
+	id bigserial NOT NULL,
+	-- 付箋ID
+	note_id bigint NOT NULL,
+	-- ログインユーザ情報ID
+	login_user_info_id bigint NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
 
 /* Create Foreign Keys */
 
@@ -303,6 +317,14 @@ ALTER TABLE login_user_password
 
 
 ALTER TABLE note_attachment_file
+	ADD FOREIGN KEY (note_id)
+	REFERENCES note (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
+ALTER TABLE note_charged_user
 	ADD FOREIGN KEY (note_id)
 	REFERENCES note (id)
 	ON UPDATE RESTRICT
@@ -404,6 +426,10 @@ COMMENT ON TABLE note_attachment_file IS '付箋 - 添付ファイル';
 COMMENT ON COLUMN note_attachment_file.id IS 'id(自動採番)';
 COMMENT ON COLUMN note_attachment_file.note_id IS '付箋ID';
 COMMENT ON COLUMN note_attachment_file.attachment_file_id IS '添付ファイルID';
+COMMENT ON TABLE note_charged_user IS '付箋担当者';
+COMMENT ON COLUMN note_charged_user.id IS 'id(自動採番)';
+COMMENT ON COLUMN note_charged_user.note_id IS '付箋ID';
+COMMENT ON COLUMN note_charged_user.login_user_info_id IS 'ログインユーザ情報ID';
 
 
 

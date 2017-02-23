@@ -87,12 +87,32 @@ case class JoinedUserTargetDto(
 /**
  * 参加者Dto.
  * @param userId ユーザID
+ * @param name 名前
  * @param authority 権限
  */
 case class JoinedUserDto(
   userId: Long,
+  name: String,
   authority: String
 )
+
+/**
+ * 参加者Object.
+ */
+object JoinedUserDto {
+  /**
+   * 参加者Dto変換.
+   * @param joinedUsers 変換元domain
+   * @return 参加者Dto
+   */
+  def toDto(joinedUsers: Seq[domain.kanban.JoinedUser]): Seq[JoinedUserDto] = joinedUsers map (v => {
+    JoinedUserDto(
+      userId = v.userId.id,
+      name = v.name,
+      authority = v.authority.code
+    )
+  })
+}
 
 /**
  * レーン情報Dto.

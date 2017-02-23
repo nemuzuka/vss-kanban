@@ -32,4 +32,47 @@ object NoteAttachmentFile extends SkinnyCRUDMapper[NoteAttachmentFile] {
     noteId = rs.get(rn.noteId),
     attachmentFileId = rs.get(rn.attachmentFileId)
   )
+
+  /**
+   * ふせんIDによる検索.
+   * @param noteId ふせんID
+   * @param session Session
+   * @return 該当データ(_1: ふせん - 添付ファイル _2:添付ファイル
+   */
+  def findByNoteId(noteId: Long)(implicit session: DBSession): Seq[(NoteAttachmentFile, AttachmentFile)] = {
+
+    val (naf, af) = (NoteAttachmentFile.defaultAlias, AttachmentFile.defaultAlias)
+    withSQL {
+      select.from(NoteAttachmentFile as naf)
+        .innerJoin(AttachmentFile as af).on(naf.attachmentFileId, af.id)
+        .where.eq(naf.noteId, noteId).orderBy(naf.id.asc)
+    }.map { rs =>
+      (NoteAttachmentFile.extract(rs, naf.resultName), AttachmentFile.extract(rs, af.resultName))
+    }.list.apply()
+  }
+
+  /**
+   * 登録.
+   * @param entity 対象Entity
+   * @param session Session
+   * @return 生成ID
+   */
+  def create(entity: NoteAttachmentFile)(implicit session: DBSession): Long = {
+    NoteAttachmentFile.createWithAttributes(
+      'noteId -> entity.noteId,
+      'attachmentFileId -> entity.attachmentFileId
+    )
+  }
+
+  /**
+   * ふせんIDによる削除.
+   * @param noteId ふせんID
+   * @param session Session
+   */
+  def deleteByKanbanId(noteId: Long)(implicit session: DBSession): Long = {
+    NoteAttachmentFile.deleteBy(
+      sqls.eq(NoteAttachmentFile.column.noteId, noteId)
+    )
+  }
+
 }

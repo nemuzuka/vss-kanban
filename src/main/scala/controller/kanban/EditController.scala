@@ -57,7 +57,7 @@ class EditController extends ApiController {
    */
   def attachmentFile: String = {
     val kanbanId = params.getAs[Long]("kanbanId").getOrElse(-1L)
-    val attachmentFileIds = multiParams.getAs[String]("attachmentFileIds").getOrElse(Seq()) map { _.toLong }
+    val attachmentFileIds = multiParams.getAs[Long]("attachmentFileIds").getOrElse(Seq())
     DB.localTx { implicit session =>
       val kanbanRepository = injector.getInstance(classOf[KanbanRepository])
       kanbanRepository.storeKanbanAttachmentFile(kanbanId, attachmentFileIds)

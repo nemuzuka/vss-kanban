@@ -1,6 +1,7 @@
 package model
 
-import skinny.orm._, feature._
+import skinny.orm._
+import feature._
 import scalikejdbc._
 import org.joda.time._
 
@@ -19,7 +20,7 @@ case class Note(
   lockVersion: Long
 )
 
-object Note extends SkinnyCRUDMapper[Note] {
+object Note extends SkinnyCRUDMapper[Note] with OptimisticLockWithVersionFeature[Note] {
   override lazy val tableName = "note"
   override lazy val defaultAlias = createAlias("n")
 
@@ -50,4 +51,27 @@ object Note extends SkinnyCRUDMapper[Note] {
     lastUpdateAt = rs.get(rn.lastUpdateAt),
     lockVersion = rs.get(rn.lockVersion)
   )
+
+  /**
+   * 登録.
+   * @param entity 対象Entity
+   * @param session Session
+   * @return 生成ID
+   */
+  def create(entity: Note)(implicit session: DBSession): Long = {
+    Note.createWithAttributes(
+      'laneId -> entity.laneId,
+      'kanbanId -> entity.kanbanId,
+      'noteTitle -> entity.noteTitle,
+      'noteDescription -> entity.noteDescription,
+      'fixDate -> entity.fixDate,
+      'sortNum -> Long.MaxValue,
+      'createLoginUserInfoId -> entity.createLoginUserInfoId,
+      'createAt -> entity.createAt,
+      'lastUpdateLoginUserInfoId -> entity.lastUpdateLoginUserInfoId,
+      'lastUpdateAt -> entity.lastUpdateAt,
+      'lockVersion -> entity.lockVersion
+    )
+  }
+
 }

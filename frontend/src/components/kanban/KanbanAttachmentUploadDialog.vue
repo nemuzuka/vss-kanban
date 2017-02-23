@@ -86,29 +86,8 @@
         self.files.splice(index, 1);
       },
       fileUpload(e, targetFiles) {
-        if(targetFiles.length <= 0) {
-          return;
-        }
-
-        const fd = new FormData();
-        Object.keys(targetFiles).forEach(function(key){
-          fd.append("attachmentFiles", targetFiles[key]);
-        });
-
         const self = this;
-        Utils.setAjaxDefault();
-        $.ajax({
-          data: fd,
-          method: 'POST',
-          url: "/attachment/file/kanban",
-          contentType: false,
-          processData: false
-        }).then(
-          function (data) {
-            self.files.push(...data.result);
-          }
-        );
-
+        Utils.uploadFile(targetFiles, self.files);
       }
     }
   }

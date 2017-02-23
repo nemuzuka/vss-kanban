@@ -268,4 +268,36 @@ export default class Utils {
   static isUniqueStr(org) {
     return org.toString().indexOf("dummy-") === 0
   }
+
+
+  /**
+   * ファイルアップロード共通処理.
+   * @param targetFiles アップロード対象ファイル
+   * @param files 結果格納List
+   */
+  static uploadFile(targetFiles, files) {
+    if(targetFiles.length <= 0) {
+      return;
+    }
+
+    const fd = new FormData();
+    Object.keys(targetFiles).forEach(function(key){
+      fd.append("attachmentFiles", targetFiles[key]);
+    });
+
+    this.setAjaxDefault();
+    $.ajax({
+      data: fd,
+      method: 'POST',
+      url: "/attachment/file/kanban",
+      contentType: false,
+      processData: false
+    }).then(
+      function (data) {
+        files.push(...data.result);
+      }
+    );
+
+  }
+
 }

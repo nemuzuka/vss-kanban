@@ -64,12 +64,7 @@ class KanbanAdminServiceImpl @Inject() (
       JoinedUserTargetDto(
         id = id,
         lockVersion = kanban.configuration.lockVersion,
-        joinedUsers = kanban.joinedUsers map (v => {
-        JoinedUserDto(
-          userId = v.userId.id,
-          authority = v.authority.code
-        )
-      }),
+        joinedUsers = JoinedUserDto.toDto(kanban.joinedUsers),
         allUsers = userSerivce.findAll
       )
     }
