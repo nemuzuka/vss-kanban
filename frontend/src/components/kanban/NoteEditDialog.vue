@@ -132,7 +132,8 @@
     },
     methods: {
       dateClear(e){
-        $("#note-edit-dialog-fix-date").val("");
+        const self = this;
+        self.form.fixDate = "";
       },
       openDialog(e, laneId, noteId) {
         const self = this;

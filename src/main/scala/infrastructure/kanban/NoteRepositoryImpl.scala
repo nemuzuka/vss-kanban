@@ -41,6 +41,7 @@ class NoteRepositoryImpl extends NoteRepository {
           noteDescription = note.description,
           fixDate = note.fixDate,
           sortNum = Long.MaxValue,
+          archiveStatus = note.noteStatus.code,
           createLoginUserInfoId = loginUser.userId.get.id,
           createAt = now,
           lastUpdateLoginUserInfoId = loginUser.userId.get.id,
