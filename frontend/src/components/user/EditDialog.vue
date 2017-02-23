@@ -156,7 +156,7 @@
 
             Utils.viewInfoMsg(data);
             setTimeout(function(){
-              Utils.closeDialog('user-edit-dialog');
+              self.closeDialog();
               self.$emit("Refresh", e);
             },1500);
           }

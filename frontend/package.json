@@ -11,6 +11,7 @@
   "dependencies": {
     "autosize": "^3.0.20",
     "bulma": "^0.3.1",
+    "flatpickr": "^2.4.2",
     "font-awesome": "^4.7.0",
     "lightbox2": "^2.9.0",
     "toastr": "^2.1.2",

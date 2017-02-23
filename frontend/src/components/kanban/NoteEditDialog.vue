@@ -15,8 +15,8 @@
         <div>
           <label class="label">件名 <span class="tag is-danger">必須</span></label>
           <p class="control">
-            <input class="input" type="text" v-model="form.noteName" placeholder="件名を入力してください" id="note-edit-dialog-note-name">
-            <span class="help is-danger" v-html="msg.noteNameErrMsg"></span>
+            <input class="input" type="text" v-model="form.noteTitle" placeholder="件名を入力してください" id="note-edit-dialog-note-title">
+            <span class="help is-danger" v-html="msg.noteTitleErrMsg"></span>
           </p>
         </div>
 
@@ -30,10 +30,13 @@
 
         <div>
           <label class="label">期限</label>
-          <p class="control">
-            <input class="input" type="text" v-model="form.fixDate" placeholder="期限があれば入力してください" id="note-edit-dialog-fix-date">
-            <span class="help is-danger" v-html="msg.fixDateErrMsg"></span>
+          <p class="control has-addons">
+            <input class="input is-expanded flatpickr" type="text" v-model="form.fixDate" placeholder="期限があれば入力してください" id="note-edit-dialog-fix-date">
+            <a class="button" @click="dateClear">
+              日付をクリア
+            </a>
           </p>
+          <span class="help is-danger" v-html="msg.fixDateErrMsg"></span>
         </div>
 
         <div>
@@ -88,6 +91,7 @@
   import Utils from '../../utils'
   import Upload from '../attachment/Upload'
   import SavedFileList from '../attachment/List'
+  import 'flatpickr/dist/flatpickr.min.css'
 
   export default {
     name: 'note-edit-dialog',
@@ -103,7 +107,7 @@
           laneId: "",
           kanbanId:"",
           lockVersion: "0",
-          noteName: "",
+          noteTitle: "",
           noteDescription: "",
           fixDate: "",
           archiveStatus: "0",
@@ -114,19 +118,22 @@
         files:[],
         msg:{
           globalErrMsg:"",
-          noteNameErrMsg:"",
+          noteTitleErrMsg:"",
           noteDescriptionErrMsg:"",
           fixDateErrMsg: ""
         },
         clearMsg(){
           this.msg.globalErrMsg = "";
-          this.msg.noteNameErrMsg = "";
+          this.msg.noteTitleErrMsg = "";
           this.msg.noteDescriptionErrMsg = "";
           this.msg.fixDateErrMsg = "";
         }
       }
     },
     methods: {
+      dateClear(e){
+        $("#note-edit-dialog-fix-date").val("");
+      },
       openDialog(e, laneId, noteId) {
         const self = this;
         const param = {
@@ -150,10 +157,14 @@
             Utils.openDialog('note-edit-dialog');
 
             setTimeout(function(){
-              $('#note-edit-dialog-note-name').focus();
+              $('#note-edit-dialog-note-title').focus();
+
               const ta = document.querySelector('#note-edit-dialog textarea');
               autosize(ta);
               autosize.update(ta);
+
+              Utils.datepicker('#note-edit-dialog .flatpickr');
+
             }, 500);
           }
         );
@@ -190,7 +201,30 @@
         self.files.splice(index, 1);
       },
       saveDialog(e){
-        alert("わかってるよ...");
+        const self = this;
+        self.clearMsg();
+        self.form.attachmentFileIds = self.files.map(function(element, index, array) {
+          return element.attachmentFileId;
+        });
+        Utils.setAjaxDefault();
+
+        $.ajax({
+          data: self.form,
+          method: 'POST',
+          url: "/kanban/note/store"
+        }).then(
+          function (data) {
+            //エラーが存在する場合、その旨記述
+            if(Utils.writeErrorMsg(self, data)) {
+              return;
+            }
+            Utils.viewInfoMsg(data);
+            setTimeout(function(){
+              self.closeDialog();
+              self.$emit("Refresh", e);
+            },1500);
+          }
+        );
       }
     },
     computed: {

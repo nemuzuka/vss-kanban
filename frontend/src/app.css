@@ -128,3 +128,8 @@ p.back a i {
 .modal-card-title {
   font-weight: bold;
 }
+
+/** datepicker */
+.flatpickr-calendar.open {
+  z-index: 2000;
+}

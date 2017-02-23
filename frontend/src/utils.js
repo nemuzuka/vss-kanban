@@ -1,4 +1,6 @@
 import toastr from 'toastr/toastr';
+import Flatpickr from 'flatpickr/dist/flatpickr'
+import FlatpickrJa from 'flatpickr/dist/l10n/ja'
 
 export default class Utils {
   /**
@@ -269,6 +271,18 @@ export default class Utils {
     return org.toString().indexOf("dummy-") === 0
   }
 
+  /**
+   * 日付入力項目生成.
+   * @param selector セレクタ
+   */
+  static datepicker(selector) {
+    new Flatpickr(document.querySelector(selector), {
+      enableTime: false,
+      clickOpens: true,
+      dateFormat: 'Y/m/d',
+      "locale" : FlatpickrJa.ja
+    });
+  }
 
   /**
    * ファイルアップロード共通処理.
