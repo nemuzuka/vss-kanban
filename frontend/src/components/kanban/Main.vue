@@ -21,11 +21,11 @@
 
               <label class="checkbox" style="margin-right: .75rem;">
                 <input type="checkbox" v-model="includeArchive" @change="refresh">
-                アーカイブ済みのレーンや付箋も見る
+                アーカイブ済みのレーンやふせんも見る
               </label>
 
-              <a v-if="kanbanAttachmentFiles.length > 0" @click="openAttachmentDialog">
-                <span class="tag is-danger is-large">添付有</span>
+              <a v-if="kanbanAttachmentFiles.length > 0" @click="openAttachmentDialog" class="button is-outlined is-danger attachment-file">
+                添付有
               </a>
 
               <a class="button is-success" @click="openAttachmentUploadDialog">
@@ -212,5 +212,12 @@
   .kanban-main-container {
     overflow-x:auto;
     height:100%;
+  }
+
+  .button.is-danger.is-outlined.attachment-file {
+    background-color: #fff;
+  }
+  .button.is-danger.is-outlined.attachment-file:hover {
+    background-color: #ff3860;
   }
 </style>

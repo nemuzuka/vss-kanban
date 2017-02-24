@@ -5,7 +5,7 @@
       <p class="card-header-title">
         {{noteItem.noteTitle}}
       </p>
-      <a class="card-header-icon">
+      <a class="card-header-icon drag-item">
         <span class="icon">
           <i class="fa fa-arrows"></i>
         </span>
