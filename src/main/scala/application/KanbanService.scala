@@ -59,10 +59,12 @@ trait KanbanService {
  * @param lanes レーンDtoSeq
  * @param noteMap 付箋DtoMap(key:レーンID value:付箋DtoSeq)
  * @param kanbanAttachmentFiles かんばん添付ファイルSeq
+ * @param joinedUserMap 参加者DtoMap
  */
 case class KanbanDetail(
   kanban: KanbanRow,
   lanes: Seq[LaneRow],
   noteMap: Map[String, Seq[NoteRow]],
-  kanbanAttachmentFiles: Seq[AttachmentFileRow]
+  kanbanAttachmentFiles: Seq[AttachmentFileRow],
+  joinedUserMap: Map[String, JoinedUserDto]
 )

@@ -16,7 +16,7 @@ class LaneRepositoryImpl extends LaneRepository {
    * @inheritdoc
    */
   override def findByKanbanId(kanbanId: KanbanId, includeArchive: Boolean)(implicit session: DBSession): Seq[LaneRow] = {
-    model.Lane.findByKanbanId(kanbanId.id) map { v =>
+    model.Lane.findByKanbanId(kanbanId.id, includeArchive) map { v =>
       LaneRow(
         laneId = v.id.toString,
         laneName = v.laneName,

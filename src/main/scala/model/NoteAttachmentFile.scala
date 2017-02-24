@@ -75,4 +75,18 @@ object NoteAttachmentFile extends SkinnyCRUDMapper[NoteAttachmentFile] {
     )
   }
 
+  /**
+   * ふせんIDによる添付ファイル件数取得.
+   * @param noteIds ふせんIDSeq
+   * @param session Session
+   * @return _1: ふせんID _2: 添付ファイル数 Seq
+   */
+  def findCountByNoteIds(noteIds: Seq[Long])(implicit session: DBSession): Seq[(Long, Long)] = {
+    if (noteIds.isEmpty) Seq() else {
+      sql"select note_id, count(*) from note_attachment_file where note_id in (${noteIds}) group by note_id".map { rs =>
+        (rs.long(1), rs.long(2))
+      }.list().apply()
+    }
+  }
+
 }

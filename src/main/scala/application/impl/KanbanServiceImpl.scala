@@ -2,7 +2,7 @@ package application.impl
 
 import javax.inject.Inject
 
-import application.{ KanbanDetail, KanbanService }
+import application.{ JoinedUserDto, KanbanDetail, KanbanService }
 import domain.kanban._
 import domain.user.{ User, UserAuthority }
 import scalikejdbc.DBSession
@@ -12,7 +12,8 @@ import scalikejdbc.DBSession
  */
 class KanbanServiceImpl @Inject() (
     kanbanRepository: KanbanRepository,
-    laneRepository: LaneRepository
+    laneRepository: LaneRepository,
+    noteRepository: NoteRepository
 ) extends KanbanService {
   /**
    * @inheritdoc
@@ -52,13 +53,31 @@ class KanbanServiceImpl @Inject() (
   override def findById(id: Long, includeArchive: Boolean, loginUser: User)(implicit session: DBSession): Option[KanbanDetail] = {
     val kanbanId = KanbanId(id)
     for {
-      kanban <- kanbanRepository.findRowById(kanbanId, loginUser)
+      kanban <- kanbanRepository.findById(kanbanId, loginUser) if kanban.isJoined(loginUser)
     } yield {
+
+      val noteMap = noteRepository.findByCondition(NoteCondition(
+        kanbanId = kanban.kanbanId.get,
+        includeArchive = includeArchive
+      )).foldLeft(Map[String, Seq[NoteRow]]()) { (map, value) =>
+        {
+          val key = value.laneId.toString
+          map.updated(key, map.getOrElse(key, Seq()) :+ value)
+        }
+      }
+
       KanbanDetail(
-        kanban = kanban,
+        kanban = kanban.toKanbanRow(loginUser),
         lanes = laneRepository.findByKanbanId(kanbanId, includeArchive),
-        noteMap = Map(),
-        kanbanAttachmentFiles = kanbanRepository.findByKanbanId(kanbanId)
+        noteMap = noteMap,
+        kanbanAttachmentFiles = kanbanRepository.findByKanbanId(kanbanId),
+        joinedUserMap = (kanban.joinedUsers map { v =>
+          v.userId.id.toString -> JoinedUserDto(
+            userId = v.userId.id,
+            name = v.name,
+            authority = v.authority.code
+          )
+        }).toMap
       )
     }
   }

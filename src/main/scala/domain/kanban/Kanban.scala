@@ -66,6 +66,21 @@ case class Kanban(
   def updated(configuration: KanbanConfiguration): Kanban = {
     this.copy(configuration = configuration)
   }
+
+  /**
+   * かんばんRow生成.
+   * @param user 対象ユーザ
+   * @return かんばんRow
+   */
+  def toKanbanRow(user: User) = KanbanRow(
+    id = kanbanId.get.id,
+    title = configuration.title,
+    description = configuration.description,
+    archiveStatus = configuration.kanbanStatus.code,
+    lockVersion = configuration.lockVersion,
+    authority = if (isAdministrator(user)) "1" else "0"
+  )
+
 }
 
 /**

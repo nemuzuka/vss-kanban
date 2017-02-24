@@ -53,7 +53,7 @@
       </div>
 
       <div class="columns is-mobile kanban-main-container" id="kanban-main-context">
-        <lane-list v-for="laneItem in lanes" :laneItem="laneItem" :noteMap="noteMap" @OpenEditDialog="openNoteEditDialog"></lane-list>
+        <lane-list v-for="laneItem in lanes" :laneItem="laneItem" :noteMap="noteMap" :joinedUserMap="joinedUserMap" :key="laneItem.laneId" @OpenEditDialog="openNoteEditDialog"></lane-list>
       </div>
 
       <kanban-attachment-upload-dialog ref="kanbanAttachmentUploadDialog" :kanbanId="kanbanId" @Refresh="refresh"></kanban-attachment-upload-dialog>
@@ -99,7 +99,8 @@
         },
         lanes:[],
         noteMap:{},
-        kanbanAttachmentFiles:[]
+        kanbanAttachmentFiles:[],
+        joinedUserMap:{}
       }
     },
     methods: {
@@ -189,6 +190,7 @@
         self.lanes.push(...kanbanDetail.lanes);
 
         self.noteMap = kanbanDetail.noteMap;
+        self.joinedUserMap = kanbanDetail.joinedUserMap;
 
         self.kanbanAttachmentFiles.splice(0,self.kanbanAttachmentFiles.length);
         self.kanbanAttachmentFiles.push(...kanbanDetail.kanbanAttachmentFiles);

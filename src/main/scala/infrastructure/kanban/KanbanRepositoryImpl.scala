@@ -53,14 +53,7 @@ class KanbanRepositoryImpl extends KanbanRepository {
     for (
       kanban <- findById(kanbanId, loginUser)
     ) yield {
-      KanbanRow(
-        id = kanban.kanbanId.get.id,
-        title = kanban.configuration.title,
-        description = kanban.configuration.description,
-        archiveStatus = kanban.configuration.kanbanStatus.code,
-        lockVersion = kanban.configuration.lockVersion,
-        authority = if (kanban.isAdministrator(loginUser)) "1" else "0"
-      )
+      kanban.toKanbanRow(loginUser)
     }
   }
 

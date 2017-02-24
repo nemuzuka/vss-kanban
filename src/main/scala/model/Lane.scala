@@ -75,10 +75,23 @@ object Lane extends SkinnyCRUDMapper[Lane] {
    * かんばんIDによる取得.
    * ソート順でソートします
    * @param kanbanId かんばんID
+   * @param includeArchive Archiveのレーンも含める場合、true
    * @param session Session
    * @return 該当データ
    */
-  def findByKanbanId(kanbanId: Long)(implicit session: DBSession): Seq[Lane] = {
-    Lane.where('kanbanId -> kanbanId).orderBy(defaultAlias.sortNum.asc, defaultAlias.id.asc).apply()
+  def findByKanbanId(kanbanId: Long, includeArchive: Boolean)(implicit session: DBSession): Seq[Lane] = {
+
+    val l = Lane.defaultAlias
+    withSQL {
+      select.from(Lane as l)
+        .where(sqls.toAndConditionOpt(
+          Option(sqls"1 = 1"),
+          if (includeArchive) None else Option(sqls.eq(l.archiveStatus, "0"))
+        ))
+        .and.eq(l.kanbanId, kanbanId)
+        .orderBy(l.sortNum.asc, l.id.desc)
+    }.map { rs =>
+      Lane.extract(rs, l.resultName)
+    }.list.apply()
   }
 }

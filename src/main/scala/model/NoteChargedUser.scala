@@ -57,4 +57,15 @@ object NoteChargedUser extends SkinnyCRUDMapper[NoteChargedUser] {
     )
   }
 
+  /**
+   * ふせんIDによる取得.
+   * @param noteIds ふせんID
+   * @param session Session
+   * @return 該当データ
+   */
+  def findByNoteIds(noteIds: Seq[Long])(implicit session: DBSession): Seq[NoteChargedUser] = {
+    if (noteIds.isEmpty) Seq() else {
+      NoteChargedUser.where(sqls.in(NoteChargedUser.column.noteId, noteIds)).orderBy(NoteChargedUser.column.id.asc).apply()
+    }
+  }
 }

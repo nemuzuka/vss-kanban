@@ -36,16 +36,14 @@ trait NoteRepository extends Repository[Note] {
    */
   def store(note: Note, attachmentFileIds: Seq[Long],
     kanbanId: KanbanId, laneId: LaneId, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
-
-  /**
-   * 付箋検索条件.
-   * @param kanbanId かんばんID
-   * @param laneIds レーンIDSeq
-   * @param includeArchive Archiveの付箋も含める場合、true
-   */
-  case class NoteCondition(
-    kanbanId: KanbanId,
-    laneIds: Seq[LaneId],
-    includeArchive: Boolean
-  )
 }
+
+/**
+ * 付箋検索条件.
+ * @param kanbanId かんばんID
+ * @param includeArchive Archiveの付箋も含める場合、true
+ */
+case class NoteCondition(
+  kanbanId: KanbanId,
+  includeArchive: Boolean
+)

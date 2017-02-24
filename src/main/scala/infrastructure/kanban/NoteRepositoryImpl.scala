@@ -19,7 +19,31 @@ class NoteRepositoryImpl extends NoteRepository {
   /**
    * @inheritdoc
    */
-  override def findByCondition(condition: NoteCondition)(implicit session: DBSession): Seq[NoteRow] = ???
+  override def findByCondition(condition: NoteCondition)(implicit session: DBSession): Seq[NoteRow] = {
+    val notes = model.Note.findByKanbanId(condition.kanbanId.id, condition.includeArchive)
+    val noteIds = notes map { _.id }
+    val noteAttachmentFileCountMap: Map[Long, Long] = (NoteAttachmentFile.findCountByNoteIds(noteIds) map { v =>
+      v._1 -> v._2
+    }).toMap
+    val chargedUsers: Map[Long, Seq[String]] = NoteChargedUser.findByNoteIds(noteIds).foldLeft(Map[Long, Seq[String]]()) { (map, value) =>
+      {
+        val key = value.noteId
+        map.updated(key, map.getOrElse(key, Seq()) :+ value.loginUserInfoId.toString)
+      }
+    }
+    notes map { v =>
+      NoteRow(
+        laneId = v.laneId,
+        noteId = v.id,
+        noteTitle = v.noteTitle,
+        noteDescription = v.noteDescription,
+        archiveStatus = v.archiveStatus,
+        fixDate = v.fixDate map { _.toString("yyyyMMdd") } getOrElse "",
+        hasAttachmentFile = noteAttachmentFileCountMap.get(v.id) exists { value => if (value > 0) true else false },
+        chargedUsers = chargedUsers.getOrElse(v.id, Seq())
+      )
+    }
+  }
 
   /**
    * @inheritdoc

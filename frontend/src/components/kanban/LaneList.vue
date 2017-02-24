@@ -1,5 +1,5 @@
 <template>
-  <div class="column is-one-quarter-desktop is-one-quarter-tablet is-half-mobile" style="height:100%">
+  <div class="column is-one-quarter-desktop is-one-quarter-tablet is-half-mobile" style="height:100%" :class="{ 'archived': laneItem.archiveStatus === '1' }">
 
     <div class="lane-container is-info">
 
@@ -11,105 +11,8 @@
       </div>
 
       <div class="lane-items">
-        <div class="card" style="margin-bottom:10px;">
-          <header class="card-header">
-            <p class="card-header-title">
-              じゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむじゅげむ
-            </p>
-          </header>
-          <div class="card-content">
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-              <a>@bulmaio</a>. <a>#css</a> <a>#responsive</a>
-              <br>
-              <small>11:09 PM - 1 Jan 2016</small>
-            </div>
-          </div>
-        </div>
 
-        <div class="card">
-          <header class="card-header">
-            <p class="card-header-title">
-              Component
-            </p>
-            <a class="card-header-icon">
-                <span class="icon">
-                  <i class="fa fa-angle-down"></i>
-                </span>
-            </a>
-          </header>
-          <div class="card-content">
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-              <a>@bulmaio</a>. <a>#css</a> <a>#responsive</a>
-              <br>
-              <small>11:09 PM - 1 Jan 2016</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <header class="card-header">
-            <p class="card-header-title">
-              Component
-            </p>
-            <a class="card-header-icon">
-                <span class="icon">
-                  <i class="fa fa-angle-down"></i>
-                </span>
-            </a>
-          </header>
-          <div class="card-content">
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-              <a>@bulmaio</a>. <a>#css</a> <a>#responsive</a>
-              <br>
-              <small>11:09 PM - 1 Jan 2016</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <header class="card-header">
-            <p class="card-header-title">
-              Component
-            </p>
-            <a class="card-header-icon">
-                <span class="icon">
-                  <i class="fa fa-angle-down"></i>
-                </span>
-            </a>
-          </header>
-          <div class="card-content">
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-              <a>@bulmaio</a>. <a>#css</a> <a>#responsive</a>
-              <br>
-              <small>11:09 PM - 1 Jan 2016</small>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <header class="card-header">
-            <p class="card-header-title">
-              Component
-            </p>
-            <a class="card-header-icon">
-            <span class="icon">
-              <i class="fa fa-angle-down"></i>
-            </span>
-            </a>
-          </header>
-          <div class="card-content">
-            <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-              <a>@bulmaio</a>. <a>#css</a> <a>#responsive</a>
-              <br>
-              <small>11:09 PM - 1 Jan 2016</small>
-            </div>
-          </div>
-        </div>
+        <note-item v-for="noteItem in noteMap[laneItem.laneId]" :noteItem="noteItem" :joinedUserMap="joinedUserMap" :key="noteItem.noteId"></note-item>
 
       </div>
 
@@ -120,8 +23,14 @@
 
 <script>
   import Utils from '../../utils'
+  import NoteItem from './NoteItem'
+
   export default {
-    props:['laneItem', 'noteMap'],
+    name: 'lane-list',
+    props:['laneItem', 'noteMap', 'joinedUserMap'],
+    components: {
+      'note-item' : NoteItem
+    },
     methods: {
       openEditDialog(e) {
         const self = this;
@@ -148,4 +57,9 @@
   .lane-container.is-info {
     background-color: #3273dc;
   }
+
+  .archived > .lane-container.is-info {
+    background-color:#aaa;
+  }
+
 </style>

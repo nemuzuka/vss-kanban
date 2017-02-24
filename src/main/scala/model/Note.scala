@@ -77,4 +77,28 @@ object Note extends SkinnyCRUDMapper[Note] with OptimisticLockWithVersionFeature
     )
   }
 
+  /**
+   * かんばんIDによる取得.
+   * ソート順でソートします
+   * @param kanbanId かんばんID
+   * @param includeArchive Archiveのレーンも含める場合、true
+   * @param session Session
+   * @return 該当データ
+   */
+  def findByKanbanId(kanbanId: Long, includeArchive: Boolean)(implicit session: DBSession): Seq[Note] = {
+
+    val n = Note.defaultAlias
+    withSQL {
+      select.from(Note as n)
+        .where(sqls.toAndConditionOpt(
+          Option(sqls"1 = 1"),
+          if (includeArchive) None else Option(sqls.eq(n.archiveStatus, "0"))
+        ))
+        .and.eq(n.kanbanId, kanbanId)
+        .orderBy(n.sortNum.asc, n.id.desc)
+    }.map { rs =>
+      Note.extract(rs, n.resultName)
+    }.list.apply()
+  }
+
 }
