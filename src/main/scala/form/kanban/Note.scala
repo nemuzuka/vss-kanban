@@ -78,7 +78,7 @@ object Note {
 
   /**
    * ドメインから生成.
-   * ふせん担当者IDSeqと添付ファイルIDSeqは空のSeqを設定します
+   * 添付ファイルIDSeqは空のSeqを設定します
    * @param kanbanId かんばんID
    * @param laneId レーンID
    * @param note ふせんID
@@ -92,7 +92,7 @@ object Note {
     noteTitle = note.title,
     noteDescription = note.description,
     fixDate = note.fixDate map (_.toString("yyyyMMdd")) getOrElse "",
-    chargedUserIds = Seq(),
+    chargedUserIds = note.chargedUsers map (_.userId.id),
     attachmentFileIds = Seq()
   )
 }
