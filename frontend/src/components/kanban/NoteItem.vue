@@ -38,7 +38,7 @@
 
   export default {
     name: 'note-item',
-    props: ['noteItem', 'joinedUserMap'],
+    props: ['noteItem', 'joinedUserMap', 'completeLane'],
     methods:{
       takeStringTop(target) {
         if(typeof target === 'undefined' || target === '') {
@@ -66,7 +66,7 @@
       },
       fixDateClass() {
         const self = this;
-        return Utils.fixDateClass(self.noteItem.fixDate);
+        return Utils.fixDateClass(self.noteItem.fixDate, self.completeLane);
       }
     }
   }

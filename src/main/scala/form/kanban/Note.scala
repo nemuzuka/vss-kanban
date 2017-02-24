@@ -91,6 +91,7 @@ object Note {
     lockVersion = note.lockVersion.toString,
     noteTitle = note.title,
     noteDescription = note.description,
+    archiveStatus = note.noteStatus.code,
     fixDate = note.fixDate map (_.toString("yyyyMMdd")) getOrElse "",
     chargedUserIds = note.chargedUsers map (_.userId.id),
     attachmentFileIds = Seq()

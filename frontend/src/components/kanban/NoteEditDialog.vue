@@ -185,7 +185,7 @@
         self.form.noteTitle = form.noteTitle;
         self.form.noteDescription = form.noteDescription;
         self.form.archiveStatus = form.archiveStatus;
-        self.form.fixDate = form.fixDate;
+        self.form.fixDate = Utils.toDateString(form.fixDate,'YYYY/MM/DD');
         self.form.chargedUserIds = form.chargedUserIds;
         self.form.attachmentFileIds = form.attachmentFileIds;
 

@@ -306,20 +306,22 @@ export default class Utils {
   /**
    * 期限クラス情報取得.
    * 期日とシステム日付を比べて、
+   * 完了レーンの場合、is-lightをtrue
    * 期日 < システム日付の場合、is-primaryをtrue
    * 期日 = システム日付の場合、is-warningをtrue
    * 期日 > システム日付の場合、is-dangerをtrue
    * を返却します
    * @param targetDate 期日
-   * @returns {{is-primary: (boolean|*), is-warning: (boolean|*), is-danger: (boolean|*)}}
+   * @param completeLane 完了レーンの場合、true
    */
-  static fixDateClass(targetDate) {
+  static fixDateClass(targetDate, completeLane) {
     const fixDate = moment(targetDate, "YYYYMMDD");
     const now = moment(moment().format("YYYYMMDD"), "YYYYMMDD");
     return {
-      'is-primary': fixDate.isAfter(now),
-      'is-warning': fixDate.isSame(now),
-      'is-danger': fixDate.isBefore(now)
+      'is-primary': !completeLane && fixDate.isAfter(now),
+      'is-warning': !completeLane && fixDate.isSame(now),
+      'is-danger': !completeLane && fixDate.isBefore(now),
+      'is-light': completeLane
     };
   }
 

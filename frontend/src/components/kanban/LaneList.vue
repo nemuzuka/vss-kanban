@@ -12,7 +12,7 @@
 
       <div class="lane-items">
 
-        <note-item v-for="noteItem in noteMap[laneItem.laneId]" :noteItem="noteItem" :joinedUserMap="joinedUserMap" :key="noteItem.noteId" @OpenDetailDialog="openDetailDialog"></note-item>
+        <note-item v-for="noteItem in noteMap[laneItem.laneId]" :noteItem="noteItem" :joinedUserMap="joinedUserMap" :key="noteItem.noteId" :completeLane="laneItem.completeLane" @OpenDetailDialog="openDetailDialog"></note-item>
 
       </div>
 

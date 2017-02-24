@@ -6,12 +6,17 @@ import domain.kanban._
 import domain.user.{ User, UserId }
 import model.{ NoteAttachmentFile, NoteChargedUser }
 import scalikejdbc.DBSession
+import skinny.logging.Logger
 import util.CurrentDateUtil
+
+import scala.util.{ Failure, Success, Try }
 
 /**
  * NoteRepositoryの実装クラス.
  */
 class NoteRepositoryImpl extends NoteRepository {
+
+  private[this] val logger = Logger(this.getClass)
 
   /**
    * @inheritdoc
@@ -72,9 +77,33 @@ class NoteRepositoryImpl extends NoteRepository {
     kanbanId: KanbanId, laneId: LaneId, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
 
     val now = CurrentDateUtil.nowDateTime
-    note.noteId match {
-      case Some(_) =>
-        Right(1)
+    val result: Either[ApplicationException, Long] = note.noteId match {
+      case Some(noteId) =>
+        //変更
+        Try {
+          val entity = model.Note(
+            id = noteId.id,
+            laneId = laneId.id,
+            kanbanId = kanbanId.id,
+            noteTitle = note.title,
+            noteDescription = note.description,
+            fixDate = note.fixDate,
+            sortNum = Long.MaxValue,
+            archiveStatus = note.noteStatus.code,
+            createLoginUserInfoId = loginUser.userId.get.id,
+            createAt = now,
+            lastUpdateLoginUserInfoId = loginUser.userId.get.id,
+            lastUpdateAt = now,
+            lockVersion = note.lockVersion
+          )
+          model.Note.update(entity)
+        } match {
+          case Success(id) => Right(id)
+          case Failure(e) =>
+            logger.error(e.getMessage, e)
+            Left(new ApplicationException("invalidVersion", Seq()))
+        }
+
       case _ =>
         //新規登録
         val entity = model.Note(
@@ -92,10 +121,15 @@ class NoteRepositoryImpl extends NoteRepository {
           lastUpdateAt = now,
           lockVersion = 1L
         )
-        val noteId = model.Note.create(entity)
-        saveChargedUsers(noteId, note.chargedUsers)
-        saveAttachmentFiles(noteId, attachmentFileIds)
-        Right(noteId)
+        Right(model.Note.create(entity))
+    }
+
+    for {
+      noteId <- result.right
+    } yield {
+      saveChargedUsers(noteId, note.chargedUsers)
+      saveAttachmentFiles(noteId, attachmentFileIds)
+      noteId
     }
   }
 

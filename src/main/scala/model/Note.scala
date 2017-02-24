@@ -78,6 +78,24 @@ object Note extends SkinnyCRUDMapper[Note] with OptimisticLockWithVersionFeature
   }
 
   /**
+   * 変更.
+   * @param entity 対象Entity
+   * @param session Session
+   * @return ふせんID
+   */
+  def update(entity: Note)(implicit session: DBSession): Long = {
+    Note.updateByIdAndVersion(entity.id, entity.lockVersion).withAttributes(
+      'noteTitle -> entity.noteTitle,
+      'noteDescription -> entity.noteDescription,
+      'fixDate -> entity.fixDate,
+      'archiveStatus -> entity.archiveStatus,
+      'lastUpdateLoginUserInfoId -> entity.lastUpdateLoginUserInfoId,
+      'lastUpdateAt -> entity.lastUpdateAt
+    )
+    entity.id
+  }
+
+  /**
    * かんばんIDによる取得.
    * ソート順でソートします
    * @param kanbanId かんばんID
