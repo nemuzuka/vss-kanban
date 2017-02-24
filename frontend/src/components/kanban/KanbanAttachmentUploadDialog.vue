@@ -17,7 +17,12 @@
 
       </section>
       <footer class="modal-card-foot">
-        <a class="button is-info" @click="saveDialog">保存</a>
+        <a class="button is-info" @click="saveDialog">
+          <span class="icon is-small">
+            <i class="fa fa-floppy-o"></i>
+          </span>
+          <span>保存</span>
+        </a>
         <a class="button" @click="closeDialog">Cancel</a>
       </footer>
     </div>

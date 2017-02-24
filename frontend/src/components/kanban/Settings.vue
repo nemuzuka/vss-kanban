@@ -69,7 +69,12 @@
                 <span class="icon"><i class="fa fa-times"></i></span>
                 <span>削除</span>
               </a>
-              <a class="button is-info" @click="saveBase">変更</a>
+              <a class="button is-info" @click="saveBase">
+                <span class="icon is-small">
+                  <i class="fa fa-floppy-o"></i>
+                </span>
+                <span>変更</span>
+              </a>
             </div>
 
           </div>
@@ -98,7 +103,12 @@
             </div>
 
             <div class="has-text-right">
-              <a class="button is-info" @click="saveLanes">変更</a>
+              <a class="button is-info" @click="saveLanes">
+                <span class="icon is-small">
+                  <i class="fa fa-floppy-o"></i>
+                </span>
+                <span>変更</span>
+              </a>
             </div>
 
           </div>
@@ -140,7 +150,12 @@
             </div>
 
             <div class="has-text-right">
-              <a class="button is-info" @click="saveJoinedUsers">変更</a>
+              <a class="button is-info" @click="saveJoinedUsers">
+                <span class="icon is-small">
+                  <i class="fa fa-floppy-o"></i>
+                </span>
+                <span>変更</span>
+              </a>
             </div>
 
           </div>

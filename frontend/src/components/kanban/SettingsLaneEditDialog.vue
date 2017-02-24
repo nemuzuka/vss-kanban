@@ -38,7 +38,12 @@
 
       </section>
       <footer class="modal-card-foot">
-        <a class="button is-info" @click="saveDialog">{{buttonLabel}}</a>
+        <a class="button is-success" @click="saveDialog">
+          <span class="icon is-small">
+            <i class="fa fa-floppy-o"></i>
+          </span>
+          <span>{{buttonLabel}}</span>
+        </a>
         <a class="button" @click="closeDialog">Cancel</a>
       </footer>
     </div>

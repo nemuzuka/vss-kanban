@@ -48,7 +48,20 @@
 
       </section>
       <footer class="modal-card-foot">
-        <a class="button is-primary" @click="openEditDialog">このふせんを変更する</a>
+        <a class="button is-primary" @click="openEditDialog" v-if="isCharged">
+          <span class="icon is-small">
+            <i class="fa fa-pencil"></i>
+          </span>
+          <span>このふせんを変更する</span>
+        </a>
+
+        <a class="button is-primary" @click="openEditDialog">
+          <span class="icon is-small">
+            <i class="fa fa-comment-o"></i>
+          </span>
+          <span>このふせんにコメントする</span>
+        </a>
+
         <a class="button" @click="closeDialog">Cancel</a>
       </footer>
     </div>

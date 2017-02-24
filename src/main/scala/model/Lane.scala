@@ -89,7 +89,7 @@ object Lane extends SkinnyCRUDMapper[Lane] {
           if (includeArchive) None else Option(sqls.eq(l.archiveStatus, "0"))
         ))
         .and.eq(l.kanbanId, kanbanId)
-        .orderBy(l.sortNum.asc, l.id.desc)
+        .orderBy(l.sortNum.asc, l.id.asc)
     }.map { rs =>
       Lane.extract(rs, l.resultName)
     }.list.apply()
