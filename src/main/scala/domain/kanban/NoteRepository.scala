@@ -1,5 +1,6 @@
 package domain.kanban
 
+import domain.attachment.AttachmentFileRow
 import domain.user.User
 import domain.{ ApplicationException, Repository }
 import scalikejdbc.DBSession
@@ -36,6 +37,15 @@ trait NoteRepository extends Repository[Note] {
    */
   def store(note: Note, attachmentFileIds: Seq[Long],
     kanbanId: KanbanId, laneId: LaneId, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
+
+  /**
+   * ふせんに紐づく添付ファイル一覧取得.
+   * @param noteId ふせんID
+   * @param session Session
+   * @return 該当データ
+   */
+  def findByNoteId(noteId: NoteId)(implicit session: DBSession): Seq[AttachmentFileRow]
+
 }
 
 /**

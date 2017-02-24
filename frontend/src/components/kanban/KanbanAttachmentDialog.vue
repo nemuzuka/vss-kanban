@@ -6,7 +6,7 @@
         <p class="modal-card-title">添付ファイル</p>
         <button class="delete" @click="closeDialog"></button>
       </header>
-      <section class="modal-card-body">
+      <section class="modal-card-body detail">
 
         <saved-file-list :fileList="files" type="detail"></saved-file-list>
 

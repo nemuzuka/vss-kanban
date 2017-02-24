@@ -121,6 +121,10 @@ p.back a i {
   background-image: url(./assets/absurdity.png);
 }
 
+.modal-card-body.detail {
+  background-color: #81c7d4;
+}
+
 .modal-card-foot {
   justify-content: flex-end;
 }

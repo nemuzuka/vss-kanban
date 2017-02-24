@@ -95,7 +95,7 @@ object Note extends SkinnyCRUDMapper[Note] with OptimisticLockWithVersionFeature
           if (includeArchive) None else Option(sqls.eq(n.archiveStatus, "0"))
         ))
         .and.eq(n.kanbanId, kanbanId)
-        .orderBy(n.sortNum.asc, n.id.desc)
+        .orderBy(n.sortNum.asc, n.id.asc)
     }.map { rs =>
       Note.extract(rs, n.resultName)
     }.list.apply()

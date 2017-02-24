@@ -2,7 +2,7 @@ package application.impl
 
 import javax.inject.Inject
 
-import application.{ JoinedUserDto, NoteEditDetail, NoteService }
+import application.{ JoinedUserDto, NoteDetail, NoteEditDetail, NoteService }
 import domain.ApplicationException
 import domain.kanban._
 import domain.user.User
@@ -30,8 +30,15 @@ class NoteServiceImpl @Inject() (
           noteAttachmentFiles = Seq()
         ))
       } else {
-        //変更用のForm作成
-        None
+        for (
+          note <- noteRepository.findById(noteId.get) if note.isCharged(loginUser, kanban)
+        ) yield {
+          NoteEditDetail(
+            form = form.kanban.Note.fromDomain(kanbanId, laneId, note),
+            joinedUsers = JoinedUserDto.toDto(kanban.joinedUsers),
+            noteAttachmentFiles = noteRepository.findByNoteId(noteId.get)
+          )
+        }
       }
     }
     result getOrElse None
@@ -44,5 +51,22 @@ class NoteServiceImpl @Inject() (
     val note = form.toDomain(loginUser)
     noteRepository.store(note, form.attachmentFileIds,
       KanbanId(form.kanbanId.toLong), LaneId(form.laneId.toLong), loginUser)
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def getDetail(kanbanId: KanbanId, laneId: LaneId, noteId: NoteId, loginUser: User)(implicit session: DBSession): Option[NoteDetail] = {
+    for {
+      kanban <- kanbanRepository.findById(kanbanId, loginUser) if kanban.isJoined(loginUser)
+      note <- noteRepository.findById(noteId)
+    } yield {
+      NoteDetail(
+        form = form.kanban.Note.fromDomain(kanbanId, laneId, note),
+        chargedUserNames = note.chargedUsers map (_.name),
+        noteAttachmentFiles = noteRepository.findByNoteId(noteId),
+        isCharged = note.isCharged(loginUser, kanban)
+      )
+    }
   }
 }

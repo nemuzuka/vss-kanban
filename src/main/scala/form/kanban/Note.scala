@@ -75,4 +75,24 @@ object Note {
     chargedUserIds = Seq(),
     attachmentFileIds = Seq()
   )
+
+  /**
+   * ドメインから生成.
+   * ふせん担当者IDSeqと添付ファイルIDSeqは空のSeqを設定します
+   * @param kanbanId かんばんID
+   * @param laneId レーンID
+   * @param note ふせんID
+   * @return 更新用Form
+   */
+  def fromDomain(kanbanId: KanbanId, laneId: LaneId, note: domain.kanban.Note) = Note(
+    id = note.noteId.get.id.toString,
+    kanbanId = kanbanId.id.toString,
+    laneId = laneId.id.toString,
+    lockVersion = note.lockVersion.toString,
+    noteTitle = note.title,
+    noteDescription = note.description,
+    fixDate = note.fixDate map (_.toString("yyyyMMdd")) getOrElse "",
+    chargedUserIds = Seq(),
+    attachmentFileIds = Seq()
+  )
 }

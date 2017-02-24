@@ -53,12 +53,13 @@
       </div>
 
       <div class="columns is-mobile kanban-main-container" id="kanban-main-context">
-        <lane-list v-for="laneItem in lanes" :laneItem="laneItem" :noteMap="noteMap" :joinedUserMap="joinedUserMap" :key="laneItem.laneId" @OpenEditDialog="openNoteEditDialog"></lane-list>
+        <lane-list v-for="laneItem in lanes" :laneItem="laneItem" :noteMap="noteMap" :joinedUserMap="joinedUserMap" :key="laneItem.laneId" @OpenEditDialog="openNoteEditDialog" @OpenDetailDialog="openNoteDetailDialog"></lane-list>
       </div>
 
       <kanban-attachment-upload-dialog ref="kanbanAttachmentUploadDialog" :kanbanId="kanbanId" @Refresh="refresh"></kanban-attachment-upload-dialog>
       <kanban-attachment-dialog ref="kanbanAttachmentDialog" :kanbanId="kanbanId"></kanban-attachment-dialog>
       <note-edit-dialog ref="noteEditDialog" :kanbanId="kanbanId" @Refresh="refresh"></note-edit-dialog>
+      <note-detail-dialog ref="noteDetailDialog" :kanbanId="kanbanId" @Refresh="refresh" @OpenEditDialog="openNoteEditDialog"></note-detail-dialog>
 
     </div>
 
@@ -73,6 +74,7 @@
   import KanbanAttachmentUploadDialog from './KanbanAttachmentUploadDialog'
   import KanbanAttachmentDialog from './KanbanAttachmentDialog'
   import NoteEditDialog from './NoteEditDialog'
+  import NoteDetailDialog from './NoteDetailDialog'
   import LaneList from './LaneList'
   import KanbanSettings from './Settings'
 
@@ -83,7 +85,8 @@
       'kanban-attachment-dialog':KanbanAttachmentDialog,
       'lane-list':LaneList,
       'kanban-settings':KanbanSettings,
-      'note-edit-dialog': NoteEditDialog
+      'note-edit-dialog': NoteEditDialog,
+      'note-detail-dialog': NoteDetailDialog
     },
     data() {
       return {
@@ -139,6 +142,10 @@
       openNoteEditDialog(e, laneId, noteId) {
         const self = this;
         self.$refs.noteEditDialog.openDialog(e, laneId, noteId);
+      },
+      openNoteDetailDialog(e, laneId, noteId) {
+        const self = this;
+        self.$refs.noteDetailDialog.openDialog(e, laneId, noteId);
       },
       viewSettings(e) {
         const self = this;

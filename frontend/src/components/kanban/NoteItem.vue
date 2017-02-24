@@ -35,7 +35,6 @@
 
 <script>
   import Utils from '../../utils'
-  import moment from 'moment'
 
   export default {
     name: 'note-item',
@@ -49,15 +48,15 @@
         }
       },
       toDateString(target) {
-        const m = moment(target, "YYYYMMDD");
-        return m.format("YY/MM/DD");
+        return Utils.toDateString(target, "YY/MM/DD");
       },
       openDetailDialog(e) {
         if (e && (e.target.tagName.toLocaleLowerCase() === 'a' || e.target.tagName.toLocaleLowerCase() === 'span' || e.target.tagName.toLocaleLowerCase() === 'i')) {
           //aタグの場合、処理終了
           return;
         }
-        alert("開いてよ！");
+        const self = this;
+        self.$emit("OpenDetailDialog", e, self.noteItem.noteId);
       }
     },
     computed:{
@@ -67,14 +66,7 @@
       },
       fixDateClass() {
         const self = this;
-        const fixDate = moment(self.noteItem.fixDate, "YYYYMMDD");
-        const now = moment(moment().format("YYYYMMDD"), "YYYYMMDD");
-
-        return {
-          'is-primary':fixDate.isAfter(now),
-          'is-warning':fixDate.isSame(now),
-          'is-danger': fixDate.isBefore(now)
-        };
+        return Utils.fixDateClass(self.noteItem.fixDate);
       }
     }
   }

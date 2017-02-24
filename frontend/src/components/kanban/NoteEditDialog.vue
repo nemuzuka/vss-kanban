@@ -164,7 +164,7 @@
               autosize(ta);
               autosize.update(ta);
 
-              Utils.datepicker('#note-edit-dialog .flatpickr');
+              Utils.datepicker('#note-edit-dialog .flatpickr', self.form.fixDate);
 
             }, 500);
           }

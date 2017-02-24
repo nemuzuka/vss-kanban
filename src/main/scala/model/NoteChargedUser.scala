@@ -68,4 +68,23 @@ object NoteChargedUser extends SkinnyCRUDMapper[NoteChargedUser] {
       NoteChargedUser.where(sqls.in(NoteChargedUser.column.noteId, noteIds)).orderBy(NoteChargedUser.column.id.asc).apply()
     }
   }
+
+  /**
+   * ふせんIDによる取得.
+   * ソート順は、idの昇順です
+   * @param noteId ふせんID
+   * @param session Session
+   * @return 該当データ(_1: LoginUserInfo, _2:NoteChargedUser)
+   */
+  def findByNoteId(noteId: Long)(implicit session: DBSession): Seq[(LoginUserInfo, NoteChargedUser)] = {
+    val (lui, ncu) = (LoginUserInfo.defaultAlias, NoteChargedUser.defaultAlias)
+    withSQL {
+      select.from(LoginUserInfo as lui)
+        .innerJoin(NoteChargedUser as ncu).on(lui.id, ncu.loginUserInfoId)
+        .where.eq(ncu.noteId, noteId).orderBy(ncu.id.asc)
+    }.map { rs =>
+      (LoginUserInfo.extract(rs, lui.resultName), NoteChargedUser.extract(rs, ncu.resultName))
+    }.list.apply()
+  }
+
 }

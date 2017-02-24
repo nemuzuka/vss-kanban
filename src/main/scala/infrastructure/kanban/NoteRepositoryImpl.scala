@@ -1,8 +1,9 @@
 package infrastructure.kanban
 
 import domain.ApplicationException
+import domain.attachment.AttachmentFileRow
 import domain.kanban._
-import domain.user.User
+import domain.user.{ User, UserId }
 import model.{ NoteAttachmentFile, NoteChargedUser }
 import scalikejdbc.DBSession
 import util.CurrentDateUtil
@@ -11,10 +12,29 @@ import util.CurrentDateUtil
  * NoteRepositoryの実装クラス.
  */
 class NoteRepositoryImpl extends NoteRepository {
+
   /**
    * @inheritdoc
    */
-  override def findById(noteId: NoteId)(implicit session: DBSession): Option[Note] = ???
+  override def findById(noteId: NoteId)(implicit session: DBSession): Option[Note] = {
+    for (
+      note <- model.Note.findById(noteId.id)
+    ) yield {
+      Note(
+        noteId = Option(noteId),
+        sortNum = note.sortNum,
+        noteStatus = NoteStatus.withCode(note.archiveStatus).get,
+        title = note.noteTitle,
+        description = note.noteDescription,
+        fixDate = note.fixDate,
+        createUserId = UserId(note.createLoginUserInfoId),
+        lockVersion = note.lockVersion,
+        chargedUsers = NoteChargedUser.findByNoteId(noteId.id) map { v =>
+          ChargedUser.createChargedUser(v._2.loginUserInfoId, v._1.userName)
+        }
+      )
+    }
+  }
 
   /**
    * @inheritdoc
@@ -76,6 +96,15 @@ class NoteRepositoryImpl extends NoteRepository {
         saveChargedUsers(noteId, note.chargedUsers)
         saveAttachmentFiles(noteId, attachmentFileIds)
         Right(noteId)
+    }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def findByNoteId(noteId: NoteId)(implicit session: DBSession): Seq[AttachmentFileRow] = {
+    NoteAttachmentFile.findByNoteId(noteId.id) map { v =>
+      domain.attachment.AttachmentFile.createAttachmentFileRow(v._2)
     }
   }
 

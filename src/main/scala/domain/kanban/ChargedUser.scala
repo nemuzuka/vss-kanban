@@ -21,7 +21,7 @@ case class ChargedUser(
 /**
  * ふせん担当者Object.
  */
-object createChargedUser {
+object ChargedUser {
   /**
    * ふせん担当者生成.
    * @param userId ユーザID

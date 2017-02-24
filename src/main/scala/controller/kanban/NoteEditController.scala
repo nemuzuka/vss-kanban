@@ -64,6 +64,27 @@ class NoteEditController extends ApiController {
   }
 
   /**
+   * 詳細情報取得.
+   */
+  def detail: String = {
+    val kanbanId = params.getAs[Long]("kanbanId").getOrElse(-1L)
+    val laneId = params.getAs[Long]("laneId").getOrElse(-1L)
+    val noteId = params.getAs[Long]("noteId").getOrElse(-1L)
+    val userInfo = session.getAs[User](Keys.Session.UserInfo).get
+
+    DB localTx { implicit session =>
+      val noteService = injector.getInstance(classOf[NoteService])
+      noteService.getDetail(KanbanId(kanbanId), LaneId(laneId), NoteId(noteId), userInfo)
+    } match {
+      case Some(detail) =>
+        createJsonResult(detail)
+      case _ =>
+        val errorMsg = createErrorMsg(Keys.ErrMsg.Key, "noData", Seq())
+        createJsonResult(errorMsg)
+    }
+  }
+
+  /**
    * validate & 入力パラメータ取得.
    *
    * @return Right:入力Form / Left:validateエラーメッセージ
