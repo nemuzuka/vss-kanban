@@ -70,4 +70,17 @@ class NoteServiceImpl @Inject() (
       )
     }
   }
+
+  /**
+   * @inheritdoc
+   */
+  override def deleteById(kanbanId: KanbanId, noteId: NoteId, lockVersion: Long, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
+    val result = for {
+      kanban <- kanbanRepository.findById(kanbanId, loginUser) if kanban.isJoined(loginUser)
+      note <- noteRepository.findById(noteId) if note.isCharged(loginUser, kanban)
+    } yield {
+      noteRepository.deleteById(noteId, lockVersion)
+    }
+    result getOrElse Left(new ApplicationException("noData", Seq()))
+  }
 }

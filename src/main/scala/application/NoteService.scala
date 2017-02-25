@@ -56,6 +56,18 @@ trait NoteService {
    * @return ふせん詳細情報
    */
   def getDetail(kanbanId: KanbanId, laneId: LaneId, noteId: NoteId, loginUser: User)(implicit session: DBSession): Option[NoteDetail]
+
+  /**
+   * ふせん削除.
+   * ふせん担当者でなければエラーになります
+   * @param kanbanId かんばんID
+   * @param noteId ふせんID
+   * @param lockVersion ふせんバージョンNo
+   * @param loginUser ログインユーザ情報
+   * @param session Session
+   * @return Right:ふせんID, Left:エラー情報
+   */
+  def deleteById(kanbanId: KanbanId, noteId: NoteId, lockVersion: Long, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
 }
 
 /**

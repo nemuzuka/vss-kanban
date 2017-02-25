@@ -64,6 +64,15 @@ trait NoteRepository extends Repository[Note] {
    * @return 該当データ
    */
   def findCommentsByNoteId(noteId: NoteId)(implicit session: DBSession): Seq[NoteCommentRow]
+
+  /**
+   * ふせん削除.
+   * @param noteId ふせんID
+   * @param lockVersion ふせんのバージョンNo
+   * @return Right:ふせんID, Left:エラー情報
+   */
+  def deleteById(noteId: NoteId, lockVersion: Long): Either[ApplicationException, Long]
+
 }
 
 /**

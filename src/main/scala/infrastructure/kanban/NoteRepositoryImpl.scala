@@ -193,6 +193,21 @@ class NoteRepositoryImpl extends NoteRepository {
   }
 
   /**
+   * @inheritdoc
+   */
+  override def deleteById(noteId: NoteId, lockVersion: Long): Either[ApplicationException, Long] = {
+    Try {
+      model.Note.deleteByIdAndVersion(noteId.id, lockVersion)
+      noteId.id
+    } match {
+      case Success(id) => Right(id)
+      case Failure(e) =>
+        logger.error(e.getMessage, e)
+        Left(new ApplicationException("invalidVersion", Seq()))
+    }
+  }
+
+  /**
    * ふせん添付ファイル登録.
    * ふせんIDに紐づく情報を削除した後、Insertします
    * @param noteId ふせんID

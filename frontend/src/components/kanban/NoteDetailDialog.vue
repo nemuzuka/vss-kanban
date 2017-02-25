@@ -75,7 +75,6 @@
             <label class="label">コメント</label>
             <p class="control">
               <textarea v-model="comment.comment" placeholder="コメントを入力してください" class="textarea" id="note-detail-dialog-comment"></textarea>
-              <span class="help is-danger" v-html="msg.commentErrMsg"></span>
             </p>
           </div>
 
@@ -175,8 +174,7 @@
           viewNoteDetail:false
         },
         msg: {
-          globalErrMsg: "",
-          commentErrMsg: "",
+          globalErrMsg: ""
         },
         files:[],
         isCharged: true,
@@ -185,7 +183,6 @@
         mode:"",
         clearMsg(){
           this.msg.globalErrMsg = "";
-          this.msg.commentErrMsg = "";
         }
       };
     },
@@ -271,8 +268,39 @@
         const self = this;
         self.comment.viewNoteDetail = !self.comment.viewNoteDetail;
       },
-      deleteNote() {
-          alert("ふせん削除するよ...");
+      deleteNote(e) {
+
+        if(window.confirm("このふせんを削除して本当によろしいですか？(「アーカイブ」することで見えなくすることもできます)") == false) {
+          return;
+        }
+
+        const self = this;
+        self.clearMsg();
+
+        const param = {
+          kanbanId: self.kanbanId,
+          noteId: self.detail.id,
+          lockVersion: self.detail.lockVersion
+        };
+
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: param,
+          method: 'POST',
+          url: "/kanban/note/delete"
+        }).then(
+          function (data) {
+            //エラーが存在する場合、その旨記述
+            if(Utils.writeErrorMsg(self, data)) {
+              return;
+            }
+            Utils.viewInfoMsg(data);
+            setTimeout(function(){
+              self.closeDialog();
+              self.$emit("Refresh", e);
+            },1500);
+          }
+        );
       },
       fileUpload(e, targetFiles) {
         const self = this;

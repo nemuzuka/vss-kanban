@@ -85,6 +85,28 @@ class NoteEditController extends ApiController {
   }
 
   /**
+   * 削除.
+   */
+  def delete: String = {
+    val kanbanId = params.getAs[Long]("kanbanId").getOrElse(-1L)
+    val noteId = params.getAs[Long]("noteId").getOrElse(-1L)
+    val lockVersion = params.getAs[Long]("lockVersion").getOrElse(-1L)
+    val userInfo = session.getAs[User](Keys.Session.UserInfo).get
+
+    import scalikejdbc.TxBoundary.Either._
+    DB.localTx { implicit session =>
+      val noteService = injector.getInstance(classOf[NoteService])
+      noteService.deleteById(KanbanId(kanbanId), NoteId(noteId), lockVersion, userInfo)
+    } match {
+      case Right(noteId) =>
+        createJsonResult("success", Result(noteId = noteId))
+      case Left(exception) =>
+        val errorMsg = createErrorMsg(Keys.ErrMsg.Key, exception.messageKey, exception.paramKey)
+        createJsonResult(errorMsg)
+    }
+  }
+
+  /**
    * コメント登録.
    */
   def commentStore(): String = {
