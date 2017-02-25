@@ -9,6 +9,14 @@ var ora = require('ora')
 var webpack = require('webpack')
 var webpackConfig = require('./webpack.prod.conf')
 
+if(process.argv.length >= 3) {
+  for(var i = 2; i< process.argv.length; i++ ) {
+    if(process.argv[i] === "watch") {
+      webpackConfig.watch = true;
+    }
+  }
+}
+
 console.log(
   '  Tip:\n' +
   '  Built files are meant to be served over an HTTP server.\n' +

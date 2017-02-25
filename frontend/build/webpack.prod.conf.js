@@ -79,8 +79,7 @@ var webpackConfig = merge(baseWebpackConfig, {
       name: 'manifest',
       chunks: ['vendor']
     })
-  ],
-  watch:true
+  ]
 })
 
 if (config.build.productionGzip) {
