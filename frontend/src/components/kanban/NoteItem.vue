@@ -28,7 +28,7 @@
         </div>
 
         <div class="last-comment" v-if="noteItem.lastCommentAt !== ''">
-          <span class="tag is-dark">
+          <span class="tag is-comment">
             <span class="icon is-small" style="margin-right: .5rem">
               <i class="fa fa-commenting"></i>
             </span>
@@ -97,5 +97,8 @@
   }
   .charge-users, .fix-date, .last-comment {
     margin-top: 0.5rem;
+  }
+  .is-comment {
+    background: #FEDFE1;
   }
 </style>
