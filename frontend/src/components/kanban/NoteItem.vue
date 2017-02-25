@@ -27,6 +27,15 @@
           <span v-if="noteItem.hasAttachmentFile" class="tag is-info">添付有</span>
         </div>
 
+        <div class="last-comment" v-if="noteItem.lastCommentAt !== ''">
+          <span class="tag is-dark">
+            <span class="icon is-small" style="margin-right: .5rem">
+              <i class="fa fa-commenting"></i>
+            </span>
+            {{viewLastCommentAt}}
+          </span>
+        </div>
+
       </div>
     </div>
   </div>
@@ -67,6 +76,10 @@
       fixDateClass() {
         const self = this;
         return Utils.fixDateClass(self.noteItem.fixDate, self.completeLane);
+      },
+      viewLastCommentAt() {
+        const self = this;
+        return Utils.toDateTimeString(self.noteItem.lastCommentAt, "YY/MM/DD HH:mm");
       }
     }
   }
@@ -82,7 +95,7 @@
   .card-content {
     padding: 0.75rem;
   }
-  .charge-users, .fix-date {
+  .charge-users, .fix-date, .last-comment {
     margin-top: 0.5rem;
   }
 </style>

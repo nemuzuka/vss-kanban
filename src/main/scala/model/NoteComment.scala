@@ -58,7 +58,7 @@ object NoteComment extends SkinnyCRUDMapper[NoteComment] {
    * @param session Session
    * @return _1:ふせんコメント _2:ふせんコメント登録者情報Opt
    */
-  def findByNoteId(noteId: Long)(implicit session: DBSession): List[(NoteComment, Option[LoginUserInfo])] = {
+  def findByNoteId(noteId: Long)(implicit session: DBSession): Seq[(NoteComment, Option[LoginUserInfo])] = {
     val (nc, lui) = (NoteComment.defaultAlias, LoginUserInfo.defaultAlias)
     withSQL {
       select.from(NoteComment as nc)
@@ -68,6 +68,20 @@ object NoteComment extends SkinnyCRUDMapper[NoteComment] {
       val logunUserInfo = rs.longOpt(lui.resultName.id) map (_ => Option(LoginUserInfo.extract(rs, lui.resultName))) getOrElse None
       (NoteComment.extract(rs, nc.resultName), logunUserInfo)
     }.list.apply()
+  }
+
+  /**
+   * ふせんID毎の最終登録コメント取得.
+   * @param noteIds ふせんIDSeq
+   * @param session Session
+   * @return _1: ふせんID _2:最終登録コメント登録時刻
+   */
+  def findLastCreateCommentByNoteIds(noteIds: Seq[Long])(implicit session: DBSession): Seq[(Long, DateTime)] = {
+    if (noteIds.isEmpty) Seq() else {
+      sql"select note_id, max(create_at) from note_comment where note_id in (${noteIds}) group by note_id".map { rs =>
+        (rs.long(1), rs.jodaDateTime(2))
+      }.list().apply()
+    }
   }
 
 }

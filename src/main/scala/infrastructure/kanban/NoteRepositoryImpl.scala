@@ -56,6 +56,8 @@ class NoteRepositoryImpl extends NoteRepository {
         map.updated(key, map.getOrElse(key, Seq()) :+ value.loginUserInfoId.toString)
       }
     }
+    val noteLastCreateCommentMap: Map[Long, String] = (NoteComment.findLastCreateCommentByNoteIds(noteIds) map (result => result._1 -> result._2.toString("yyyyMMddHHmmss"))).toMap
+
     notes map { v =>
       NoteRow(
         laneId = v.laneId,
@@ -65,7 +67,8 @@ class NoteRepositoryImpl extends NoteRepository {
         archiveStatus = v.archiveStatus,
         fixDate = v.fixDate map { _.toString("yyyyMMdd") } getOrElse "",
         hasAttachmentFile = noteAttachmentFileCountMap.get(v.id) exists { value => if (value > 0) true else false },
-        chargedUsers = chargedUsers.getOrElse(v.id, Seq())
+        chargedUsers = chargedUsers.getOrElse(v.id, Seq()),
+        lastCommentAt = noteLastCreateCommentMap.getOrElse(v.id, "")
       )
     }
   }

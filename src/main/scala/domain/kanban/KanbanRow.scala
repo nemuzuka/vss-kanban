@@ -49,6 +49,7 @@ case class LaneRow(
  * @param fixDate 期日(yyyyMMdd形式)
  * @param hasAttachmentFile 添付ファイルが存在する場合、true
  * @param chargedUsers 担当者ID情報
+ * @param lastCommentAt 最終コメント時刻
  */
 case class NoteRow(
     laneId: Long,
@@ -58,7 +59,8 @@ case class NoteRow(
     archiveStatus: String,
     fixDate: String,
     hasAttachmentFile: Boolean,
-    chargedUsers: Seq[String]
+    chargedUsers: Seq[String],
+    lastCommentAt: String
 ) extends ValueObject[NoteRow] {
   override def sameValueAs(other: NoteRow): Boolean = this.noteId == other.noteId
 }
