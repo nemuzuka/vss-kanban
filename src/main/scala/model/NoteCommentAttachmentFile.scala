@@ -45,4 +45,25 @@ object NoteCommentAttachmentFile extends SkinnyCRUDMapper[NoteCommentAttachmentF
       'attachmentFileId -> entity.attachmentFileId
     )
   }
+
+  /**
+   * ふせんコメントIDによる検索.
+   * @param noteCommentIds ふせんコメントIDSeq
+   * @param session Session
+   * @return 該当データ(_1: ふせんコメント - 添付ファイル _2:添付ファイル
+   */
+  def findByNoteId(noteCommentIds: Seq[Long])(implicit session: DBSession): Seq[(NoteCommentAttachmentFile, AttachmentFile)] = {
+
+    if (noteCommentIds.isEmpty) Seq() else {
+      val (ncaf, af) = (NoteCommentAttachmentFile.defaultAlias, AttachmentFile.defaultAlias)
+      withSQL {
+        select.from(NoteCommentAttachmentFile as ncaf)
+          .innerJoin(AttachmentFile as af).on(ncaf.attachmentFileId, af.id)
+          .where.in(ncaf.noteCommentId, noteCommentIds).orderBy(ncaf.id.asc)
+      }.map { rs =>
+        (NoteCommentAttachmentFile.extract(rs, ncaf.resultName), AttachmentFile.extract(rs, af.resultName))
+      }.list.apply()
+    }
+  }
+
 }

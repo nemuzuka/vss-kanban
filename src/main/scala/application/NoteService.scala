@@ -2,7 +2,7 @@ package application
 
 import domain.ApplicationException
 import domain.attachment.AttachmentFileRow
-import domain.kanban.{ KanbanId, LaneId, NoteId }
+import domain.kanban.{ KanbanId, LaneId, NoteCommentRow, NoteId }
 import domain.user.User
 import form.kanban.Note
 import scalikejdbc.DBSession
@@ -76,10 +76,12 @@ case class NoteEditDetail(
  * @param chargedUserNames ふせん担当者名Seq
  * @param noteAttachmentFiles ふせん添付ファイルSeq
  * @param isCharged ふせん担当者か？
+ * @param comments ふせんコメントSeq
  */
 case class NoteDetail(
   form: Note,
   chargedUserNames: Seq[String],
   noteAttachmentFiles: Seq[AttachmentFileRow],
-  isCharged: Boolean
+  isCharged: Boolean,
+  comments: Seq[NoteCommentRow]
 )

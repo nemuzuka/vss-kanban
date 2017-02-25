@@ -46,6 +46,14 @@
           </div>
 
           <saved-file-list :fileList="files" type="detail"></saved-file-list>
+
+          <div class="box" v-if="comments.length > 0" style="background: ghostwhite;">
+            <div>
+              <label class="label">コメント</label>
+              <note-comment v-for="commentItem in comments" :commentItem="commentItem" :key="commentItem.noteCommentId"></note-comment>
+            </div>
+          </div>
+
         </div>
 
         <div v-if="mode==='comment'">
@@ -136,6 +144,7 @@
   import autosize from 'autosize/dist/autosize'
   import Utils from '../../utils'
   import SavedFileList from '../attachment/List'
+  import NoteComment from './NoteComment'
   import Upload from '../attachment/Upload'
 
   export default {
@@ -143,7 +152,8 @@
     props: ['kanbanId'],
     components: {
       'saved-file-list':SavedFileList,
-      'file-upload':Upload
+      'file-upload':Upload,
+      'note-comment':NoteComment
     },
     data() {
       return {
@@ -171,6 +181,7 @@
         files:[],
         isCharged: true,
         chargedUserNames:[],
+        comments:[],
         mode:"",
         clearMsg(){
           this.msg.globalErrMsg = "";
@@ -221,6 +232,9 @@
         self.detail.archiveStatus = form.archiveStatus;
         self.detail.fixDate = form.fixDate;
         self.detail.lockVersion = form.lockVersion;
+
+        self.comments.splice(0, self.comments.length);
+        self.comments.push(...result.comments);
 
         self.isCharged = result.isCharged;
         self.chargedUserNames = result.chargedUserNames;

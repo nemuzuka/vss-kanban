@@ -56,6 +56,14 @@ trait NoteRepository extends Repository[Note] {
    * @return ふせんコメントID
    */
   def store(noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Long
+
+  /**
+   * ふせんコメント一覧取得.
+   * @param noteId ふせんID
+   * @param session Session
+   * @return 該当データ
+   */
+  def findCommentsByNoteId(noteId: NoteId)(implicit session: DBSession): Seq[NoteCommentRow]
 }
 
 /**

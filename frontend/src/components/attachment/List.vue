@@ -1,6 +1,10 @@
 <template>
-  <div v-if="fileList.length > 0" style="margin-top: 1rem">
-    <file-item v-for="(item, index) in fileList" :item="item" :index="index" :type="type" :key="item.attachmentFileId" @DeleteItem="deleteItem"></file-item>
+  <div v-if="fileList.length > 0" class="box">
+    <article class="media">
+      <div class="media-content">
+        <file-item v-for="(item, index) in fileList" :item="item" :index="index" :type="type" :key="item.attachmentFileId" @DeleteItem="deleteItem"></file-item>
+      </div>
+    </article>
   </div>
 </template>
 

@@ -84,6 +84,11 @@ body.kanban-detail > div#main-content {
   margin-bottom: 0.75rem;
 }
 
+#note-detail-dialog .media .media {
+  border-top: 0px;
+  padding-top: 0px;
+}
+
 /** 戻るボタン. */
 p.back {
   position: fixed;

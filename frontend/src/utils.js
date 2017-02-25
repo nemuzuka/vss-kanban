@@ -304,6 +304,22 @@ export default class Utils {
   }
 
   /**
+   * 日時文字列フォーマット.
+   * 引数の日時文字列を指定したフォーマットに変換します。
+   * @param target 対象文字列
+   * @param formatStr フォーマット文字列
+   * @returns {string}
+   */
+  static toDateTimeString(target, formatStr) {
+
+    if(typeof target == 'undefined' || target === "") {
+      return "";
+    }
+    const targetStr = target.replace(/-/g, "").replace(/\//g, "");
+    return moment(targetStr, "YYYYMMDDhhmmss").format(formatStr);
+  }
+
+  /**
    * 期限クラス情報取得.
    * 期日とシステム日付を比べて、
    * 完了レーンの場合、is-lightをtrue

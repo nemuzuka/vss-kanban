@@ -51,4 +51,23 @@ object NoteComment extends SkinnyCRUDMapper[NoteComment] {
       'createAt -> entity.createAt
     )
   }
+
+  /**
+   * ふせんIDに紐づくふせんコメント取得.
+   * @param noteId ふせんID
+   * @param session Session
+   * @return _1:ふせんコメント _2:ふせんコメント登録者情報Opt
+   */
+  def findByNoteId(noteId: Long)(implicit session: DBSession): List[(NoteComment, Option[LoginUserInfo])] = {
+    val (nc, lui) = (NoteComment.defaultAlias, LoginUserInfo.defaultAlias)
+    withSQL {
+      select.from(NoteComment as nc)
+        .leftJoin(LoginUserInfo as lui).on(nc.createLoginUserInfoId, lui.id)
+        .where.eq(nc.noteId, noteId).orderBy(nc.id.asc)
+    }.map { rs =>
+      val logunUserInfo = rs.longOpt(lui.resultName.id) map (_ => Option(LoginUserInfo.extract(rs, lui.resultName))) getOrElse None
+      (NoteComment.extract(rs, nc.resultName), logunUserInfo)
+    }.list.apply()
+  }
+
 }

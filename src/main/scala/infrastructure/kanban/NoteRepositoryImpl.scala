@@ -1,7 +1,7 @@
 package infrastructure.kanban
 
 import domain.ApplicationException
-import domain.attachment.AttachmentFileRow
+import domain.attachment.{ AttachmentFile, AttachmentFileRow }
 import domain.kanban._
 import domain.user.{ User, UserId }
 import model.{ NoteAttachmentFile, NoteChargedUser, NoteComment, NoteCommentAttachmentFile }
@@ -162,6 +162,34 @@ class NoteRepositoryImpl extends NoteRepository {
       )
     ))
     noteCommentId
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def findCommentsByNoteId(noteId: NoteId)(implicit session: DBSession): Seq[NoteCommentRow] = {
+    val noteComments = NoteComment.findByNoteId(noteId.id)
+    val noteCommentIds = noteComments map { v => v._1.id }
+    val noteCommentAttachmentFiles = NoteCommentAttachmentFile.findByNoteId(noteCommentIds)
+    val noteCommentAttachmentFileMap = noteCommentAttachmentFiles.foldLeft(Map[Long, Seq[AttachmentFileRow]]()) { (map, value) =>
+      {
+        val noteCommentAttachmentFile = value._1
+        val key = noteCommentAttachmentFile.noteCommentId
+        map.updated(key, map.getOrElse(key, Seq()) :+ AttachmentFile.createAttachmentFileRow(value._2))
+      }
+    }
+
+    noteComments map { noteComment =>
+      NoteCommentRow(
+        noteCommentId = noteComment._1.id,
+        noteId = noteComment._1.noteId,
+        comment = noteComment._1.commentText,
+        createUserName = noteComment._2 map { _.userName } getOrElse "",
+        createUserId = noteComment._1.createLoginUserInfoId,
+        createAt = noteComment._1.createAt.toString("yyyyMMddHHmmss"),
+        attachmentFiles = noteCommentAttachmentFileMap.getOrElse(noteComment._1.id, Seq())
+      )
+    }
   }
 
   /**

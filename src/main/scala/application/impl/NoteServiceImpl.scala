@@ -65,7 +65,8 @@ class NoteServiceImpl @Inject() (
         form = form.kanban.Note.fromDomain(kanbanId, laneId, note),
         chargedUserNames = note.chargedUsers map (_.name),
         noteAttachmentFiles = noteRepository.findByNoteId(noteId),
-        isCharged = note.isCharged(loginUser, kanban)
+        isCharged = note.isCharged(loginUser, kanban),
+        comments = noteRepository.findCommentsByNoteId(noteId)
       )
     }
   }

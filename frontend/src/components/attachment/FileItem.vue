@@ -1,24 +1,18 @@
 <template>
-  <div class="box">
-    <article class="media">
-      <div class="media-content">
-        <div class="content">
-          <div>
-            <a @click="downloadFile">{{item.realFileName}}</a>
-            <a class="button is-danger is-small" @click="deleteItem" v-if="type === 'edit'">
-              <span class="icon is-small">
-                <i class="fa fa-times"></i>
-              </span>
-            </a>
-          </div>
-          <div class="image is-128x128" v-if="typeof item.thumbnailWidth !== 'undefined'">
-            <a :href="createOriginalUrl" data-lightbox="sample" :data-title="item.realFileName">
-              <img :src="createUrl">
-            </a>
-          </div>
-        </div>
-      </div>
-    </article>
+  <div class="content">
+    <div>
+      <a @click="downloadFile">{{item.realFileName}}</a>
+      <a class="button is-danger is-small" @click="deleteItem" v-if="type === 'edit'">
+        <span class="icon is-small">
+          <i class="fa fa-times"></i>
+        </span>
+      </a>
+    </div>
+    <div class="image is-128x128" v-if="typeof item.thumbnailWidth !== 'undefined'">
+      <a :href="createOriginalUrl" data-lightbox="sample" :data-title="item.realFileName">
+        <img :src="createUrl">
+      </a>
+    </div>
   </div>
 </template>
 

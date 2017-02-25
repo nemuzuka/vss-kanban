@@ -1,6 +1,7 @@
 package domain.kanban
 
 import domain.ValueObject
+import domain.attachment.AttachmentFileRow
 
 /**
  * かんばん一覧表示用ValueObject.
@@ -60,4 +61,26 @@ case class NoteRow(
     chargedUsers: Seq[String]
 ) extends ValueObject[NoteRow] {
   override def sameValueAs(other: NoteRow): Boolean = this.noteId == other.noteId
+}
+
+/**
+ * ふせんコメント表示用ValueObject
+ * @param noteCommentId ふせんコメントID
+ * @param noteId ふせんID
+ * @param comment コメント
+ * @param createUserName 登録者
+ * @param createUserId 登録ユーザID
+ * @param createAt 登録日時
+ * @param attachmentFiles ふせんコメント添付ファイルSeq
+ */
+case class NoteCommentRow(
+    noteCommentId: Long,
+    noteId: Long,
+    comment: String,
+    createUserName: String,
+    createUserId: Long,
+    createAt: String,
+    attachmentFiles: Seq[AttachmentFileRow]
+) extends ValueObject[NoteCommentRow] {
+  override def sameValueAs(other: NoteCommentRow): Boolean = this.noteCommentId == other.noteCommentId
 }
