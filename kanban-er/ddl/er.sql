@@ -10,9 +10,11 @@ DROP INDEX IF EXISTS idx_login_user_info_01;
 DROP TABLE IF EXISTS file_image;
 DROP TABLE IF EXISTS kanban_attachment_file;
 DROP TABLE IF EXISTS note_attachment_file;
+DROP TABLE IF EXISTS note_comment_attachment_file;
 DROP TABLE IF EXISTS attachment_file;
 DROP TABLE IF EXISTS kanban_joined_user;
 DROP TABLE IF EXISTS note_charged_user;
+DROP TABLE IF EXISTS note_comment;
 DROP TABLE IF EXISTS note;
 DROP TABLE IF EXISTS lane;
 DROP TABLE IF EXISTS kanban;
@@ -241,6 +243,36 @@ CREATE TABLE note_charged_user
 ) WITHOUT OIDS;
 
 
+-- ふせん - コメント
+CREATE TABLE note_comment
+(
+	-- id(自動採番)
+	id bigserial NOT NULL,
+	-- ふせんID
+	note_id bigint NOT NULL,
+	-- コメント
+	comment_text text NOT NULL,
+	-- 登録ユーザID
+	create_login_user_info_id bigint NOT NULL,
+	-- 作成日時
+	create_at timestamp NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
+-- ふせんコメント - 添付ファイル
+CREATE TABLE note_comment_attachment_file
+(
+	-- id(自動採番)
+	id bigserial NOT NULL,
+	-- ふせんコメントID
+	note_comment_id bigint NOT NULL,
+	-- 添付ファイルID
+	attachment_file_id bigint NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
 
 /* Create Foreign Keys */
 
@@ -261,6 +293,14 @@ ALTER TABLE kanban_attachment_file
 
 
 ALTER TABLE note_attachment_file
+	ADD FOREIGN KEY (attachment_file_id)
+	REFERENCES attachment_file (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
+ALTER TABLE note_comment_attachment_file
 	ADD FOREIGN KEY (attachment_file_id)
 	REFERENCES attachment_file (id)
 	ON UPDATE RESTRICT
@@ -327,6 +367,22 @@ ALTER TABLE note_attachment_file
 ALTER TABLE note_charged_user
 	ADD FOREIGN KEY (note_id)
 	REFERENCES note (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
+ALTER TABLE note_comment
+	ADD FOREIGN KEY (note_id)
+	REFERENCES note (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
+ALTER TABLE note_comment_attachment_file
+	ADD FOREIGN KEY (note_comment_id)
+	REFERENCES note_comment (id)
 	ON UPDATE RESTRICT
 	ON DELETE CASCADE
 ;
@@ -430,6 +486,16 @@ COMMENT ON TABLE note_charged_user IS '付箋担当者';
 COMMENT ON COLUMN note_charged_user.id IS 'id(自動採番)';
 COMMENT ON COLUMN note_charged_user.note_id IS '付箋ID';
 COMMENT ON COLUMN note_charged_user.login_user_info_id IS 'ログインユーザ情報ID';
+COMMENT ON TABLE note_comment IS 'ふせん - コメント';
+COMMENT ON COLUMN note_comment.id IS 'id(自動採番)';
+COMMENT ON COLUMN note_comment.note_id IS 'ふせんID';
+COMMENT ON COLUMN note_comment.comment_text IS 'コメント';
+COMMENT ON COLUMN note_comment.create_login_user_info_id IS '登録ユーザID';
+COMMENT ON COLUMN note_comment.create_at IS '作成日時';
+COMMENT ON TABLE note_comment_attachment_file IS 'ふせんコメント - 添付ファイル';
+COMMENT ON COLUMN note_comment_attachment_file.id IS 'id(自動採番)';
+COMMENT ON COLUMN note_comment_attachment_file.note_comment_id IS 'ふせんコメントID';
+COMMENT ON COLUMN note_comment_attachment_file.attachment_file_id IS '添付ファイルID';
 
 
 

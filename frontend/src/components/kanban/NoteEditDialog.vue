@@ -171,7 +171,7 @@
 
               Utils.datepicker('#note-edit-dialog .flatpickr', self.form.fixDate);
 
-            }, 500);
+            }, 100);
           }
         );
       },

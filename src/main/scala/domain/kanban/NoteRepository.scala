@@ -46,6 +46,16 @@ trait NoteRepository extends Repository[Note] {
    */
   def findByNoteId(noteId: NoteId)(implicit session: DBSession): Seq[AttachmentFileRow]
 
+  /**
+   * ふせんコメント永続化.
+   * @param noteId ふせんID
+   * @param comment コメント文
+   * @param attachmentFileIds ふせんコメントに紐付ける添付ファイルIDSeq
+   * @param loginUser ログインユーザ情報
+   * @param session Session
+   * @return ふせんコメントID
+   */
+  def store(noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Long
 }
 
 /**

@@ -2,7 +2,7 @@ package controller.kanban
 
 import application.NoteService
 import controller.{ ApiController, Keys }
-import domain.kanban.{ KanbanId, LaneId, NoteId }
+import domain.kanban.{ KanbanId, LaneId, NoteId, NoteRepository }
 import domain.user.User
 import form.kanban.Note
 import scalikejdbc.DB
@@ -81,6 +81,27 @@ class NoteEditController extends ApiController {
       case _ =>
         val errorMsg = createErrorMsg(Keys.ErrMsg.Key, "noData", Seq())
         createJsonResult(errorMsg)
+    }
+  }
+
+  /**
+   * コメント登録.
+   */
+  def commentStore(): String = {
+    val userInfo = session.getAs[User](Keys.Session.UserInfo).get
+
+    val noteId = params.getAs[Long]("noteId").getOrElse(-1L)
+    val attachmentFileIds = multiParams.getAs[Long]("attachmentFileIds").getOrElse(Seq())
+    val comment = params.getAs[String]("comment").getOrElse("")
+
+    if (comment.isEmpty && attachmentFileIds.isEmpty) {
+      createJsonResult(createErrorMsg(Keys.ErrMsg.Key, "invalidComment", Seq()))
+    } else {
+      DB.localTx { implicit session =>
+        val noteRepository = injector.getInstance(classOf[NoteRepository])
+        noteRepository.store(NoteId(noteId), comment, attachmentFileIds, userInfo)
+      }
+      createJsonResult("success")
     }
   }
 

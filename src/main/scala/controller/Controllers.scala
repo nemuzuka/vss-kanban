@@ -81,6 +81,7 @@ object Controllers {
     val formUrl: Route = get("/kanban/note/form")(form).as('form)
     val storeUrl: Route = post("/kanban/note/store")(store).as('store)
     val detailUrl: Route = get("/kanban/note/detail")(detail).as('detail)
+    val commentStoreUrl: Route = post("/kanban/note/comment/store")(commentStore()).as('commentStore)
   }
 
   object kanbanListAjax extends _root_.controller.kanban.ListConstoller with Routes {

@@ -4,7 +4,7 @@ import domain.ApplicationException
 import domain.attachment.AttachmentFileRow
 import domain.kanban._
 import domain.user.{ User, UserId }
-import model.{ NoteAttachmentFile, NoteChargedUser }
+import model.{ NoteAttachmentFile, NoteChargedUser, NoteComment, NoteCommentAttachmentFile }
 import scalikejdbc.DBSession
 import skinny.logging.Logger
 import util.CurrentDateUtil
@@ -140,6 +140,28 @@ class NoteRepositoryImpl extends NoteRepository {
     NoteAttachmentFile.findByNoteId(noteId.id) map { v =>
       domain.attachment.AttachmentFile.createAttachmentFileRow(v._2)
     }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def store(noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Long = {
+    val noteCommentId = NoteComment.create(NoteComment(
+      id = -1L,
+      noteId = noteId.id,
+      commentText = comment,
+      createAt = CurrentDateUtil.nowDateTime,
+      createLoginUserInfoId = loginUser.userId.get.id
+    ))
+
+    attachmentFileIds foreach (attachmentFileId => NoteCommentAttachmentFile.create(
+      NoteCommentAttachmentFile(
+        id = 1L,
+        noteCommentId = noteCommentId,
+        attachmentFileId = attachmentFileId
+      )
+    ))
+    noteCommentId
   }
 
   /**
