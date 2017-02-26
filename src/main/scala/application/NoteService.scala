@@ -93,6 +93,7 @@ case class NoteEditDetail(
 case class NoteDetail(
   form: Note,
   chargedUserNames: Seq[String],
+  joinedUsers: Seq[JoinedUserDto],
   noteAttachmentFiles: Seq[AttachmentFileRow],
   isCharged: Boolean,
   comments: Seq[NoteCommentRow]

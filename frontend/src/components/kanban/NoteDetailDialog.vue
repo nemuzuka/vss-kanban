@@ -93,8 +93,8 @@
                 <span>{{appendixChangeLabel}}</span>
               </a>
             </div>
-            <div v-if="comment.appendixChange === true">
-              他情報の変更情報
+            <div v-if="comment.appendixChange === true" style="margin-top: 1rem;">
+              <note-edit-area :form="form" :msg="msg" :joinedUsers="joinedUsers" :files="files"></note-edit-area>
             </div>
           </div>
 
@@ -145,6 +145,7 @@
   import SavedFileList from '../attachment/List'
   import NoteComment from './NoteComment'
   import Upload from '../attachment/Upload'
+  import NoteEditArea from './NoteEditArea'
 
   export default {
     name: 'note-detail-dialog',
@@ -152,7 +153,8 @@
     components: {
       'saved-file-list':SavedFileList,
       'file-upload':Upload,
-      'note-comment':NoteComment
+      'note-comment':NoteComment,
+      'note-edit-area':NoteEditArea
     },
     data() {
       return {
@@ -173,8 +175,25 @@
           appendixChange: false,
           viewNoteDetail:false
         },
+        form:{
+          id: "",
+          laneId: "",
+          kanbanId:"",
+          lockVersion: "0",
+          noteTitle: "",
+          noteDescription: "",
+          fixDate: "",
+          archiveStatus: "0",
+          chargedUserIds: [],
+          attachmentFileIds: []
+        },
+        joinedUsers:[],
+        formFiles:[],
         msg: {
-          globalErrMsg: ""
+          globalErrMsg: "",
+          noteTitleErrMsg:"",
+          noteDescriptionErrMsg:"",
+          fixDateErrMsg: ""
         },
         files:[],
         isCharged: true,
@@ -183,6 +202,9 @@
         mode:"",
         clearMsg(){
           this.msg.globalErrMsg = "";
+          this.msg.noteTitleErrMsg="";
+          this.msg.noteDescriptionErrMsg="";
+          this.msg.fixDateErrMsg= "";
         }
       };
     },
@@ -239,6 +261,25 @@
         self.files.splice(0, self.files.length);
         self.files.push(...result.noteAttachmentFiles);
 
+        //変更用
+        self.form.id = form.id;
+        self.form.laneId = form.laneId;
+        self.form.kanbanId = form.kanbanId;
+        self.form.lockVersion = form.lockVersion;
+        self.form.noteTitle = form.noteTitle;
+        self.form.noteDescription = form.noteDescription;
+        self.form.archiveStatus = form.archiveStatus;
+        self.form.fixDate = Utils.toDateString(form.fixDate,'YYYY/MM/DD');
+        self.form.chargedUserIds = form.chargedUserIds;
+        self.form.attachmentFileIds = form.attachmentFileIds;
+
+        self.joinedUsers.splice(0, self.joinedUsers.length);
+        self.joinedUsers.push(...result.joinedUsers);
+
+        self.files.splice(0, self.files.length);
+        self.files.push(...result.noteAttachmentFiles);
+
+
         $('#note-detail-dialog-body').addClass("detail");
         self.mode = 'detail';
       },
@@ -263,6 +304,20 @@
       toggleAppendixChange() {
         const self = this;
         self.comment.appendixChange = !self.comment.appendixChange;
+
+        if(self.comment.appendixChange) {
+          setTimeout(function(){
+            $('#note-detail-dialog .note-title').focus();
+
+            const ta = document.querySelectorAll('#note-detail-dialog textarea');
+            autosize(ta);
+            autosize.update(ta);
+
+            Utils.datepicker('#note-detail-dialog .flatpickr', self.form.fixDate);
+
+          }, 100);
+        }
+
       },
       toggleViewNoteDetail() {
         const self = this;

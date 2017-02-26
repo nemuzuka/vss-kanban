@@ -66,6 +66,7 @@ class NoteServiceImpl @Inject() (
         chargedUserNames = note.chargedUsers map (_.name),
         noteAttachmentFiles = noteRepository.findByNoteId(noteId),
         isCharged = note.isCharged(loginUser, kanban),
+        joinedUsers = JoinedUserDto.toDto(kanban.joinedUsers),
         comments = noteRepository.findCommentsByNoteId(noteId)
       )
     }
