@@ -392,7 +392,27 @@
           //コメントの登録だけ
           self.executeSaveComment(e);
         } else {
-          alert("他の情報も更新するよ...");
+          //ふせんの更新
+          self.clearMsg();
+          self.form.attachmentFileIds = self.formFiles.map(function(element, index, array) {
+            return element.attachmentFileId;
+          });
+          Utils.setAjaxDefault();
+
+          $.ajax({
+            data: self.form,
+            method: 'POST',
+            url: "/kanban/note/store"
+          }).then(
+            function (data) {
+              //エラーが存在する場合、その旨記述
+              if(Utils.writeErrorMsg(self, data)) {
+                return;
+              }
+              //コメント登録を実行
+              self.executeSaveComment(e);
+            }
+          );
         }
       },
       executeSaveComment(e) {
