@@ -94,7 +94,7 @@
               </a>
             </div>
             <div v-if="comment.appendixChange === true" style="margin-top: 1rem;">
-              <note-edit-area :form="form" :msg="msg" :joinedUsers="joinedUsers" :files="files"></note-edit-area>
+              <note-edit-area :form="form" :msg="msg" :joinedUsers="joinedUsers" :files="formFiles"></note-edit-area>
             </div>
           </div>
 
@@ -276,9 +276,8 @@
         self.joinedUsers.splice(0, self.joinedUsers.length);
         self.joinedUsers.push(...result.joinedUsers);
 
-        self.files.splice(0, self.files.length);
-        self.files.push(...result.noteAttachmentFiles);
-
+        self.formFiles.splice(0, self.formFiles.length);
+        self.formFiles.push(...result.noteAttachmentFiles);
 
         $('#note-detail-dialog-body').addClass("detail");
         self.mode = 'detail';
