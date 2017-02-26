@@ -71,6 +71,26 @@
             <div class="message-body" v-html="msg.globalErrMsg"></div>
           </article>
 
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <label class="label">このふせんを</label>
+              </div>
+              <div class="level-item">
+                <span class="select">
+                  <select v-model="comment.laneId" placeholder="コメントを入力してください">
+                    <option v-for="lane in lanes" :lane="lane" :value="lane.laneId">
+                      {{lane.laneName}}
+                    </option>
+                  </select>
+                </span>
+              </div>
+              <div class="level-item">
+                <label class="label">へ移動する</label>
+              </div>
+            </div>
+          </div>
+
           <div>
             <label class="label">コメント</label>
             <p class="control">
@@ -149,7 +169,7 @@
 
   export default {
     name: 'note-detail-dialog',
-    props: ['kanbanId'],
+    props: ['kanbanId', 'lanes'],
     components: {
       'saved-file-list':SavedFileList,
       'file-upload':Upload,
@@ -170,6 +190,7 @@
         },
         comment: {
           comment: "",
+          laneId: "",
           files:[],
           attachmentFileIds:[],
           appendixChange: false,
@@ -286,6 +307,7 @@
         const self = this;
         self.mode = 'comment';
         self.comment.comment = "";
+        self.comment.laneId = self.detail.laneId;
         self.comment.files = [];
         self.comment.attachmentFileIds = [];
         self.comment.appendixChange = false;
@@ -383,7 +405,8 @@
         const param = {
           noteId: self.detail.id,
           attachmentFileIds: self.comment.attachmentFileIds,
-          comment: self.comment.comment
+          comment: self.comment.comment,
+          laneId: self.comment.laneId
         };
 
         Utils.setAjaxDefault();

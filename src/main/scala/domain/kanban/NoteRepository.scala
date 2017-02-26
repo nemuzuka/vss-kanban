@@ -48,14 +48,15 @@ trait NoteRepository extends Repository[Note] {
 
   /**
    * ふせんコメント永続化.
+   * @param laneId レーンID
    * @param noteId ふせんID
    * @param comment コメント文
    * @param attachmentFileIds ふせんコメントに紐付ける添付ファイルIDSeq
    * @param loginUser ログインユーザ情報
    * @param session Session
-   * @return ふせんコメントID
+   * @return ふせんコメントID(コメントを登録していない場合、None)
    */
-  def store(noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Long
+  def store(laneId: LaneId, noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Option[Long]
 
   /**
    * ふせんコメント一覧取得.
@@ -69,9 +70,10 @@ trait NoteRepository extends Repository[Note] {
    * ふせん削除.
    * @param noteId ふせんID
    * @param lockVersion ふせんのバージョンNo
+   * @param session Session
    * @return Right:ふせんID, Left:エラー情報
    */
-  def deleteById(noteId: NoteId, lockVersion: Long): Either[ApplicationException, Long]
+  def deleteById(noteId: NoteId, lockVersion: Long)(implicit session: DBSession): Either[ApplicationException, Long]
 
 }
 

@@ -113,18 +113,15 @@ class NoteEditController extends ApiController {
     val userInfo = session.getAs[User](Keys.Session.UserInfo).get
 
     val noteId = params.getAs[Long]("noteId").getOrElse(-1L)
+    val laneId = params.getAs[Long]("laneId").getOrElse(-1L)
     val attachmentFileIds = multiParams.getAs[Long]("attachmentFileIds").getOrElse(Seq())
     val comment = params.getAs[String]("comment").getOrElse("")
 
-    if (comment.isEmpty && attachmentFileIds.isEmpty) {
-      createJsonResult(createErrorMsg(Keys.ErrMsg.Key, "invalidComment", Seq()))
-    } else {
-      DB.localTx { implicit session =>
-        val noteRepository = injector.getInstance(classOf[NoteRepository])
-        noteRepository.store(NoteId(noteId), comment, attachmentFileIds, userInfo)
-      }
-      createJsonResult("success")
+    DB.localTx { implicit session =>
+      val noteRepository = injector.getInstance(classOf[NoteRepository])
+      noteRepository.store(LaneId(laneId), NoteId(noteId), comment, attachmentFileIds, userInfo)
     }
+    createJsonResult("success")
   }
 
   /**

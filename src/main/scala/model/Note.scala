@@ -119,4 +119,16 @@ object Note extends SkinnyCRUDMapper[Note] with OptimisticLockWithVersionFeature
     }.list.apply()
   }
 
+  /**
+   * レーンID変更.
+   * @param noteId ふせんID
+   * @param laneId 変更先レーンID
+   * @param session Session
+   */
+  def updateByLane(noteId: Long, laneId: Long)(implicit session: DBSession): Unit = {
+    Note.updateBy(sqls.eq(Note.column.id, noteId)).withAttributes(
+      'laneId -> laneId,
+      'sortNum -> Long.MaxValue
+    )
+  }
 }

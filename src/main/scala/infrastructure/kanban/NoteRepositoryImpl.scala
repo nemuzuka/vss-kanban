@@ -148,23 +148,30 @@ class NoteRepositoryImpl extends NoteRepository {
   /**
    * @inheritdoc
    */
-  override def store(noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Long = {
-    val noteCommentId = NoteComment.create(NoteComment(
-      id = -1L,
-      noteId = noteId.id,
-      commentText = comment,
-      createAt = CurrentDateUtil.nowDateTime,
-      createLoginUserInfoId = loginUser.userId.get.id
-    ))
+  override def store(laneId: LaneId, noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Option[Long] = {
 
-    attachmentFileIds foreach (attachmentFileId => NoteCommentAttachmentFile.create(
-      NoteCommentAttachmentFile(
-        id = 1L,
-        noteCommentId = noteCommentId,
-        attachmentFileId = attachmentFileId
-      )
-    ))
-    noteCommentId
+    moveLane(noteId, laneId)
+
+    if (comment.isEmpty && attachmentFileIds.isEmpty) {
+      None
+    } else {
+      val noteCommentId = NoteComment.create(NoteComment(
+        id = -1L,
+        noteId = noteId.id,
+        commentText = comment,
+        createAt = CurrentDateUtil.nowDateTime,
+        createLoginUserInfoId = loginUser.userId.get.id
+      ))
+
+      attachmentFileIds foreach (attachmentFileId => NoteCommentAttachmentFile.create(
+        NoteCommentAttachmentFile(
+          id = 1L,
+          noteCommentId = noteCommentId,
+          attachmentFileId = attachmentFileId
+        )
+      ))
+      Option(noteCommentId)
+    }
   }
 
   /**
@@ -198,7 +205,7 @@ class NoteRepositoryImpl extends NoteRepository {
   /**
    * @inheritdoc
    */
-  override def deleteById(noteId: NoteId, lockVersion: Long): Either[ApplicationException, Long] = {
+  override def deleteById(noteId: NoteId, lockVersion: Long)(implicit session: DBSession): Either[ApplicationException, Long] = {
     Try {
       model.Note.deleteByIdAndVersion(noteId.id, lockVersion)
       noteId.id
@@ -207,6 +214,22 @@ class NoteRepositoryImpl extends NoteRepository {
       case Failure(e) =>
         logger.error(e.getMessage, e)
         Left(new ApplicationException("invalidVersion", Seq()))
+    }
+  }
+
+  /**
+   * レーン移動.
+   * @param noteId ふせんID
+   * @param laneId 移動先レーンID
+   * @param session Session
+   * @return 移動した場合、移動先のレーンID。移動前後が同じレーンの場合、None
+   */
+  def moveLane(noteId: NoteId, laneId: LaneId)(implicit session: DBSession): Option[LaneId] = {
+    for {
+      note <- model.Note.findById(noteId.id) if note.laneId != laneId.id
+    } yield {
+      model.Note.updateByLane(noteId.id, laneId.id)
+      laneId
     }
   }
 

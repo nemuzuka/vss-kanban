@@ -59,7 +59,7 @@
       <kanban-attachment-upload-dialog ref="kanbanAttachmentUploadDialog" :kanbanId="kanbanId" @Refresh="refresh"></kanban-attachment-upload-dialog>
       <kanban-attachment-dialog ref="kanbanAttachmentDialog" :kanbanId="kanbanId"></kanban-attachment-dialog>
       <note-edit-dialog ref="noteEditDialog" :kanbanId="kanbanId" @Refresh="refresh"></note-edit-dialog>
-      <note-detail-dialog ref="noteDetailDialog" :kanbanId="kanbanId" @Refresh="refresh" @OpenEditDialog="openNoteEditDialog"></note-detail-dialog>
+      <note-detail-dialog ref="noteDetailDialog" :kanbanId="kanbanId" @Refresh="refresh" :lanes="lanes" @OpenEditDialog="openNoteEditDialog"></note-detail-dialog>
 
     </div>
 
