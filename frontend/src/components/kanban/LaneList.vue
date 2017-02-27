@@ -45,6 +45,11 @@
 </script>
 
 <style scoped>
+
+  .lane-container .card-header {
+    box-shadow: none;
+  }
+
   .lane-items {
     height:90%;
     overflow-y:auto
