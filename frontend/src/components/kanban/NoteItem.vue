@@ -1,6 +1,6 @@
 <template>
 
-  <div class="card" :class="{ 'archived': noteItem.archiveStatus === '1' }" @click="openDetailDialog">
+  <div class="card" :class="{ 'archived': noteItem.archiveStatus === '1' }" @click.stop="openDetailDialog">
     <header class="card-header">
       <p class="card-header-title">
         {{noteItem.noteTitle}}
@@ -60,10 +60,6 @@
         return Utils.toDateString(target, "YY/MM/DD");
       },
       openDetailDialog(e) {
-        if (e && (e.target.tagName.toLocaleLowerCase() === 'a' || e.target.tagName.toLocaleLowerCase() === 'span' || e.target.tagName.toLocaleLowerCase() === 'i')) {
-          //aタグの場合、処理終了
-          return;
-        }
         const self = this;
         self.$emit("OpenDetailDialog", e, self.noteItem.noteId);
       }

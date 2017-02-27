@@ -59,7 +59,7 @@ export default class Utils {
     ret = ret.replace(/(\n|\r)/g, "<br>");
 
     const re = /((http|https|ftp):\/\/[\w?=&.\/-;#~%-]+(?![\w\s?&.\/;#~%"=-]*>))/g
-    ret = ret.replace(re, '<a href="$1" class="link" target="_blank">$1</a> ');
+    ret = ret.replace(re, '<a href="$1" class="link" target="_blank" onClick="if(event.stopPropagation){event.stopPropagation();}event.cancelBubble=true;">$1</a> ');
     return ret;
   }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="column is-3" :class="{ 'archived': item.archiveStatus === '1' }">
 
-    <div class="card" @click="viewKanbanMain" style="cursor: pointer;">
+    <div class="card" @click.stop="viewKanbanMain" style="cursor: pointer;">
       <header class="card-header">
         <p class="card-header-title">
           {{item.title}}
@@ -23,11 +23,6 @@
     props: ["item"],
     methods : {
       viewKanbanMain(e) {
-        if (e && (e.target.tagName.toLocaleLowerCase() === 'a' || e.target.tagName.toLocaleLowerCase() === 'span' || e.target.tagName.toLocaleLowerCase() === 'i')) {
-          //aタグの場合、処理終了
-          return;
-        }
-        
         const self = this;
         self.$emit("ViewKanbanMain", e, self.item.id);
       }
