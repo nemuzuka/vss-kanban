@@ -125,6 +125,21 @@ class NoteEditController extends ApiController {
   }
 
   /**
+   * ふせん移動.
+   */
+  def move: String = {
+    val noteId = params.getAs[String]("noteId").getOrElse("")
+    val laneId = params.getAs[Long]("laneId").getOrElse(-1L)
+    val noteIds = multiParams.getAs[Long]("noteIds").getOrElse(Seq())
+
+    DB.localTx { implicit session =>
+      val noteService = injector.getInstance(classOf[NoteService])
+      noteService.moveNote(LaneId(laneId), if (noteId.isEmpty) None else Option(NoteId(noteId.toLong)), noteIds)
+    }
+    createJsonResult("success")
+  }
+
+  /**
    * validate & 入力パラメータ取得.
    *
    * @return Right:入力Form / Left:validateエラーメッセージ

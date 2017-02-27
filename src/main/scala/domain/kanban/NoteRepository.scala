@@ -75,6 +75,21 @@ trait NoteRepository extends Repository[Note] {
    */
   def deleteById(noteId: NoteId, lockVersion: Long)(implicit session: DBSession): Either[ApplicationException, Long]
 
+  /**
+   * レーン移動.
+   * @param noteId ふせんID
+   * @param laneId 移動先レーンID
+   * @param session Session
+   * @return 移動した場合、移動先のレーンID。移動前後が同じレーンの場合、None
+   */
+  def moveLane(noteId: NoteId, laneId: LaneId)(implicit session: DBSession): Option[LaneId]
+
+  /**
+   * ソート順変更.
+   * @param noteIds ふせんID
+   * @param session Session
+   */
+  def updateSortNum(noteIds: Seq[Long])(implicit session: DBSession): Unit
 }
 
 /**

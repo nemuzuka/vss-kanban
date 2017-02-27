@@ -131,4 +131,16 @@ object Note extends SkinnyCRUDMapper[Note] with OptimisticLockWithVersionFeature
       'sortNum -> Long.MaxValue
     )
   }
+
+  /**
+   * ソート順変更.
+   * @param noteId ふせんID
+   * @param sortNum ソート順
+   * @param session Session
+   */
+  def updateSortNum(noteId: Long, sortNum: Int)(implicit session: DBSession): Unit = {
+    Note.updateBy(sqls.eq(Note.column.id, noteId)).withAttributes(
+      'sortNum -> sortNum
+    )
+  }
 }

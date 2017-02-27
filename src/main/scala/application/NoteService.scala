@@ -68,6 +68,16 @@ trait NoteService {
    * @return Right:ふせんID, Left:エラー情報
    */
   def deleteById(kanbanId: KanbanId, noteId: NoteId, lockVersion: Long, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
+
+  /**
+   * ふせん移動.
+   * 対象レーンIDのふせんIDを並び替え(0から順に採番します)
+   * @param laneId 対象レーンID
+   * @param noteId 対象レーンに移動したふせんID(レーンを移動したふせんが存在しない場合、None)
+   * @param noteIds ソート順を変更するふせんIDSeq
+   * @param session Session
+   */
+  def moveNote(laneId: LaneId, noteId: Option[NoteId], noteIds: Seq[Long])(implicit session: DBSession): Unit
 }
 
 /**

@@ -218,19 +218,22 @@ class NoteRepositoryImpl extends NoteRepository {
   }
 
   /**
-   * レーン移動.
-   * @param noteId ふせんID
-   * @param laneId 移動先レーンID
-   * @param session Session
-   * @return 移動した場合、移動先のレーンID。移動前後が同じレーンの場合、None
+   * @inheritdoc
    */
-  def moveLane(noteId: NoteId, laneId: LaneId)(implicit session: DBSession): Option[LaneId] = {
+  override def moveLane(noteId: NoteId, laneId: LaneId)(implicit session: DBSession): Option[LaneId] = {
     for {
       note <- model.Note.findById(noteId.id) if note.laneId != laneId.id
     } yield {
       model.Note.updateByLane(noteId.id, laneId.id)
       laneId
     }
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def updateSortNum(noteIds: Seq[Long])(implicit session: DBSession): Unit = {
+    noteIds.zipWithIndex foreach (v => model.Note.updateSortNum(v._1, v._2))
   }
 
   /**

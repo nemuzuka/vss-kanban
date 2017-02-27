@@ -84,4 +84,12 @@ class NoteServiceImpl @Inject() (
     }
     result getOrElse Left(new ApplicationException("noData", Seq()))
   }
+
+  /**
+   * @inheritdoc
+   */
+  override def moveNote(laneId: LaneId, noteId: Option[NoteId], noteIds: Seq[Long])(implicit session: DBSession): Unit = {
+    noteId foreach (v => noteRepository.moveLane(v, laneId))
+    noteRepository.updateSortNum(noteIds)
+  }
 }

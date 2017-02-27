@@ -10,11 +10,9 @@
         </a>
       </div>
 
-      <div class="lane-items">
-
+      <draggable :list="noteMap[laneItem.laneId]" :options="{group:'lane',handle:'.drag-item'}" @start="drag=true" @end="drag=false" class="lane-items" @change="noteChange($event, evt)">
         <note-item v-for="noteItem in noteMap[laneItem.laneId]" :noteItem="noteItem" :joinedUserMap="joinedUserMap" :key="noteItem.noteId" :completeLane="laneItem.completeLane" @OpenDetailDialog="openDetailDialog"></note-item>
-
-      </div>
+      </draggable>
 
     </div>
 
@@ -24,12 +22,14 @@
 <script>
   import Utils from '../../utils'
   import NoteItem from './NoteItem'
+  import Draggable from 'vuedraggable'
 
   export default {
     name: 'lane-list',
     props:['laneItem', 'noteMap', 'joinedUserMap'],
     components: {
-      'note-item' : NoteItem
+      'note-item' : NoteItem,
+      'draggable':Draggable
     },
     methods: {
       openEditDialog(e) {
@@ -39,6 +39,36 @@
       openDetailDialog(e, noteId) {
         const self = this;
         self.$emit("OpenDetailDialog", e, self.laneItem.laneId, noteId);
+      },
+      noteChange(evt) {
+        if(typeof evt.added === 'undefined' && typeof evt.moved === 'undefined') {
+            return;
+        }
+
+        let noteId = "";
+        if(typeof evt.added !== 'undefined') {
+          //別のレーンに移動したとみなす
+          noteId = evt.added.element.noteId;
+        }
+
+        const self = this;
+        const param = {
+          noteId: noteId,
+          laneId: self.laneItem.laneId,
+          noteIds: self.noteMap[self.laneItem.laneId].map(function(element){
+            return element.noteId
+          })
+        };
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: param,
+          method: 'POST',
+          url: "/kanban/note/move"
+        }).then(
+          function (data) {
+            self.$emit("Refresh", null);
+          }
+        );
       }
     }
   }
