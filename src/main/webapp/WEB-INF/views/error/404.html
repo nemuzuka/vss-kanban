@@ -1,8 +1,31 @@
-<html layout:decorator="../layouts/default">
-<h3 layout:fragment="title">404 Not Found</h3>
-<div layout:fragment="content">
-<p>
-Page Not Found.
-</p>
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name=”robots” content=”noindex”>
+    <title>VSS Kanban</title>
+    <meta content="b0b6c869c2c539999d3c480c1e655490a4d18d73" name="csrf-token" />
+    <link href="/assets/css/base.css?version=0.0.1" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="/assets/js/manifest.js?version=0.0.1"></script>
+    <script type="text/javascript" src="/assets/js/vendor.js?version=0.0.1"></script>
+    <script type="text/javascript" src="/assets/js/base.js?version=0.0.1"></script>
+</head>
+<body id="body">
+<link href="/assets/css/index.css?version=0.0.1" rel="stylesheet" type="text/css">
+
+<div id="main-content">
+    <app-header></app-header>
+    <div class="container">
+        <article class="message is-danger">
+            <div class="message-body">ページが存在しません</div>
+        </article>
+    </div>
 </div>
 
+<script type="text/javascript" src="/assets/js/error.js?version=0.0.1"></script>
+
+<form id="downloader-form" class="hide" method="POST"></form>
+</body>
+</html>

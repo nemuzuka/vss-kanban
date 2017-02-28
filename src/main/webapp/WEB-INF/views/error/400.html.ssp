@@ -1,5 +1,13 @@
-<h3>Welcome</h3>
-<hr/>
-<p class="alert alert-success">
-  <strong>TODO:</strong> This is an auto-generated file by <a href="http://skinny-framework.org/">Skinny framework</a>!<br/>
-</p>
+<%@ val appVersion:String = util.ConfigHelper.appVersion %>
+<link href="/assets/css/index.css?version=${appVersion}" rel="stylesheet" type="text/css">
+
+<div id="main-content">
+  <app-header></app-header>
+  <div class="container">
+    <article class="message is-danger">
+      <div class="message-body">本アプリケーションは、ログインする必要があります</div>
+    </article>
+  </div>
+</div>
+
+<script type="text/javascript" src="/assets/js/error.js?version=${appVersion}"></script>

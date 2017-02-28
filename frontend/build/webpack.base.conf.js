@@ -14,6 +14,7 @@ module.exports = {
   entry: {
     base: './src/base.js',
     index: './src/index.js',
+    error: './src/error.js',
     'top/index': './src/top/index.js',
     'user/index': './src/user/index.js',
   },
