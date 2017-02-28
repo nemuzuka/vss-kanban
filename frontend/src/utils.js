@@ -276,9 +276,10 @@ export default class Utils {
    * 日付入力項目生成.
    * @param selector セレクタ
    * @param defaultDate 日付初期値
+   * @returns {Flatpickr} 生成インスタンス
    */
   static datepicker(selector, defaultDate) {
-    new Flatpickr(document.querySelector(selector), {
+    return new Flatpickr(document.querySelector(selector), {
       enableTime: false,
       clickOpens: true,
       dateFormat: 'Y/m/d',

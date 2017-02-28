@@ -12,7 +12,7 @@
           <div class="message-body" v-html="msg.globalErrMsg"></div>
         </article>
 
-        <note-edit-area :form="form" :msg="msg" :joinedUsers="joinedUsers" :files="files"></note-edit-area>
+        <note-edit-area :form="form" :msg="msg" :joinedUsers="joinedUsers" :files="files" @ClearFixDate="clearFixDate"></note-edit-area>
 
       </section>
       <footer class="modal-card-foot">
@@ -56,6 +56,7 @@
         },
         joinedUsers:[],
         files:[],
+        fixDate:null,
         msg:{
           globalErrMsg:"",
           noteTitleErrMsg:"",
@@ -71,9 +72,10 @@
       }
     },
     methods: {
-      dateClear(e){
+      clearFixDate(e){
         const self = this;
         self.form.fixDate = "";
+        self.fixDate.clear();
       },
       openDialog(e, laneId, noteId) {
         const self = this;
@@ -104,7 +106,7 @@
               autosize(ta);
               autosize.update(ta);
 
-              Utils.datepicker('#note-edit-dialog .flatpickr', self.form.fixDate);
+              self.fixDate = Utils.datepicker('#note-edit-dialog .flatpickr', self.form.fixDate);
 
             }, 100);
           }

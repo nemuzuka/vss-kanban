@@ -84,7 +84,7 @@
     methods: {
       dateClear(e){
         const self = this;
-        self.form.fixDate = "";
+        self.$emit("ClearFixDate", e);
       },
       fileUpload(e, targetFiles) {
         const self = this;

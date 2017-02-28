@@ -114,7 +114,7 @@
               </a>
             </div>
             <div v-if="comment.appendixChange === true" style="margin-top: 1rem;">
-              <note-edit-area :form="form" :msg="msg" :joinedUsers="joinedUsers" :files="formFiles"></note-edit-area>
+              <note-edit-area :form="form" :msg="msg" :joinedUsers="joinedUsers" :files="formFiles" @ClearFixDate="clearFixDate"></note-edit-area>
             </div>
           </div>
 
@@ -208,6 +208,7 @@
           chargedUserIds: [],
           attachmentFileIds: []
         },
+        fixDate:null,
         joinedUsers:[],
         formFiles:[],
         msg: {
@@ -334,7 +335,7 @@
             autosize(ta);
             autosize.update(ta);
 
-            Utils.datepicker('#note-detail-dialog .flatpickr', self.form.fixDate);
+            self.fixDate = Utils.datepicker('#note-detail-dialog .flatpickr', self.form.fixDate);
 
           }, 100);
         }
@@ -447,6 +448,11 @@
             },1500);
           }
         );
+      },
+      clearFixDate(e){
+        const self = this;
+        self.form.fixDate = "";
+        self.fixDate.clear();
       }
     },
     computed: {
