@@ -10,7 +10,7 @@
         </a>
       </div>
 
-      <draggable :list="noteMap[laneItem.laneId]" :options="{group:'lane',handle:'.drag-item'}" @start="drag=true" @end="drag=false" class="lane-items" @change="noteChange($event, evt)">
+      <draggable :list="getNoteList" :options="{group:'lane',handle:'.drag-item'}" @start="drag=true" @end="drag=false" class="lane-items" @change="noteChange($event, evt)">
         <note-item v-for="noteItem in noteMap[laneItem.laneId]" :noteItem="noteItem" :joinedUserMap="joinedUserMap" :key="noteItem.noteId" :completeLane="laneItem.completeLane" @OpenDetailDialog="openDetailDialog"></note-item>
       </draggable>
 
@@ -70,7 +70,18 @@
           }
         );
       }
-    }
+    },
+    computed:{
+      getNoteList() {
+        const self = this;
+        let list = self.noteMap[self.laneItem.laneId];
+        if(typeof list === 'undefined') {
+          list = [];
+          self.$set(self.noteMap, self.laneItem.laneId, list);
+        }
+        return list;
+      }
+    },
   }
 </script>
 
