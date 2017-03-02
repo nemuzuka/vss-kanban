@@ -55,7 +55,7 @@
 
 ### Demo Site
 
-[こちらから](http://vss-kanban.vss.jp.net/ "こちらから")お試し頂けます。
+<a href="http://vss-kanban.vss.jp.net/" target="_blank">こちらから</a>お試し頂けます。
 
 | ログインID | パスワード |
 |:----------|:----------|
