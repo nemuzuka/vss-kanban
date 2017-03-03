@@ -6,7 +6,8 @@
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "build-watch": "node build/build.js watch"
   },
   "dependencies": {
     "autosize": "^3.0.20",

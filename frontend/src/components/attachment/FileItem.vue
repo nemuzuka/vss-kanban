@@ -8,8 +8,8 @@
         </span>
       </a>
     </div>
-    <div class="image is-128x128" v-if="typeof item.thumbnailWidth !== 'undefined'">
-      <a :href="createOriginalUrl" data-lightbox="sample" :data-title="item.realFileName">
+    <div v-if="typeof item.thumbnailWidth !== 'undefined'">
+      <a :href="createOriginalUrl" :data-lightbox="groupName" :data-title="item.realFileName">
         <img :src="createUrl">
       </a>
     </div>
@@ -23,7 +23,7 @@
 
   export default {
     name: 'file-item',
-    props:["item", "type", "index"],
+    props:["item", "type", "index", "groupName"],
     methods:{
       deleteItem(e) {
         const self = this;
