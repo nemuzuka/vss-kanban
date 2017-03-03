@@ -24,7 +24,7 @@
 
      src/main/resources/application.conf
 
-のdelelopmentのDB接続文字列を変更
+のdevelopmentのDB接続文字列を変更
 
 ### 4. table作成
 
