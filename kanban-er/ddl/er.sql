@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS note_comment;
 DROP TABLE IF EXISTS note;
 DROP TABLE IF EXISTS lane;
 DROP TABLE IF EXISTS kanban;
+DROP TABLE IF EXISTS login_user_appendix;
 DROP TABLE IF EXISTS login_user_password;
 DROP TABLE IF EXISTS login_user_info;
 
@@ -145,6 +146,17 @@ CREATE TABLE lane
 	-- 0:完了扱いのレーンでない
 	complete_lane varchar(1) NOT NULL,
 	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
+-- ログインユーザ追加情報
+CREATE TABLE login_user_appendix
+(
+	-- ログインユーザID
+	login_user_info_id bigint NOT NULL,
+	-- ソート順
+	sort_num bigint NOT NULL,
+	PRIMARY KEY (login_user_info_id)
 ) WITHOUT OIDS;
 
 
@@ -348,6 +360,14 @@ ALTER TABLE note
 ;
 
 
+ALTER TABLE login_user_appendix
+	ADD FOREIGN KEY (login_user_info_id)
+	REFERENCES login_user_info (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
 ALTER TABLE login_user_password
 	ADD FOREIGN KEY (login_user_info_id)
 	REFERENCES login_user_info (id)
@@ -449,6 +469,9 @@ COMMENT ON COLUMN lane.sort_num IS 'ソート順';
 COMMENT ON COLUMN lane.complete_lane IS '完了扱いのレーンか
 1:完了扱いのレーン
 0:完了扱いのレーンでない';
+COMMENT ON TABLE login_user_appendix IS 'ログインユーザ追加情報';
+COMMENT ON COLUMN login_user_appendix.login_user_info_id IS 'ログインユーザID';
+COMMENT ON COLUMN login_user_appendix.sort_num IS 'ソート順';
 COMMENT ON TABLE login_user_info IS 'ログインユーザ情報';
 COMMENT ON COLUMN login_user_info.id IS 'id(自動採番)';
 COMMENT ON COLUMN login_user_info.login_id IS 'ログインID';

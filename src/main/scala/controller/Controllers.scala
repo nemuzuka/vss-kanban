@@ -59,6 +59,7 @@ object Controllers {
     val detailUrl: Route = get("/user/detail")(detail).as('detail)
     val storeUrl: Route = post("/user/store")(store).as('store)
     val deleteUrl: Route = post("/user/delete")(delete).as('delete)
+    val updateSortNumUrl: Route = post("/user/update/sort")(updateSortNum()).as('updateSortNum)
   }
 
   object kanbanEditAjax extends _root_.controller.kanban.EditController with Routes {

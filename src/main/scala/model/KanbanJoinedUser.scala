@@ -51,17 +51,18 @@ object KanbanJoinedUser extends SkinnyCRUDMapper[KanbanJoinedUser] {
 
   /**
    * かんばんIDによる取得.
-   * ソート順は、idの昇順です
+   * ソート順は、ソート順 asc, id ascです
    * @param kanbanId かんばんID
    * @param session Session
    * @return 該当データ(_1: LoginUserInfo, _2:KanbanJoinedUser)
    */
   def findByKanbanId(kanbanId: Long)(implicit session: DBSession): Seq[(LoginUserInfo, KanbanJoinedUser)] = {
-    val (lui, kju) = (LoginUserInfo.defaultAlias, KanbanJoinedUser.defaultAlias)
+    val (lui, kju, lua) = (LoginUserInfo.defaultAlias, KanbanJoinedUser.defaultAlias, LoginUserAppendix.defaultAlias)
     withSQL {
       select.from(LoginUserInfo as lui)
+        .innerJoin(LoginUserAppendix as lua).on(lui.id, lua.loginUserInfoId)
         .innerJoin(KanbanJoinedUser as kju).on(lui.id, kju.loginUserInfoId)
-        .where.eq(kju.kanbanId, kanbanId).orderBy(kju.id.asc)
+        .where.eq(kju.kanbanId, kanbanId).orderBy(lua.sortNum.asc, kju.id.asc)
     }.map { rs =>
       (LoginUserInfo.extract(rs, lui.resultName), KanbanJoinedUser.extract(rs, kju.resultName))
     }.list.apply()

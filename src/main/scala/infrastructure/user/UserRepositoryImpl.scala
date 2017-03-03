@@ -2,7 +2,7 @@ package infrastructure.user
 
 import domain.ApplicationException
 import domain.user.{ User, UserAuthority, UserId, UserRepository }
-import model.{ LoginUserInfo, LoginUserPassword }
+import model.{ LoginUserAppendix, LoginUserInfo, LoginUserPassword }
 import scalikejdbc.DBSession
 import skinny.logging.Logger
 import util.{ CurrentDateUtil, PasswordDigestUtil }
@@ -144,6 +144,11 @@ class UserRepositoryImpl extends UserRepository {
   override def findAll(implicit session: DBSession): Seq[User] = {
     LoginUserInfo.findAll map createUser
   }
+
+  /**
+   * @inheritdoc
+   */
+  override def updateSortNum(userIds: Seq[Long])(implicit session: DBSession): Unit = userIds.zipWithIndex foreach (v => LoginUserAppendix.updateSortNum(v._1, v._2))
 
   /**
    * @inheritdoc

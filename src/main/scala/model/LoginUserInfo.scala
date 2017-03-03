@@ -54,12 +54,13 @@ object LoginUserInfo extends SkinnyCRUDMapper[LoginUserInfo] with OptimisticLock
 
   /**
    * 登録.
+   * ログインユーザ追加情報も登録します
    * @param entity 対象Entity
    * @param session Session
    * @return 生成ID
    */
   def create(entity: LoginUserInfo)(implicit session: DBSession): Long = {
-    LoginUserInfo.createWithAttributes(
+    val loginUserInfoId = LoginUserInfo.createWithAttributes(
       'loginId -> entity.loginId,
       'userName -> entity.userName,
       'applicationAdminFlg -> entity.applicationAdminFlg,
@@ -67,6 +68,11 @@ object LoginUserInfo extends SkinnyCRUDMapper[LoginUserInfo] with OptimisticLock
       'lastUpdateAt -> entity.lastUpdateAt,
       'lockVersion -> 1L
     )
+    LoginUserAppendix.createWithAttributes(
+      'loginUserInfoId -> loginUserInfoId,
+      'sortNum -> Long.MaxValue
+    )
+    loginUserInfoId
   }
 
   /**
@@ -91,8 +97,18 @@ object LoginUserInfo extends SkinnyCRUDMapper[LoginUserInfo] with OptimisticLock
 
   /**
    * 全件取得.
+   * 一覧のソート順は、ソート順 asc, id ascになります。
    * @param session Session
    * @return 該当データ
    */
-  def findAll(implicit session: DBSession): Seq[LoginUserInfo] = LoginUserInfo.findAll(Seq(defaultAlias.id.asc))
+  def findAll(implicit session: DBSession): Seq[LoginUserInfo] = {
+    val (lui, lua) = (LoginUserInfo.defaultAlias, LoginUserAppendix.defaultAlias)
+    withSQL {
+      select.from(LoginUserInfo as lui)
+        .innerJoin(LoginUserAppendix as lua).on(lui.id, lua.loginUserInfoId)
+        .orderBy(lua.sortNum.asc, lui.id.asc)
+    }.map { rs =>
+      LoginUserInfo.extract(rs, lui.resultName)
+    }.list.apply()
+  }
 }

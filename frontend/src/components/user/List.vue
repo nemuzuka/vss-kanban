@@ -31,10 +31,12 @@
 
     <div v-if="listData.rows.length > 0">
       <table class="table is-bordered is-striped is-narrow">
-        <thead><tr><th>ユーザ名</th><th>ログインID</th><th style="width:200px">アプリケーション管理者</th><th style="width:20px"></th></tr></thead>
-        <tbody>
-        <user-list-row v-for="row in listData.rows" :row="row" @OpenEditDialog="openEditDialog" @Refresh="refresh"></user-list-row>
-        </tbody>
+        <thead><tr><th style="width:20px"></th><th>ユーザ名</th><th>ログインID</th><th style="width:200px">アプリケーション管理者</th><th style="width:20px"></th></tr></thead>
+
+        <draggable :list="listData.rows" :options="{group:'users',handle:'.drag-item'}" element="tbody" @start="drag=true" @end="drag=false" @change="updateSortNum">
+          <user-list-row v-for="row in listData.rows" :row="row" @OpenEditDialog="openEditDialog" @Refresh="refresh"></user-list-row>
+        </draggable>
+
       </table>
     </div>
 
@@ -47,12 +49,15 @@
 
 <script>
 
+  import Utils from '../../utils'
   import Row from './Row'
+  import Draggable from 'vuedraggable'
 
   export default {
     name: 'user-list',
     components: {
-      'user-list-row' : Row
+      'user-list-row' : Row,
+      'draggable':Draggable
     },
     props:["listData"],
     methods:{
@@ -63,6 +68,24 @@
       refresh(e) {
         const self = this;
         self.$emit("Refresh", e);
+      },
+      updateSortNum() {
+        const self = this;
+        const param = {
+          userIds: self.listData.rows.map(function(element){
+            return element.id
+          })
+        };
+        Utils.setAjaxDefault();
+        $.ajax({
+          data: param,
+          method: 'POST',
+          url: "/user/update/sort"
+        }).then(
+          function (data) {
+            self.$emit("Refresh", null);
+          }
+        );
       }
     }
   }

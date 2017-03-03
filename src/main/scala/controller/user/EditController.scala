@@ -2,7 +2,7 @@ package controller.user
 
 import application.UserSerivce
 import controller.{ ApiController, Keys }
-import domain.user.UserAuthority
+import domain.user.{ UserAuthority, UserRepository }
 import form.user.Edit
 import scalikejdbc.DB
 import skinny.validator._
@@ -68,6 +68,18 @@ class EditController extends ApiController {
         val errorMsg = createErrorMsg(Keys.ErrMsg.Key, exception.messageKey, exception.paramKey)
         createJsonResult(errorMsg)
     }
+  }
+
+  /**
+   * ソート順変更.
+   */
+  def updateSortNum(): String = {
+    val userIds = multiParams.getAs[Long]("userIds").getOrElse(Seq())
+    DB.localTx { implicit session =>
+      val userRepository = injector.getInstance(classOf[UserRepository])
+      userRepository.updateSortNum(userIds)
+    }
+    createJsonResult("success")
   }
 
   /**

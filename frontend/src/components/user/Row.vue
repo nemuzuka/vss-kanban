@@ -1,5 +1,10 @@
 <template>
   <tr style="cursor: pointer;" @click.stop="openEditDialog">
+    <td class="drag-item">
+      <span class="icon">
+        <i class="fa fa-arrows"></i>
+      </span>
+    </td>
     <td class="large">{{row.name}}</td>
     <td>{{row.loginId}}</td>
     <td class="has-text-centered">{{authority}}</td>

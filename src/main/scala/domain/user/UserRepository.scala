@@ -68,4 +68,12 @@ trait UserRepository extends Repository[User] {
    * @return Right:ユーザID, Left:エラー情報
    */
   def delete(userId: UserId, lockVersion: Long)(implicit session: DBSession): Either[ApplicationException, Long]
+
+  /**
+   * ソート順変更.
+   * ユーザIDSeqの順にソート順を変更していきます
+   * @param userIds ユーザIDSeq
+   * @param session Session
+   */
+  def updateSortNum(userIds: Seq[Long])(implicit session: DBSession): Unit
 }
