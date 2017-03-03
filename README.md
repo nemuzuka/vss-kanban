@@ -1,8 +1,8 @@
-## VSS Kanban 
+# VSS Kanban 
 
 環境構築手順(とりあえず動かしたい人向け)
 
-### 事前準備
+## 事前準備
 
 - Java8 
 - PostgreSQL(9.5) 
@@ -53,7 +53,7 @@
 
 
 
-### Demo Site
+## Demo Site
 
 <a href="http://vss-kanban.vss.jp.net/" target="_blank">こちらから</a>お試し頂けます。
 
@@ -66,7 +66,7 @@
 **※アプリケーション管理者機能は個別に環境を立ててお試しください**
 
 
-### 注意点
+## 注意点
 
 今のところ、IE / Edgeには対応していません。
 CSSフレームワークとして[Buluma](http://bulma.io/ "Bulma")を使用しているのですが、一部IE / Edge で正常に動作しない機能が確認されている為です。
