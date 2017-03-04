@@ -97,7 +97,7 @@
   }
   .lane-container {
     padding: 1rem 1rem;
-    height:95%;
+    height:90%;
   }
 
   .lane-container > .card-header .card-header-title {
