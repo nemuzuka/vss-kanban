@@ -74,8 +74,8 @@ object Controllers {
     val deleteUrl: Route = post("/kanban/admin/delete")(delete).as('delete)
     val joinedUsersUrl: Route = get("/kanban/admin/joinedUsers")(joinedUsers).as('joinedUsers)
     val updateJoinedUsersUrl: Route = post("/kanban/admin/updateJoinedUsers")(updateJoinedUsers()).as('updateJoinedUsers)
-    val lanesUrl: Route = get("/kanban/admin/lanes")(lanes).as('lanes)
-    val updateLanesUrl: Route = post("/kanban/admin/updateLanes")(updateLanes()).as('updateLanes)
+    val stagesUrl: Route = get("/kanban/admin/stages")(stages).as('stages)
+    val updateStagesUrl: Route = post("/kanban/admin/updateStages")(updateStages()).as('updateStages)
   }
 
   object noteEditAjax extends _root_.controller.kanban.NoteEditController with Routes {

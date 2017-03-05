@@ -4,7 +4,7 @@ import application.KanbanAdminService
 import controller.Keys
 import domain.kanban.{ KanbanId, KanbanRepository }
 import domain.user.User
-import form.kanban.{ JoinedUser, Lane }
+import form.kanban.{ JoinedUser, Stage }
 import scalikejdbc.DB
 
 /**
@@ -121,18 +121,18 @@ class EditController extends controller.kanban.EditController {
   }
 
   /**
-   * レーン取得.
+   * ステージ取得.
    */
-  def lanes: String = {
+  def stages: String = {
     val kanbanId = params.getAs[Long]("kanbanId").getOrElse(-1L)
     val userInfo = session.getAs[User](Keys.Session.UserInfo).get
 
     DB localTx { implicit session =>
       val kanbanAdminService = injector.getInstance(classOf[KanbanAdminService])
-      kanbanAdminService.getLane(kanbanId, userInfo)
+      kanbanAdminService.getStage(kanbanId, userInfo)
     } match {
-      case Some(lane) =>
-        createJsonResult(lane)
+      case Some(stage) =>
+        createJsonResult(stage)
       case _ =>
         val errorMsg = createErrorMsg(Keys.ErrMsg.Key, "noData", Seq())
         createJsonResult(errorMsg)
@@ -140,23 +140,23 @@ class EditController extends controller.kanban.EditController {
   }
 
   /**
-   * レーン変更.
+   * ステージ変更.
    */
-  def updateLanes(): String = {
-    val form = Lane(
+  def updateStages(): String = {
+    val form = Stage(
       id = params.getAs[Long]("id").getOrElse(-1L),
       lockVersion = params.getAs[Long]("lockVersion").getOrElse(-1L),
-      laneIds = multiParams.getAs[String]("laneIds").getOrElse(Seq()),
-      laneNames = multiParams.getAs[String]("laneNames").getOrElse(Seq()),
+      stageIds = multiParams.getAs[String]("stageIds").getOrElse(Seq()),
+      stageNames = multiParams.getAs[String]("stageNames").getOrElse(Seq()),
       archiveStatuses = multiParams.getAs[String]("archiveStatuses").getOrElse(Seq()),
-      completeLanes = multiParams.getAs[Boolean]("completeLanes").getOrElse(Seq())
+      completeStages = multiParams.getAs[Boolean]("completeStages").getOrElse(Seq())
     )
     val userInfo = session.getAs[User](Keys.Session.UserInfo).get
 
     import scalikejdbc.TxBoundary.Either._
     DB localTx { implicit session =>
       val kanbanAdminService = injector.getInstance(classOf[KanbanAdminService])
-      kanbanAdminService.updateLane(form, userInfo)
+      kanbanAdminService.updateStage(form, userInfo)
     } match {
       case Right(_) =>
         createJsonResult("success")

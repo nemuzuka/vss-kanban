@@ -7,7 +7,7 @@ import org.joda.time._
 
 case class Note(
   id: Long,
-  laneId: Long,
+  stageId: Long,
   kanbanId: Long,
   noteTitle: String,
   noteDescription: String,
@@ -40,7 +40,7 @@ object Note extends SkinnyCRUDMapper[Note] with OptimisticLockWithVersionFeature
    */
   override def extract(rs: WrappedResultSet, rn: ResultName[Note]): Note = new Note(
     id = rs.get(rn.id),
-    laneId = rs.get(rn.laneId),
+    stageId = rs.get(rn.stageId),
     kanbanId = rs.get(rn.kanbanId),
     noteTitle = rs.get(rn.noteTitle),
     noteDescription = rs.get(rn.noteDescription),
@@ -62,7 +62,7 @@ object Note extends SkinnyCRUDMapper[Note] with OptimisticLockWithVersionFeature
    */
   def create(entity: Note)(implicit session: DBSession): Long = {
     Note.createWithAttributes(
-      'laneId -> entity.laneId,
+      'stageId -> entity.stageId,
       'kanbanId -> entity.kanbanId,
       'noteTitle -> entity.noteTitle,
       'noteDescription -> entity.noteDescription,
@@ -99,7 +99,7 @@ object Note extends SkinnyCRUDMapper[Note] with OptimisticLockWithVersionFeature
    * かんばんIDによる取得.
    * ソート順でソートします
    * @param kanbanId かんばんID
-   * @param includeArchive Archiveのレーンも含める場合、true
+   * @param includeArchive Archiveのふせんも含める場合、true
    * @param session Session
    * @return 該当データ
    */
@@ -120,14 +120,14 @@ object Note extends SkinnyCRUDMapper[Note] with OptimisticLockWithVersionFeature
   }
 
   /**
-   * レーンID変更.
+   * ステージID変更.
    * @param noteId ふせんID
-   * @param laneId 変更先レーンID
+   * @param stageId 変更先ステージID
    * @param session Session
    */
-  def updateByLane(noteId: Long, laneId: Long)(implicit session: DBSession): Unit = {
+  def updateByStage(noteId: Long, stageId: Long)(implicit session: DBSession): Unit = {
     Note.updateBy(sqls.eq(Note.column.id, noteId)).withAttributes(
-      'laneId -> laneId,
+      'stageId -> stageId,
       'sortNum -> Long.MaxValue
     )
   }

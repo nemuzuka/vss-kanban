@@ -47,7 +47,7 @@
 
   export default {
     name: 'note-item',
-    props: ['noteItem', 'joinedUserMap', 'completeLane'],
+    props: ['noteItem', 'joinedUserMap', 'completeStage'],
     methods:{
       takeStringTop(target) {
         if(typeof target === 'undefined' || target === '') {
@@ -71,7 +71,7 @@
       },
       fixDateClass() {
         const self = this;
-        return Utils.fixDateClass(self.noteItem.fixDate, self.completeLane);
+        return Utils.fixDateClass(self.noteItem.fixDate, self.completeStage);
       },
       viewLastCommentAt() {
         const self = this;

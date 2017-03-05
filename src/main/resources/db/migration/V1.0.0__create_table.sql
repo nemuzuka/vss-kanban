@@ -16,8 +16,9 @@ DROP TABLE IF EXISTS kanban_joined_user;
 DROP TABLE IF EXISTS note_charged_user;
 DROP TABLE IF EXISTS note_comment;
 DROP TABLE IF EXISTS note;
-DROP TABLE IF EXISTS lane;
+DROP TABLE IF EXISTS stage;
 DROP TABLE IF EXISTS kanban;
+DROP TABLE IF EXISTS login_user_appendix;
 DROP TABLE IF EXISTS login_user_password;
 DROP TABLE IF EXISTS login_user_info;
 
@@ -125,26 +126,14 @@ CREATE TABLE kanban_joined_user
 ) WITHOUT OIDS;
 
 
--- レーン
-CREATE TABLE lane
+-- ログインユーザ追加情報
+CREATE TABLE login_user_appendix
 (
-	-- id(自動採番)
-	id bigserial NOT NULL,
-	-- かんばんID
-	kanban_id bigint NOT NULL,
-	-- レーン名
-	lane_name varchar(256) NOT NULL,
-	-- アーカイブステータス
-	-- 0:通常
-	-- 1:アーカイブ
-	archive_status varchar(1) NOT NULL,
+	-- ログインユーザID
+	login_user_info_id bigint NOT NULL,
 	-- ソート順
 	sort_num bigint NOT NULL,
-	-- 完了扱いのレーンか
-	-- 1:完了扱いのレーン
-	-- 0:完了扱いのレーンでない
-	complete_lane varchar(1) NOT NULL,
-	PRIMARY KEY (id)
+	PRIMARY KEY (login_user_info_id)
 ) WITHOUT OIDS;
 
 
@@ -187,8 +176,8 @@ CREATE TABLE note
 (
 	-- id(自動採番)
 	id bigserial NOT NULL,
-	-- レーンID
-	lane_id bigint NOT NULL,
+	-- ステージID
+	stage_id bigint NOT NULL,
 	-- かんばんID
 	kanban_id bigint NOT NULL,
 	-- 付箋タイトル
@@ -273,6 +262,29 @@ CREATE TABLE note_comment_attachment_file
 ) WITHOUT OIDS;
 
 
+-- ステージ
+CREATE TABLE stage
+(
+	-- id(自動採番)
+	id bigserial NOT NULL,
+	-- かんばんID
+	kanban_id bigint NOT NULL,
+	-- ステージ名
+	stage_name varchar(256) NOT NULL,
+	-- アーカイブステータス
+	-- 0:通常
+	-- 1:アーカイブ
+	archive_status varchar(1) NOT NULL,
+	-- ソート順
+	sort_num bigint NOT NULL,
+	-- 完了扱いのステージか
+	-- 1:完了扱いのステージ
+	-- 0:完了扱いのステージでない
+	complete_stage varchar(1) NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
 
 /* Create Foreign Keys */
 
@@ -324,14 +336,6 @@ ALTER TABLE kanban_joined_user
 ;
 
 
-ALTER TABLE lane
-	ADD FOREIGN KEY (kanban_id)
-	REFERENCES kanban (id)
-	ON UPDATE RESTRICT
-	ON DELETE CASCADE
-;
-
-
 ALTER TABLE note
 	ADD FOREIGN KEY (kanban_id)
 	REFERENCES kanban (id)
@@ -340,9 +344,17 @@ ALTER TABLE note
 ;
 
 
-ALTER TABLE note
-	ADD FOREIGN KEY (lane_id)
-	REFERENCES lane (id)
+ALTER TABLE stage
+	ADD FOREIGN KEY (kanban_id)
+	REFERENCES kanban (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
+ALTER TABLE login_user_appendix
+	ADD FOREIGN KEY (login_user_info_id)
+	REFERENCES login_user_info (id)
 	ON UPDATE RESTRICT
 	ON DELETE CASCADE
 ;
@@ -383,6 +395,14 @@ ALTER TABLE note_comment
 ALTER TABLE note_comment_attachment_file
 	ADD FOREIGN KEY (note_comment_id)
 	REFERENCES note_comment (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
+ALTER TABLE note
+	ADD FOREIGN KEY (stage_id)
+	REFERENCES stage (id)
 	ON UPDATE RESTRICT
 	ON DELETE CASCADE
 ;
@@ -438,17 +458,9 @@ COMMENT ON COLUMN kanban_joined_user.login_user_info_id IS 'ログインユー�
 COMMENT ON COLUMN kanban_joined_user.kanban_authority IS 'かんばん権限
 1:管理者
 0:一般';
-COMMENT ON TABLE lane IS 'レーン';
-COMMENT ON COLUMN lane.id IS 'id(自動採番)';
-COMMENT ON COLUMN lane.kanban_id IS 'かんばんID';
-COMMENT ON COLUMN lane.lane_name IS 'レーン名';
-COMMENT ON COLUMN lane.archive_status IS 'アーカイブステータス
-0:通常
-1:アーカイブ';
-COMMENT ON COLUMN lane.sort_num IS 'ソート順';
-COMMENT ON COLUMN lane.complete_lane IS '完了扱いのレーンか
-1:完了扱いのレーン
-0:完了扱いのレーンでない';
+COMMENT ON TABLE login_user_appendix IS 'ログインユーザ追加情報';
+COMMENT ON COLUMN login_user_appendix.login_user_info_id IS 'ログインユーザID';
+COMMENT ON COLUMN login_user_appendix.sort_num IS 'ソート順';
 COMMENT ON TABLE login_user_info IS 'ログインユーザ情報';
 COMMENT ON COLUMN login_user_info.id IS 'id(自動採番)';
 COMMENT ON COLUMN login_user_info.login_id IS 'ログインID';
@@ -464,7 +476,7 @@ COMMENT ON COLUMN login_user_password.login_user_info_id IS 'ログインユー�
 COMMENT ON COLUMN login_user_password.password IS 'パスワード';
 COMMENT ON TABLE note IS '付箋';
 COMMENT ON COLUMN note.id IS 'id(自動採番)';
-COMMENT ON COLUMN note.lane_id IS 'レーンID';
+COMMENT ON COLUMN note.stage_id IS 'ステージID';
 COMMENT ON COLUMN note.kanban_id IS 'かんばんID';
 COMMENT ON COLUMN note.note_title IS '付箋タイトル';
 COMMENT ON COLUMN note.note_description IS '説明';
@@ -496,3 +508,17 @@ COMMENT ON TABLE note_comment_attachment_file IS 'ふせんコメント - 添付
 COMMENT ON COLUMN note_comment_attachment_file.id IS 'id(自動採番)';
 COMMENT ON COLUMN note_comment_attachment_file.note_comment_id IS 'ふせんコメントID';
 COMMENT ON COLUMN note_comment_attachment_file.attachment_file_id IS '添付ファイルID';
+COMMENT ON TABLE stage IS 'ステージ';
+COMMENT ON COLUMN stage.id IS 'id(自動採番)';
+COMMENT ON COLUMN stage.kanban_id IS 'かんばんID';
+COMMENT ON COLUMN stage.stage_name IS 'ステージ名';
+COMMENT ON COLUMN stage.archive_status IS 'アーカイブステータス
+0:通常
+1:アーカイブ';
+COMMENT ON COLUMN stage.sort_num IS 'ソート順';
+COMMENT ON COLUMN stage.complete_stage IS '完了扱いのステージか
+1:完了扱いのステージ
+0:完了扱いのステージでない';
+
+
+

@@ -11,8 +11,8 @@
 	</page_setting>
 	<category_index>0</category_index>
 	<zoom>1.0</zoom>
-	<x>-156</x>
-	<y>0</y>
+	<x>107</x>
+	<y>489</y>
 	<default_color>
 		<r>128</r>
 		<g>128</g>
@@ -207,7 +207,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2017-02-05 11:11:48</creation_date>
-			<updated_date>2017-03-03 11:21:09</updated_date>
+			<updated_date>2017-03-05 17:41:32</updated_date>
 			<model_property>
 				<name>プロジェクト名</name>
 				<value></value>
@@ -316,9 +316,9 @@
 			<binary>false</binary>
 			<args></args>
 			<char_semantics>false</char_semantics>
-			<description>完了扱いのレーンか&#x0A;1:完了扱いのレーン&#x0A;0:完了扱いのレーンでない</description>
-			<logical_name>完了扱いのレーンか？</logical_name>
-			<physical_name>complete_lane</physical_name>
+			<description>完了扱いのステージか&#x0A;1:完了扱いのステージ&#x0A;0:完了扱いのステージでない</description>
+			<logical_name>完了扱いのステージか？</logical_name>
+			<physical_name>complete_stage</physical_name>
 			<type>varchar(n)</type>
 		</word>
 		<word>
@@ -499,22 +499,6 @@
 		</word>
 		<word>
 			<id>16</id>
-			<length>256</length>
-			<decimal>null</decimal>
-			<array>false</array>
-			<array_dimension>null</array_dimension>
-			<unsigned>false</unsigned>
-			<zerofill>false</zerofill>
-			<binary>false</binary>
-			<args></args>
-			<char_semantics>false</char_semantics>
-			<description>レーン名</description>
-			<logical_name>レーン名</logical_name>
-			<physical_name>lane_name</physical_name>
-			<type>varchar(n)</type>
-		</word>
-		<word>
-			<id>17</id>
 			<length>null</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -530,7 +514,7 @@
 			<type>timestamp</type>
 		</word>
 		<word>
-			<id>18</id>
+			<id>17</id>
 			<length>null</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -546,7 +530,7 @@
 			<type>bigint</type>
 		</word>
 		<word>
-			<id>19</id>
+			<id>18</id>
 			<length>null</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -562,7 +546,7 @@
 			<type>bigint</type>
 		</word>
 		<word>
-			<id>20</id>
+			<id>19</id>
 			<length>256</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -576,6 +560,22 @@
 			<logical_name>ログインID</logical_name>
 			<physical_name>login_id</physical_name>
 			<type>varchar(n)</type>
+		</word>
+		<word>
+			<id>20</id>
+			<length>null</length>
+			<decimal>null</decimal>
+			<array>false</array>
+			<array_dimension>null</array_dimension>
+			<unsigned>false</unsigned>
+			<zerofill>false</zerofill>
+			<binary>false</binary>
+			<args></args>
+			<char_semantics>false</char_semantics>
+			<description>ログインユーザ情報ID</description>
+			<logical_name>ログインユーザ情報ID</logical_name>
+			<physical_name>login_user_info_id</physical_name>
+			<type>bigint</type>
 		</word>
 		<word>
 			<id>21</id>
@@ -595,22 +595,6 @@
 		</word>
 		<word>
 			<id>22</id>
-			<length>null</length>
-			<decimal>null</decimal>
-			<array>false</array>
-			<array_dimension>null</array_dimension>
-			<unsigned>false</unsigned>
-			<zerofill>false</zerofill>
-			<binary>false</binary>
-			<args></args>
-			<char_semantics>false</char_semantics>
-			<description>ログインユーザ情報ID</description>
-			<logical_name>ログインユーザ情報ID</logical_name>
-			<physical_name>login_user_info_id</physical_name>
-			<type>bigint</type>
-		</word>
-		<word>
-			<id>23</id>
 			<length>256</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -626,7 +610,7 @@
 			<type>varchar(n)</type>
 		</word>
 		<word>
-			<id>24</id>
+			<id>23</id>
 			<length>null</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -642,7 +626,7 @@
 			<type>text</type>
 		</word>
 		<word>
-			<id>25</id>
+			<id>24</id>
 			<length>256</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -658,7 +642,7 @@
 			<type>varchar(n)</type>
 		</word>
 		<word>
-			<id>26</id>
+			<id>25</id>
 			<length>256</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -674,7 +658,7 @@
 			<type>varchar(n)</type>
 		</word>
 		<word>
-			<id>27</id>
+			<id>26</id>
 			<length>256</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -690,7 +674,7 @@
 			<type>varchar(n)</type>
 		</word>
 		<word>
-			<id>28</id>
+			<id>27</id>
 			<length>null</length>
 			<decimal>null</decimal>
 			<array>false</array>
@@ -704,6 +688,22 @@
 			<logical_name>ソート順</logical_name>
 			<physical_name>sort_num</physical_name>
 			<type>bigint</type>
+		</word>
+		<word>
+			<id>28</id>
+			<length>256</length>
+			<decimal>null</decimal>
+			<array>false</array>
+			<array_dimension>null</array_dimension>
+			<unsigned>false</unsigned>
+			<zerofill>false</zerofill>
+			<binary>false</binary>
+			<args></args>
+			<char_semantics>false</char_semantics>
+			<description>ステージ名</description>
+			<logical_name>ステージ名</logical_name>
+			<physical_name>stage_name</physical_name>
+			<type>varchar(n)</type>
 		</word>
 		<word>
 			<id>29</id>
@@ -961,7 +961,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>17</word_id>
+					<word_id>16</word_id>
 					<id>5</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -994,7 +994,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>19</word_id>
+					<word_id>18</word_id>
 					<id>6</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -1109,7 +1109,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>20</word_id>
+					<word_id>19</word_id>
 					<id>8</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -1241,7 +1241,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>17</word_id>
+					<word_id>16</word_id>
 					<id>12</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -1274,7 +1274,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>19</word_id>
+					<word_id>18</word_id>
 					<id>13</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -1422,7 +1422,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>26</word_id>
+					<word_id>25</word_id>
 					<id>15</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -1707,7 +1707,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>27</word_id>
+					<word_id>26</word_id>
 					<id>21</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -1740,7 +1740,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>23</word_id>
+					<word_id>22</word_id>
 					<id>22</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -1971,7 +1971,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>17</word_id>
+					<word_id>16</word_id>
 					<id>29</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -2657,10 +2657,10 @@
 					<id>41</id>
 					<referenced_column>53</referenced_column>
 					<relation>9</relation>
-					<description>レーンID</description>
+					<description>ステージID</description>
 					<unique_key_name></unique_key_name>
-					<logical_name>レーンID</logical_name>
-					<physical_name>lane_id</physical_name>
+					<logical_name>ステージID</logical_name>
+					<physical_name>stage_id</physical_name>
 					<type>bigint</type>
 					<constraint></constraint>
 					<default_value></default_value>
@@ -2722,7 +2722,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>25</word_id>
+					<word_id>24</word_id>
 					<id>43</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -2755,7 +2755,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>24</word_id>
+					<word_id>23</word_id>
 					<id>44</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -2821,7 +2821,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>28</word_id>
+					<word_id>27</word_id>
 					<id>46</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -2953,7 +2953,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>18</word_id>
+					<word_id>17</word_id>
 					<id>50</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -2986,7 +2986,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>17</word_id>
+					<word_id>16</word_id>
 					<id>51</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -3019,7 +3019,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>19</word_id>
+					<word_id>18</word_id>
 					<id>52</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -3098,9 +3098,9 @@
 					<referenced_complex_unique_key>null</referenced_complex_unique_key>
 				</relation>
 			</connections>
-			<physical_name>lane</physical_name>
-			<logical_name>レーン</logical_name>
-			<description>レーン</description>
+			<physical_name>stage</physical_name>
+			<logical_name>ステージ</logical_name>
+			<description>ステージ</description>
 			<constraint></constraint>
 			<primary_key_name></primary_key_name>
 			<option></option>
@@ -3173,7 +3173,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>16</word_id>
+					<word_id>28</word_id>
 					<id>55</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -3239,7 +3239,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>28</word_id>
+					<word_id>27</word_id>
 					<id>57</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -3426,7 +3426,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>22</word_id>
+					<word_id>20</word_id>
 					<id>61</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -3944,7 +3944,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>28</word_id>
+					<word_id>27</word_id>
 					<id>71</id>
 					<description></description>
 					<unique_key_name></unique_key_name>

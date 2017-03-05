@@ -1,9 +1,9 @@
 <template>
-  <div class="modal" id="lane-edit-dialog">
+  <div class="modal" id="stage-edit-dialog">
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">レーン{{buttonLabel}}</p>
+        <p class="modal-card-title">ステージ{{buttonLabel}}</p>
         <button class="delete" @click="closeDialog"></button>
       </header>
       <section class="modal-card-body">
@@ -13,10 +13,10 @@
         </article>
 
         <div>
-          <label class="label">レーン名 <span class="tag is-danger">必須</span></label>
+          <label class="label">ステージ名 <span class="tag is-danger">必須</span></label>
           <p class="control">
-            <input class="input" type="text" v-model="form.laneName" placeholder="レーン名を入力してください" id="lane-edit-dialog-lane-name">
-            <span class="help is-danger" v-html="msg.laneNameErrMsg"></span>
+            <input class="input" type="text" v-model="form.stageName" placeholder="ステージ名を入力してください" id="stage-edit-dialog-stage-name">
+            <span class="help is-danger" v-html="msg.stageNameErrMsg"></span>
           </p>
         </div>
 
@@ -25,13 +25,13 @@
           <p class="control">
             <label class="checkbox">
               <input type="checkbox" v-model="form.archiveStatus" :true-value="1" :false-value="0">
-              このレーンをアーカイブする
+              このステージをアーカイブする
             </label>
           </p>
           <p class="control">
             <label class="checkbox">
-              <input type="checkbox" v-model="form.completeLane" :true-value="1" :false-value="0">
-              このレーンに紐づく付箋は完了扱いとする
+              <input type="checkbox" v-model="form.completeStage" :true-value="1" :false-value="0">
+              このステージに紐づく付箋は完了扱いとする
             </label>
           </p>
         </div>
@@ -55,24 +55,24 @@
   import Utils from '../../utils'
 
   export default {
-    name: 'lane-edit-dialog',
-    props: ['lane'],
+    name: 'stage-edit-dialog',
+    props: ['stage'],
     data() {
       return {
         form:{
           id:"",
-          laneName:"",
+          stageName:"",
           archiveStatus:"0",
-          completeLane:"0",
+          completeStage:"0",
           index:null
         },
         msg:{
           globalErrMsg:"",
-          laneNameErrMsg:""
+          stageNameErrMsg:""
         },
         clearMsg(){
           this.msg.globalErrMsg = "";
-          this.msg.laneNameErrMsg = "";
+          this.msg.stageNameErrMsg = "";
         }
       }
     },
@@ -81,47 +81,47 @@
         const self = this;
         if(item === null || typeof item === "undefined") {
           self.form.id = "";
-          self.form.laneName = "";
+          self.form.stageName = "";
           self.form.archiveStatus = "0";
-          self.form.completeLane = "0";
+          self.form.completeStage = "0";
           self.form.index = null;
         } else {
-          self.form.id = item.laneId;
-          self.form.laneName = item.laneName;
+          self.form.id = item.stageId;
+          self.form.stageName = item.stageName;
           self.form.archiveStatus = item.archiveStatus;
-          self.form.completeLane = item.completeLane ? "1" : "0";
+          self.form.completeStage = item.completeStage ? "1" : "0";
           self.form.index = index;
         }
         self.clearMsg();
-        Utils.openDialog('lane-edit-dialog');
+        Utils.openDialog('stage-edit-dialog');
 
         setTimeout(function(){
-          $('#lane-edit-dialog-lane-name').focus();
+          $('#stage-edit-dialog-stage-name').focus();
         }, 100);
       },
       closeDialog() {
-        Utils.closeDialog('lane-edit-dialog');
+        Utils.closeDialog('stage-edit-dialog');
       },
       saveDialog(e) {
         const self = this;
         self.clearMsg();
 
-        if(self.form.laneName === '') {
-          self.msg.laneNameErrMsg = "レーン名 は 必ず入力してください";
+        if(self.form.stageName === '') {
+          self.msg.stageNameErrMsg = "ステージ名 は 必ず入力してください";
           return false;
         }
 
-        const lane = {
-          laneId : self.form.index === null ? Utils.getUniqueStr() : self.form.id,
-          laneName : self.form.laneName,
+        const stage = {
+          stageId : self.form.index === null ? Utils.getUniqueStr() : self.form.id,
+          stageName : self.form.stageName,
           archiveStatus : self.form.archiveStatus.toString(),
-          completeLane : self.form.completeLane.toString() === '1'
+          completeStage : self.form.completeStage.toString() === '1'
         };
 
         if(self.form.index === null) {
-          self.lane.lanes.push(lane);
+          self.stage.stages.push(stage);
         } else {
-          self.lane.lanes.splice(self.form.index, 1, lane);
+          self.stage.stages.splice(self.form.index, 1, stage);
         }
         self.closeDialog();
       }

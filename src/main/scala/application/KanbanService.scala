@@ -1,7 +1,7 @@
 package application
 
 import domain.attachment.AttachmentFileRow
-import domain.kanban.{ KanbanRow, KanbanSearchResult, LaneRow, NoteRow }
+import domain.kanban.{ KanbanRow, KanbanSearchResult, StageRow, NoteRow }
 import domain.user.User
 import scalikejdbc.DBSession
 
@@ -14,7 +14,7 @@ trait KanbanService {
    * かんばん登録.
    * ・「Open」状態
    * ・登録ユーザを管理者
-   * ・デフォルトレーン作成(未実施/実施中/完了)
+   * ・デフォルトステージ作成(未実施/実施中/完了)
    * のかんばんを登録します
    * @param kanbanTitle かんばんタイトル
    * @param kanbanDescription かんばん説明
@@ -44,7 +44,7 @@ trait KanbanService {
    * かんばん詳細情報取得.
    * かんばんが存在しても、ログインユーザが参照可能でない場合、Noneを返します
    * @param kanbanId かんばんID
-   * @param includeArchive アーカイブ済みのレーンや付箋を含める場合、true
+   * @param includeArchive アーカイブ済みのステージや付箋を含める場合、true
    * @param loginUser ログインユーザ情報
    * @param session Session
    * @return 該当データ(存在しない場合、None)
@@ -56,14 +56,14 @@ trait KanbanService {
 /**
  * かんばん詳細.
  * @param kanban かんばんドメイン
- * @param lanes レーンDtoSeq
- * @param noteMap 付箋DtoMap(key:レーンID value:付箋DtoSeq)
+ * @param stages ステージDtoSeq
+ * @param noteMap 付箋DtoMap(key:ステージID value:付箋DtoSeq)
  * @param kanbanAttachmentFiles かんばん添付ファイルSeq
  * @param joinedUserMap 参加者DtoMap
  */
 case class KanbanDetail(
   kanban: KanbanRow,
-  lanes: Seq[LaneRow],
+  stages: Seq[StageRow],
   noteMap: Map[String, Seq[NoteRow]],
   kanbanAttachmentFiles: Seq[AttachmentFileRow],
   joinedUserMap: Map[String, JoinedUserDto]

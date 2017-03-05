@@ -6,7 +6,7 @@ import application._
 import domain.ApplicationException
 import domain.kanban._
 import domain.user.User
-import form.kanban.{ Edit, JoinedUser, Lane }
+import form.kanban.{ Edit, JoinedUser, Stage }
 import scalikejdbc.DBSession
 
 /**
@@ -15,7 +15,7 @@ import scalikejdbc.DBSession
 class KanbanAdminServiceImpl @Inject() (
     userSerivce: UserSerivce,
     kanbanRepository: KanbanRepository,
-    laneRepository: LaneRepository
+    stageRepository: StageRepository
 ) extends KanbanAdminService {
 
   /**
@@ -97,15 +97,15 @@ class KanbanAdminServiceImpl @Inject() (
   /**
    * @inheritdoc
    */
-  override def getLane(id: Long, loginUser: User)(implicit session: DBSession): Option[LaneTargetDto] = {
+  override def getStage(id: Long, loginUser: User)(implicit session: DBSession): Option[StageTargetDto] = {
     val kanbanId = KanbanId(id)
     for {
       kanban <- kanbanRepository.findById(kanbanId, loginUser) if kanban.isAdministrator(loginUser)
     } yield {
-      LaneTargetDto(
+      StageTargetDto(
         id = id,
         lockVersion = kanban.configuration.lockVersion,
-        lanes = laneRepository.findByKanbanId(kanbanId, includeArchive = true)
+        stages = stageRepository.findByKanbanId(kanbanId, includeArchive = true)
       )
     }
   }
@@ -113,7 +113,7 @@ class KanbanAdminServiceImpl @Inject() (
   /**
    * @inheritdoc
    */
-  override def updateLane(form: Lane, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
+  override def updateStage(form: Stage, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
     val kanbanId = KanbanId(form.id)
     val result = for {
       kanban <- kanbanRepository.findById(kanbanId, loginUser) if kanban.isAdministrator(loginUser)
@@ -124,7 +124,7 @@ class KanbanAdminServiceImpl @Inject() (
       )
       kanbanRepository.store(updateKanban) match {
         case Right(id) =>
-          laneRepository.store(domain.kanban.Lane.createLanes(form.laneIds, form.laneNames, form.archiveStatuses, form.completeLanes), kanbanId)
+          stageRepository.store(domain.kanban.Stage.createStages(form.stageIds, form.stageNames, form.archiveStatuses, form.completeStages), kanbanId)
           Right(id)
         case e => e
       }

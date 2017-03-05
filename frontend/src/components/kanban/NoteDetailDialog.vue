@@ -78,9 +78,9 @@
               </div>
               <div class="level-item">
                 <span class="select">
-                  <select v-model="comment.laneId" placeholder="コメントを入力してください">
-                    <option v-for="lane in lanes" :lane="lane" :value="lane.laneId">
-                      {{lane.laneName}}
+                  <select v-model="comment.stageId">
+                    <option v-for="stage in stages" :stage="stage" :value="stage.stageId">
+                      {{stage.stageName}}
                     </option>
                   </select>
                 </span>
@@ -169,7 +169,7 @@
 
   export default {
     name: 'note-detail-dialog',
-    props: ['kanbanId', 'lanes'],
+    props: ['kanbanId', 'stages'],
     components: {
       'saved-file-list':SavedFileList,
       'file-upload':Upload,
@@ -180,7 +180,7 @@
       return {
         detail: {
           id:"",
-          laneId:"",
+          stageId:"",
           kanbanId:"",
           lockVersion:"",
           noteTitle: "",
@@ -190,7 +190,7 @@
         },
         comment: {
           comment: "",
-          laneId: "",
+          stageId: "",
           files:[],
           attachmentFileIds:[],
           appendixChange: false,
@@ -198,7 +198,7 @@
         },
         form:{
           id: "",
-          laneId: "",
+          stageId: "",
           kanbanId:"",
           lockVersion: "0",
           noteTitle: "",
@@ -231,12 +231,12 @@
       };
     },
     methods: {
-      openDialog(e, laneId, noteId) {
+      openDialog(e, stageId, noteId) {
         const self = this;
         const param = {
           noteId: noteId,
           kanbanId: self.kanbanId,
-          laneId: laneId
+          stageId: stageId
         };
         Utils.setAjaxDefault();
         $.ajax({
@@ -257,7 +257,7 @@
       openEditDialog(e) {
         const self = this;
         self.closeDialog();
-        self.$emit("OpenEditDialog", e, self.detail.laneId, self.detail.id);
+        self.$emit("OpenEditDialog", e, self.detail.stageId, self.detail.id);
       },
       closeDialog() {
         Utils.closeDialog('note-detail-dialog');
@@ -267,7 +267,7 @@
         const form = result.form;
         self.detail.id = form.id;
         self.detail.kanbanId = form.kanbanId;
-        self.detail.laneId = form.laneId;
+        self.detail.stageId = form.stageId;
         self.detail.noteTitle = form.noteTitle;
         self.detail.noteDescription = form.noteDescription;
         self.detail.archiveStatus = form.archiveStatus;
@@ -285,7 +285,7 @@
 
         //変更用
         self.form.id = form.id;
-        self.form.laneId = form.laneId;
+        self.form.stageId = form.stageId;
         self.form.kanbanId = form.kanbanId;
         self.form.lockVersion = form.lockVersion;
         self.form.noteTitle = form.noteTitle;
@@ -308,7 +308,7 @@
         const self = this;
         self.mode = 'comment';
         self.comment.comment = "";
-        self.comment.laneId = self.detail.laneId;
+        self.comment.stageId = self.detail.stageId;
         self.comment.files = [];
         self.comment.attachmentFileIds = [];
         self.comment.appendixChange = false;
@@ -427,7 +427,7 @@
           noteId: self.detail.id,
           attachmentFileIds: self.comment.attachmentFileIds,
           comment: self.comment.comment,
-          laneId: self.comment.laneId
+          stageId: self.comment.stageId
         };
 
         Utils.setAjaxDefault();

@@ -10,7 +10,7 @@
             <aside class="menu">
               <ul class="menu-list">
                 <li><a :class="selectedBaseMenu" @click="refreshBase">基本情報</a></li>
-                <li><a :class="selectedLaneMenu" @click="refreshLanes">レーン</a></li>
+                <li><a :class="selectedStageMenu" @click="refreshStages">ステージ</a></li>
                 <li><a :class="selectedJoinMenu" @click="refreshJoinedUsers">参加者</a></li>
               </ul>
             </aside>
@@ -80,12 +80,12 @@
           </div>
 
 
-          <!-- レーン -->
+          <!-- ステージ -->
           <div class="column is-9 margin" v-if="menuType === '2'">
             <nav class="level">
               <div class="level-left">
                 <div class="level-item">
-                  <h1 class="title">レーン変更</h1>
+                  <h1 class="title">ステージ変更</h1>
                 </div>
               </div>
             </nav>
@@ -97,13 +97,13 @@
                   <div class="message-body" v-html="msg.globalErrMsg"></div>
                 </article>
 
-                <settings-lane :lane="lane"></settings-lane>
+                <settings-stage :stage="stage"></settings-stage>
 
               </div>
             </div>
 
             <div class="has-text-right">
-              <a class="button is-info" @click="saveLanes">
+              <a class="button is-info" @click="saveStages">
                 <span class="icon is-small">
                   <i class="fa fa-floppy-o"></i>
                 </span>
@@ -172,13 +172,13 @@
 
   import autosize from 'autosize/dist/autosize'
   import Utils from '../../utils'
-  import SettingsLane from './SettingsLane'
+  import SettingsStage from './SettingsStage'
 
   export default {
     name: 'kanban-settings',
     props:["kanbanId"],
     components:{
-      'settings-lane':SettingsLane
+      'settings-stage':SettingsStage
     },
     data() {
       return {
@@ -197,11 +197,11 @@
           joinedUserIds:[],
           adminUserIds:[],
         },
-        lane:{
+        stage:{
           id:null,
           lockVersion:null,
-          lanes:[],
-          lanesMsg:""
+          stages:[],
+          stagesMsg:""
         },
         msg:{
           globalErrMsg:"",
@@ -319,10 +319,10 @@
           }
         );
       },
-      refreshLanes(){
+      refreshStages(){
         const self = this;
         self.clearMsg();
-        self.lane.lanesMsg = "";
+        self.stage.stagesMsg = "";
 
         const param = {
           kanbanId : self.kanbanId
@@ -331,51 +331,51 @@
         $.ajax({
           data: param,
           method: 'GET',
-          url: "/kanban/admin/lanes"
+          url: "/kanban/admin/stages"
         }).then(
           function (data) {
             if(Utils.alertErrorMsg(data)) {
               return;
             }
 
-            const msg = "レーンは登録されていません";
-            self.lane.id = data.result.id;
-            self.lane.lockVersion = data.result.lockVersion;
+            const msg = "ステージは登録されていません";
+            self.stage.id = data.result.id;
+            self.stage.lockVersion = data.result.lockVersion;
 
-            self.lane.lanes.splice(0,self.lane.lanes.length);
-            self.lane.lanes.push(...data.result.lanes);
+            self.stage.stages.splice(0,self.stage.stages.length);
+            self.stage.stages.push(...data.result.stages);
 
-            if(self.lane.lanes.length <= 0) {
-              self.lane.lanesMsg = msg;
+            if(self.stage.stages.length <= 0) {
+              self.stage.stagesMsg = msg;
             }
 
             self.menuType = "2";
           }
         );
       },
-      saveLanes() {
+      saveStages() {
         const self = this;
         const param = {
-          id: self.lane.id,
-          lockVersion: self.lane.lockVersion,
-          laneIds: self.lane.lanes.map( function(element) {
-            return Utils.isUniqueStr(element.laneId) ? "" : element.laneId;
+          id: self.stage.id,
+          lockVersion: self.stage.lockVersion,
+          stageIds: self.stage.stages.map( function(element) {
+            return Utils.isUniqueStr(element.stageId) ? "" : element.stageId;
           }),
-          laneNames:self.lane.lanes.map( function(element) {
-            return element.laneName;
+          stageNames:self.stage.stages.map( function(element) {
+            return element.stageName;
           }),
-          archiveStatuses:self.lane.lanes.map( function(element) {
+          archiveStatuses:self.stage.stages.map( function(element) {
             return element.archiveStatus;
           }),
-          completeLanes:self.lane.lanes.map( function(element) {
-            return element.completeLane;
+          completeStages:self.stage.stages.map( function(element) {
+            return element.completeStage;
           })
         };
         Utils.setAjaxDefault();
         $.ajax({
           data: param,
           method: 'POST',
-          url: "/kanban/admin/updateLanes"
+          url: "/kanban/admin/updateStages"
         }).then(
           function (data) {
             if(Utils.writeErrorMsg(self, data)) {
@@ -383,7 +383,7 @@
             }
             Utils.viewInfoMsg(data);
             setTimeout(function(){
-              self.refreshLanes();
+              self.refreshStages();
             },1500);
           }
         );
@@ -466,7 +466,7 @@
           'is-active': self.menuType === '1'
         }
       },
-      selectedLaneMenu() {
+      selectedStageMenu() {
         const self = this;
         return {
           'is-active': self.menuType === '2'

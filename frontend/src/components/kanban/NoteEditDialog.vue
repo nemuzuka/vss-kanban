@@ -44,7 +44,7 @@
       return {
         form:{
           id: "",
-          laneId: "",
+          stageId: "",
           kanbanId:"",
           lockVersion: "0",
           noteTitle: "",
@@ -77,12 +77,12 @@
         self.form.fixDate = "";
         self.fixDate.clear();
       },
-      openDialog(e, laneId, noteId) {
+      openDialog(e, stageId, noteId) {
         const self = this;
         const param = {
           noteId: noteId,
           kanbanId: self.kanbanId,
-          laneId: laneId
+          stageId: stageId
         };
 
         Utils.setAjaxDefault();
@@ -116,7 +116,7 @@
         const self = this;
         const form = result.form;
         self.form.id = form.id;
-        self.form.laneId = form.laneId;
+        self.form.stageId = form.stageId;
         self.form.kanbanId = form.kanbanId;
         self.form.lockVersion = form.lockVersion;
         self.form.noteTitle = form.noteTitle;

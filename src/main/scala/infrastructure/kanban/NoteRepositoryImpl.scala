@@ -60,7 +60,7 @@ class NoteRepositoryImpl extends NoteRepository {
 
     notes map { v =>
       NoteRow(
-        laneId = v.laneId,
+        stageId = v.stageId,
         noteId = v.id,
         noteTitle = v.noteTitle,
         noteDescription = v.noteDescription,
@@ -77,7 +77,7 @@ class NoteRepositoryImpl extends NoteRepository {
    * @inheritdoc
    */
   override def store(note: Note, attachmentFileIds: Seq[Long],
-    kanbanId: KanbanId, laneId: LaneId, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
+    kanbanId: KanbanId, stageId: StageId, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
 
     val now = CurrentDateUtil.nowDateTime
     val result: Either[ApplicationException, Long] = note.noteId match {
@@ -86,7 +86,7 @@ class NoteRepositoryImpl extends NoteRepository {
         Try {
           val entity = model.Note(
             id = noteId.id,
-            laneId = laneId.id,
+            stageId = stageId.id,
             kanbanId = kanbanId.id,
             noteTitle = note.title,
             noteDescription = note.description,
@@ -111,7 +111,7 @@ class NoteRepositoryImpl extends NoteRepository {
         //新規登録
         val entity = model.Note(
           id = -1L,
-          laneId = laneId.id,
+          stageId = stageId.id,
           kanbanId = kanbanId.id,
           noteTitle = note.title,
           noteDescription = note.description,
@@ -148,9 +148,9 @@ class NoteRepositoryImpl extends NoteRepository {
   /**
    * @inheritdoc
    */
-  override def store(laneId: LaneId, noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Option[Long] = {
+  override def store(stageId: StageId, noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Option[Long] = {
 
-    moveLane(noteId, laneId)
+    moveStage(noteId, stageId)
 
     if (comment.isEmpty && attachmentFileIds.isEmpty) {
       None
@@ -220,12 +220,12 @@ class NoteRepositoryImpl extends NoteRepository {
   /**
    * @inheritdoc
    */
-  override def moveLane(noteId: NoteId, laneId: LaneId)(implicit session: DBSession): Option[LaneId] = {
+  override def moveStage(noteId: NoteId, stageId: StageId)(implicit session: DBSession): Option[StageId] = {
     for {
-      note <- model.Note.findById(noteId.id) if note.laneId != laneId.id
+      note <- model.Note.findById(noteId.id) if note.stageId != stageId.id
     } yield {
-      model.Note.updateByLane(noteId.id, laneId.id)
-      laneId
+      model.Note.updateByStage(noteId.id, stageId.id)
+      stageId
     }
   }
 

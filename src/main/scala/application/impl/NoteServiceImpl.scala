@@ -19,13 +19,13 @@ class NoteServiceImpl @Inject() (
   /**
    * @inheritdoc
    */
-  override def getForm(kanbanId: KanbanId, laneId: LaneId, noteId: Option[NoteId], loginUser: User)(implicit session: DBSession): Option[NoteEditDetail] = {
+  override def getForm(kanbanId: KanbanId, stageId: StageId, noteId: Option[NoteId], loginUser: User)(implicit session: DBSession): Option[NoteEditDetail] = {
     val result = for {
       kanban <- kanbanRepository.findById(kanbanId, loginUser) if kanban.isJoined(loginUser)
     } yield {
       if (noteId.isEmpty) {
         Option(NoteEditDetail(
-          form = form.kanban.Note.createInitForm(kanbanId, laneId),
+          form = form.kanban.Note.createInitForm(kanbanId, stageId),
           joinedUsers = JoinedUserDto.toDto(kanban.joinedUsers),
           noteAttachmentFiles = Seq()
         ))
@@ -34,7 +34,7 @@ class NoteServiceImpl @Inject() (
           note <- noteRepository.findById(noteId.get) if note.isCharged(loginUser, kanban)
         ) yield {
           NoteEditDetail(
-            form = form.kanban.Note.fromDomain(kanbanId, laneId, note),
+            form = form.kanban.Note.fromDomain(kanbanId, stageId, note),
             joinedUsers = JoinedUserDto.toDto(kanban.joinedUsers),
             noteAttachmentFiles = noteRepository.findByNoteId(noteId.get)
           )
@@ -50,19 +50,19 @@ class NoteServiceImpl @Inject() (
   override def storeNote(form: Note, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
     val note = form.toDomain(loginUser)
     noteRepository.store(note, form.attachmentFileIds,
-      KanbanId(form.kanbanId.toLong), LaneId(form.laneId.toLong), loginUser)
+      KanbanId(form.kanbanId.toLong), StageId(form.stageId.toLong), loginUser)
   }
 
   /**
    * @inheritdoc
    */
-  override def getDetail(kanbanId: KanbanId, laneId: LaneId, noteId: NoteId, loginUser: User)(implicit session: DBSession): Option[NoteDetail] = {
+  override def getDetail(kanbanId: KanbanId, stageId: StageId, noteId: NoteId, loginUser: User)(implicit session: DBSession): Option[NoteDetail] = {
     for {
       kanban <- kanbanRepository.findById(kanbanId, loginUser) if kanban.isJoined(loginUser)
       note <- noteRepository.findById(noteId)
     } yield {
       NoteDetail(
-        form = form.kanban.Note.fromDomain(kanbanId, laneId, note),
+        form = form.kanban.Note.fromDomain(kanbanId, stageId, note),
         chargedUserNames = note.chargedUsers map (_.name),
         noteAttachmentFiles = noteRepository.findByNoteId(noteId),
         isCharged = note.isCharged(loginUser, kanban),
@@ -88,8 +88,8 @@ class NoteServiceImpl @Inject() (
   /**
    * @inheritdoc
    */
-  override def moveNote(laneId: LaneId, noteId: Option[NoteId], noteIds: Seq[Long])(implicit session: DBSession): Unit = {
-    noteId foreach (v => noteRepository.moveLane(v, laneId))
+  override def moveNote(stageId: StageId, noteId: Option[NoteId], noteIds: Seq[Long])(implicit session: DBSession): Unit = {
+    noteId foreach (v => noteRepository.moveStage(v, stageId))
     noteRepository.updateSortNum(noteIds)
   }
 }

@@ -9,7 +9,7 @@ import util.ConvertUtil
  *
  * @param id ふせんID
  * @param kanbanId かんばんID
- * @param laneId レーンID
+ * @param stageId ステージID
  * @param lockVersion バージョンNo
  * @param noteTitle ふせんタイトル
  * @param noteDescription ふせん説明
@@ -21,7 +21,7 @@ import util.ConvertUtil
 case class Note(
     id: String,
     kanbanId: String,
-    laneId: String,
+    stageId: String,
     lockVersion: String,
     noteTitle: String,
     noteDescription: String,
@@ -61,13 +61,13 @@ object Note {
   /**
    * 新規登録用Form作成.
    * @param kanbanId かんばんID
-   * @param laneId レーンID
+   * @param stageId ステージID
    * @return 新規登録用Form
    */
-  def createInitForm(kanbanId: KanbanId, laneId: LaneId) = Note(
+  def createInitForm(kanbanId: KanbanId, stageId: StageId) = Note(
     id = "",
     kanbanId = kanbanId.id.toString,
-    laneId = laneId.id.toString,
+    stageId = stageId.id.toString,
     lockVersion = "0",
     noteTitle = "",
     noteDescription = "",
@@ -80,14 +80,14 @@ object Note {
    * ドメインから生成.
    * 添付ファイルIDSeqは空のSeqを設定します
    * @param kanbanId かんばんID
-   * @param laneId レーンID
+   * @param stageId ステージID
    * @param note ふせんID
    * @return 更新用Form
    */
-  def fromDomain(kanbanId: KanbanId, laneId: LaneId, note: domain.kanban.Note) = Note(
+  def fromDomain(kanbanId: KanbanId, stageId: StageId, note: domain.kanban.Note) = Note(
     id = note.noteId.get.id.toString,
     kanbanId = kanbanId.id.toString,
-    laneId = laneId.id.toString,
+    stageId = stageId.id.toString,
     lockVersion = note.lockVersion.toString,
     noteTitle = note.title,
     noteDescription = note.description,

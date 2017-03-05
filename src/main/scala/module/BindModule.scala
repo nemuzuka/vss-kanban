@@ -4,10 +4,10 @@ import application._
 import application.impl._
 import com.google.inject._
 import domain.attachment.AttachmentFileRepository
-import domain.kanban.{ KanbanRepository, LaneRepository, NoteRepository }
+import domain.kanban.{ KanbanRepository, StageRepository, NoteRepository }
 import domain.user.UserRepository
 import infrastructure.attachment.AttachmentFileRepositoryImpl
-import infrastructure.kanban.{ KanbanRepositoryImpl, LaneRepositoryImpl, NoteRepositoryImpl }
+import infrastructure.kanban.{ KanbanRepositoryImpl, StageRepositoryImpl, NoteRepositoryImpl }
 import infrastructure.user.UserRepositoryImpl
 
 /**
@@ -21,7 +21,7 @@ class BindModule extends AbstractModule {
     //traitに対するインスタンスの解決を定義
     bind(classOf[UserRepository]).to(classOf[UserRepositoryImpl]).in(classOf[Singleton])
     bind(classOf[KanbanRepository]).to(classOf[KanbanRepositoryImpl]).in(classOf[Singleton])
-    bind(classOf[LaneRepository]).to(classOf[LaneRepositoryImpl]).in(classOf[Singleton])
+    bind(classOf[StageRepository]).to(classOf[StageRepositoryImpl]).in(classOf[Singleton])
     bind(classOf[NoteRepository]).to(classOf[NoteRepositoryImpl]).in(classOf[Singleton])
     bind(classOf[AttachmentFileRepository]).to(classOf[AttachmentFileRepositoryImpl]).in(classOf[Singleton])
 

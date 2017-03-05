@@ -30,13 +30,13 @@ trait NoteRepository extends Repository[Note] {
    * @param note ふせんドメイン
    * @param attachmentFileIds ふせんに紐付ける添付ファイルIDSeq
    * @param kanbanId かんばんID
-   * @param laneId レーンID
+   * @param stageId ステージID
    * @param loginUser ログインユーザ情報
    * @param session Session
    * @return Right:ふせんID, Left:エラー情報
    */
   def store(note: Note, attachmentFileIds: Seq[Long],
-    kanbanId: KanbanId, laneId: LaneId, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
+    kanbanId: KanbanId, stageId: StageId, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
 
   /**
    * ふせんに紐づく添付ファイル一覧取得.
@@ -48,7 +48,7 @@ trait NoteRepository extends Repository[Note] {
 
   /**
    * ふせんコメント永続化.
-   * @param laneId レーンID
+   * @param stageId ステージID
    * @param noteId ふせんID
    * @param comment コメント文
    * @param attachmentFileIds ふせんコメントに紐付ける添付ファイルIDSeq
@@ -56,7 +56,7 @@ trait NoteRepository extends Repository[Note] {
    * @param session Session
    * @return ふせんコメントID(コメントを登録していない場合、None)
    */
-  def store(laneId: LaneId, noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Option[Long]
+  def store(stageId: StageId, noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Option[Long]
 
   /**
    * ふせんコメント一覧取得.
@@ -76,13 +76,13 @@ trait NoteRepository extends Repository[Note] {
   def deleteById(noteId: NoteId, lockVersion: Long)(implicit session: DBSession): Either[ApplicationException, Long]
 
   /**
-   * レーン移動.
+   * ステージ移動.
    * @param noteId ふせんID
-   * @param laneId 移動先レーンID
+   * @param stageId 移動先ステージID
    * @param session Session
-   * @return 移動した場合、移動先のレーンID。移動前後が同じレーンの場合、None
+   * @return 移動した場合、移動先のステージID。移動前後が同じステージの場合、None
    */
-  def moveLane(noteId: NoteId, laneId: LaneId)(implicit session: DBSession): Option[LaneId]
+  def moveStage(noteId: NoteId, stageId: StageId)(implicit session: DBSession): Option[StageId]
 
   /**
    * ソート順変更.

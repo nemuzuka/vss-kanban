@@ -4,23 +4,23 @@ import skinny.orm._, feature._
 import scalikejdbc._
 import org.joda.time._
 
-case class Lane(
+case class Stage(
   id: Long,
   kanbanId: Long,
-  laneName: String,
+  stageName: String,
   archiveStatus: String,
   sortNum: Long,
-  completeLane: String
+  completeStage: String
 )
 
-object Lane extends SkinnyCRUDMapper[Lane] {
-  override lazy val tableName = "lane"
-  override lazy val defaultAlias: Alias[Lane] = createAlias("l")
+object Stage extends SkinnyCRUDMapper[Stage] {
+  override lazy val tableName = "stage"
+  override lazy val defaultAlias: Alias[Stage] = createAlias("s")
 
   /*
    * If you're familiar with ScalikeJDBC/Skinny ORM, using #autoConstruct makes your mapper simpler.
    * (e.g.)
-   * override def extract(rs: WrappedResultSet, rn: ResultName[Lane]) = autoConstruct(rs, rn)
+   * override def extract(rs: WrappedResultSet, rn: ResultName[Stage]) = autoConstruct(rs, rn)
    *
    * Be aware of excluding associations like this:
    * (e.g.)
@@ -30,13 +30,13 @@ object Lane extends SkinnyCRUDMapper[Lane] {
    *     autoConstruct(rs, rn, "company") // "company" will be skipped
    * }
    */
-  override def extract(rs: WrappedResultSet, rn: ResultName[Lane]): Lane = new Lane(
+  override def extract(rs: WrappedResultSet, rn: ResultName[Stage]): Stage = new Stage(
     id = rs.get(rn.id),
     kanbanId = rs.get(rn.kanbanId),
-    laneName = rs.get(rn.laneName),
+    stageName = rs.get(rn.stageName),
     archiveStatus = rs.get(rn.archiveStatus),
     sortNum = rs.get(rn.sortNum),
-    completeLane = rs.get(rn.completeLane)
+    completeStage = rs.get(rn.completeStage)
   )
 
   /**
@@ -45,13 +45,13 @@ object Lane extends SkinnyCRUDMapper[Lane] {
    * @param session Session
    * @return 生成ID
    */
-  def create(entity: Lane)(implicit session: DBSession): Long = {
-    Lane.createWithAttributes(
+  def create(entity: Stage)(implicit session: DBSession): Long = {
+    Stage.createWithAttributes(
       'kanbanId -> entity.kanbanId,
-      'laneName -> entity.laneName,
+      'stageName -> entity.stageName,
       'archiveStatus -> entity.archiveStatus,
       'sortNum -> entity.sortNum,
-      'completeLane -> entity.completeLane
+      'completeStage -> entity.completeStage
     )
   }
 
@@ -61,12 +61,12 @@ object Lane extends SkinnyCRUDMapper[Lane] {
    * @param session Session
    * @return ID
    */
-  def update(entity: Lane)(implicit session: DBSession): Long = {
-    Lane.updateById(entity.id).withAttributes(
-      'laneName -> entity.laneName,
+  def update(entity: Stage)(implicit session: DBSession): Long = {
+    Stage.updateById(entity.id).withAttributes(
+      'stageName -> entity.stageName,
       'archiveStatus -> entity.archiveStatus,
       'sortNum -> entity.sortNum,
-      'completeLane -> entity.completeLane
+      'completeStage -> entity.completeStage
     )
     entity.id
   }
@@ -75,15 +75,15 @@ object Lane extends SkinnyCRUDMapper[Lane] {
    * かんばんIDによる取得.
    * ソート順でソートします
    * @param kanbanId かんばんID
-   * @param includeArchive Archiveのレーンも含める場合、true
+   * @param includeArchive Archiveのステージも含める場合、true
    * @param session Session
    * @return 該当データ
    */
-  def findByKanbanId(kanbanId: Long, includeArchive: Boolean)(implicit session: DBSession): Seq[Lane] = {
+  def findByKanbanId(kanbanId: Long, includeArchive: Boolean)(implicit session: DBSession): Seq[Stage] = {
 
-    val l = Lane.defaultAlias
+    val l = Stage.defaultAlias
     withSQL {
-      select.from(Lane as l)
+      select.from(Stage as l)
         .where(sqls.toAndConditionOpt(
           Option(sqls"1 = 1"),
           if (includeArchive) None else Option(sqls.eq(l.archiveStatus, "0"))
@@ -91,7 +91,7 @@ object Lane extends SkinnyCRUDMapper[Lane] {
         .and.eq(l.kanbanId, kanbanId)
         .orderBy(l.sortNum.asc, l.id.asc)
     }.map { rs =>
-      Lane.extract(rs, l.resultName)
+      Stage.extract(rs, l.resultName)
     }.list.apply()
   }
 }

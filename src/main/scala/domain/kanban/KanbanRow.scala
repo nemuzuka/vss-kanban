@@ -24,24 +24,24 @@ case class KanbanRow(
 }
 
 /**
- * レーン表示用ValueObject.
- * @param laneId レーンID
- * @param laneName レーン名
+ * ステージ表示用ValueObject.
+ * @param stageId ステージID
+ * @param stageName ステージ名
  * @param archiveStatus アーカイブステータス(0:Open 1:Archive)
- * @param completeLane 完了扱いのレーンの場合、true
+ * @param completeStage 完了扱いのステージの場合、true
  */
-case class LaneRow(
-    laneId: String,
-    laneName: String,
+case class StageRow(
+    stageId: String,
+    stageName: String,
     archiveStatus: String,
-    completeLane: Boolean
-) extends ValueObject[LaneRow] {
-  override def sameValueAs(other: LaneRow): Boolean = this.laneId == other.laneId
+    completeStage: Boolean
+) extends ValueObject[StageRow] {
+  override def sameValueAs(other: StageRow): Boolean = this.stageId == other.stageId
 }
 
 /**
  * 付箋表示用ValueObject.
- * @param laneId レーンID
+ * @param stageId ステージID
  * @param noteId 付箋ID
  * @param noteTitle 付箋タイトル
  * @param noteDescription 付箋説明
@@ -52,7 +52,7 @@ case class LaneRow(
  * @param lastCommentAt 最終コメント時刻
  */
 case class NoteRow(
-    laneId: Long,
+    stageId: Long,
     noteId: Long,
     noteTitle: String,
     noteDescription: String,

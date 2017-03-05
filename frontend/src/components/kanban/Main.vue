@@ -21,7 +21,7 @@
 
               <label class="checkbox" style="margin-right: .75rem;">
                 <input type="checkbox" v-model="includeArchive" @change="refresh">
-                アーカイブ済みのレーンやふせんも見る
+                アーカイブ済みのステージやふせんも見る
               </label>
 
               <a v-if="kanbanAttachmentFiles.length > 0" @click="openAttachmentDialog" class="button is-outlined is-danger attachment-file">
@@ -53,13 +53,13 @@
       </div>
 
       <div class="columns is-mobile kanban-main-container" id="kanban-main-context">
-        <lane-list v-for="laneItem in lanes" :laneItem="laneItem" :noteMap="noteMap" :joinedUserMap="joinedUserMap" :key="laneItem.laneId" @OpenEditDialog="openNoteEditDialog" @OpenDetailDialog="openNoteDetailDialog"></lane-list>
+        <stage-list v-for="stageItem in stages" :stageItem="stageItem" :noteMap="noteMap" :joinedUserMap="joinedUserMap" :key="stageItem.stageId" @OpenEditDialog="openNoteEditDialog" @OpenDetailDialog="openNoteDetailDialog"></stage-list>
       </div>
 
       <kanban-attachment-upload-dialog ref="kanbanAttachmentUploadDialog" :kanbanId="kanbanId" @Refresh="refresh"></kanban-attachment-upload-dialog>
       <kanban-attachment-dialog ref="kanbanAttachmentDialog" :kanbanId="kanbanId"></kanban-attachment-dialog>
       <note-edit-dialog ref="noteEditDialog" :kanbanId="kanbanId" @Refresh="refresh"></note-edit-dialog>
-      <note-detail-dialog ref="noteDetailDialog" :kanbanId="kanbanId" @Refresh="refresh" :lanes="lanes" @OpenEditDialog="openNoteEditDialog"></note-detail-dialog>
+      <note-detail-dialog ref="noteDetailDialog" :kanbanId="kanbanId" @Refresh="refresh" :stages="stages" @OpenEditDialog="openNoteEditDialog"></note-detail-dialog>
 
     </div>
 
@@ -75,7 +75,7 @@
   import KanbanAttachmentDialog from './KanbanAttachmentDialog'
   import NoteEditDialog from './NoteEditDialog'
   import NoteDetailDialog from './NoteDetailDialog'
-  import LaneList from './LaneList'
+  import StageList from './StageList'
   import KanbanSettings from './Settings'
 
   export default {
@@ -83,7 +83,7 @@
     components: {
       'kanban-attachment-upload-dialog': KanbanAttachmentUploadDialog,
       'kanban-attachment-dialog':KanbanAttachmentDialog,
-      'lane-list':LaneList,
+      'stage-list':StageList,
       'kanban-settings':KanbanSettings,
       'note-edit-dialog': NoteEditDialog,
       'note-detail-dialog': NoteDetailDialog
@@ -100,7 +100,7 @@
           lockVersion:null,
           authority:""
         },
-        lanes:[],
+        stages:[],
         noteMap:{},
         kanbanAttachmentFiles:[],
         joinedUserMap:{}
@@ -139,13 +139,13 @@
         const self = this;
         self.$refs.kanbanAttachmentDialog.openDialog(self.kanbanAttachmentFiles);
       },
-      openNoteEditDialog(e, laneId, noteId) {
+      openNoteEditDialog(e, stageId, noteId) {
         const self = this;
-        self.$refs.noteEditDialog.openDialog(e, laneId, noteId);
+        self.$refs.noteEditDialog.openDialog(e, stageId, noteId);
       },
-      openNoteDetailDialog(e, laneId, noteId) {
+      openNoteDetailDialog(e, stageId, noteId) {
         const self = this;
-        self.$refs.noteDetailDialog.openDialog(e, laneId, noteId);
+        self.$refs.noteDetailDialog.openDialog(e, stageId, noteId);
       },
       viewSettings(e) {
         const self = this;
@@ -193,8 +193,8 @@
         self.kanban.lockVersion = kanban.lockVersion;
         self.kanban.authority = kanban.authority;
 
-        self.lanes.splice(0,self.lanes.length);
-        self.lanes.push(...kanbanDetail.lanes);
+        self.stages.splice(0,self.stages.length);
+        self.stages.push(...kanbanDetail.stages);
 
         self.noteMap = kanbanDetail.noteMap;
         self.joinedUserMap = kanbanDetail.joinedUserMap;

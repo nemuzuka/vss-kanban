@@ -2,7 +2,7 @@ package application
 
 import domain.ApplicationException
 import domain.attachment.AttachmentFileRow
-import domain.kanban.{ KanbanId, LaneId, NoteCommentRow, NoteId }
+import domain.kanban.{ KanbanId, StageId, NoteCommentRow, NoteId }
 import domain.user.User
 import form.kanban.Note
 import scalikejdbc.DBSession
@@ -16,13 +16,13 @@ trait NoteService {
    * ふせん登録・変更取得.
    * ふせん変更時は対象ふせんの担当者でなければ無条件にNoneを返します
    * @param kanbanId かんばんID
-   * @param laneId レーンID
+   * @param stageId ステージID
    * @param noteId ふせんID(新規の場合、None)
    * @param loginUser ログインユーザ情報
    * @param session Session
    * @return ふせん登録・変更
    */
-  def getForm(kanbanId: KanbanId, laneId: LaneId, noteId: Option[NoteId], loginUser: User)(implicit session: DBSession): Option[NoteEditDetail]
+  def getForm(kanbanId: KanbanId, stageId: StageId, noteId: Option[NoteId], loginUser: User)(implicit session: DBSession): Option[NoteEditDetail]
 
   /**
    * ふせん永続化.
@@ -49,13 +49,13 @@ trait NoteService {
   /**
    * ふせん詳細情報取得.
    * @param kanbanId かんばんID
-   * @param laneId レーンID
+   * @param stageId ステージID
    * @param noteId ふせんID
    * @param loginUser ログインユーザ情報
    * @param session Session
    * @return ふせん詳細情報
    */
-  def getDetail(kanbanId: KanbanId, laneId: LaneId, noteId: NoteId, loginUser: User)(implicit session: DBSession): Option[NoteDetail]
+  def getDetail(kanbanId: KanbanId, stageId: StageId, noteId: NoteId, loginUser: User)(implicit session: DBSession): Option[NoteDetail]
 
   /**
    * ふせん削除.
@@ -71,13 +71,13 @@ trait NoteService {
 
   /**
    * ふせん移動.
-   * 対象レーンIDのふせんIDを並び替え(0から順に採番します)
-   * @param laneId 対象レーンID
-   * @param noteId 対象レーンに移動したふせんID(レーンを移動したふせんが存在しない場合、None)
+   * 対象ステージIDのふせんIDを並び替え(0から順に採番します)
+   * @param stageId 対象ステージID
+   * @param noteId 対象ステージに移動したふせんID(ステージを移動したふせんが存在しない場合、None)
    * @param noteIds ソート順を変更するふせんIDSeq
    * @param session Session
    */
-  def moveNote(laneId: LaneId, noteId: Option[NoteId], noteIds: Seq[Long])(implicit session: DBSession): Unit
+  def moveNote(stageId: StageId, noteId: Option[NoteId], noteIds: Seq[Long])(implicit session: DBSession): Unit
 }
 
 /**

@@ -7,7 +7,7 @@
       </span>
     </td>
     <td @click.stop="openEditDialog" style="cursor: pointer;">
-      <p>{{item.laneName}} <span class="tag is-danger" v-if="item.completeLane">完了</span></p>
+      <p>{{item.stageName}} <span class="tag is-danger" v-if="item.completeStage">完了</span></p>
     </td>
     <td>
       <a class="button is-danger is-small" @click.stop="deleteItem">
@@ -22,11 +22,11 @@
 
 <script>
   export default {
-    name: 'settings-lane-item',
+    name: 'settings-stage-item',
     props: ["item", "index"],
     methods: {
       deleteItem(e) {
-        if(window.confirm("このレーンを削除すると紐づく付箋も削除しますが本当によろしいですか？(「アーカイブ」することで見えなくすることもできます)") == false) {
+        if(window.confirm("このステージを削除すると紐づく付箋も削除しますが本当によろしいですか？(「アーカイブ」することで見えなくすることもできます)") == false) {
           return;
         }
 

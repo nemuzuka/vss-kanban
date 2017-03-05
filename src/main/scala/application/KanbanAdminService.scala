@@ -1,9 +1,9 @@
 package application
 
 import domain.ApplicationException
-import domain.kanban.LaneRow
+import domain.kanban.StageRow
 import domain.user.User
-import form.kanban.{ Edit, JoinedUser, Lane }
+import form.kanban.{ Edit, JoinedUser, Stage }
 import scalikejdbc.DBSession
 
 /**
@@ -51,23 +51,23 @@ trait KanbanAdminService {
   def updateJoinedUser(form: JoinedUser, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
 
   /**
-   * レーン情報取得.
+   * ステージ情報取得.
    * @param id かんばんID
    * @param loginUser ログインユーザ情報
    * @param session Session
-   * @return レーン情報Dto(存在しない場合、None)
+   * @return ステージ情報Dto(存在しない場合、None)
    */
-  def getLane(id: Long, loginUser: User)(implicit session: DBSession): Option[LaneTargetDto]
+  def getStage(id: Long, loginUser: User)(implicit session: DBSession): Option[StageTargetDto]
 
   /**
-   * レーン情報更新.
+   * ステージ情報更新.
    * かんばんの管理者権限を所有するユーザのみ操作を受け付けます
-   * @param form レーン変更Form
+   * @param form ステージ変更Form
    * @param loginUser ログインユーザ
    * @param session Session
    * @return Right:かんばんID, Left:エラー情報
    */
-  def updateLane(form: Lane, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
+  def updateStage(form: Stage, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
 }
 
 /**
@@ -115,13 +115,13 @@ object JoinedUserDto {
 }
 
 /**
- * レーン情報Dto.
+ * ステージ情報Dto.
  * @param id かんばんID
  * @param lockVersion バージョンNo
- * @param lanes レーンSeq
+ * @param stages ステージSeq
  */
-case class LaneTargetDto(
+case class StageTargetDto(
   id: Long,
   lockVersion: Long,
-  lanes: Seq[LaneRow]
+  stages: Seq[StageRow]
 )

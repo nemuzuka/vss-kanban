@@ -12,7 +12,7 @@ import scalikejdbc.DBSession
  */
 class KanbanServiceImpl @Inject() (
     kanbanRepository: KanbanRepository,
-    laneRepository: LaneRepository,
+    stageRepository: StageRepository,
     noteRepository: NoteRepository
 ) extends KanbanService {
   /**
@@ -25,8 +25,8 @@ class KanbanServiceImpl @Inject() (
       case Right(id) => id
       case Left(e) => throw e
     }
-    //初期レーンを作成する
-    laneRepository.store(Lane.createInitLane, KanbanId(kanbanId))
+    //初期ステージを作成する
+    stageRepository.store(Stage.createInitStage, KanbanId(kanbanId))
     kanbanId
   }
 
@@ -61,14 +61,14 @@ class KanbanServiceImpl @Inject() (
         includeArchive = includeArchive
       )).foldLeft(Map[String, Seq[NoteRow]]()) { (map, value) =>
         {
-          val key = value.laneId.toString
+          val key = value.stageId.toString
           map.updated(key, map.getOrElse(key, Seq()) :+ value)
         }
       }
 
       KanbanDetail(
         kanban = kanban.toKanbanRow(loginUser),
-        lanes = laneRepository.findByKanbanId(kanbanId, includeArchive),
+        stages = stageRepository.findByKanbanId(kanbanId, includeArchive),
         noteMap = noteMap,
         kanbanAttachmentFiles = kanbanRepository.findByKanbanId(kanbanId),
         joinedUserMap = (kanban.joinedUsers map { v =>
