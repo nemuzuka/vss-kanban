@@ -108,6 +108,13 @@
 初期ユーザを作成したりソースコードを変更して動作確認してみて下さい。
 
 
+## ソースコード
+
+### js(Vue.js)
+`frontend/src` 配下
+
+### Scala(SkinnyFramework)
+`src/main` 配下
 
 
 # 注意点
