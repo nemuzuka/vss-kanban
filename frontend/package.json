@@ -18,7 +18,6 @@
     "moment": "^2.17.1",
     "toastr": "^2.1.2",
     "vue": "^2.1.0",
-    "vue-cli": "^2.8.1",
     "vuedraggable": "^2.8.4"
   },
   "devDependencies": {
@@ -52,6 +51,7 @@
     "vue-loader": "^10.0.0",
     "vue-style-loader": "^1.0.0",
     "vue-template-compiler": "^2.1.0",
+    "vue-cli": "^2.8.1",
     "webpack": "^1.13.2",
     "webpack-dev-middleware": "^1.8.3",
     "webpack-hot-middleware": "^2.12.2",
