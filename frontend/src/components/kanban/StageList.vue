@@ -112,4 +112,8 @@
     background-color:#aaa;
   }
 
+  .card-header .card-header-title {
+    word-break:break-all;
+  }
+
 </style>

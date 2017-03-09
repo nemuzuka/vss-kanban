@@ -8,7 +8,7 @@
         </p>
       </header>
       <div class="card-content">
-        <div class="content" v-html="escapeDescription"></div>
+        <div class="content description" v-html="escapeDescription"></div>
       </div>
     </div>
 
@@ -40,6 +40,10 @@
 
   .archived > .card {
     background-color:#eee;
+  }
+  .card-content .content.description {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
 </style>

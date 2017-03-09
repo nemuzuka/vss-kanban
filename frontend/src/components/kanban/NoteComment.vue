@@ -5,7 +5,7 @@
         <div style="margin-bottom: 0.5rem;">
           <small style="margin-right: 0.5rem;">{{createDateStr}}</small><span class="tag is-light" v-if="commentItem.createUserName !== ''">{{commentItem.createUserName}}</span>
         </div>
-        <div v-html="escapeComment"></div>
+        <div class="description" v-html="escapeComment"></div>
 
         <saved-file-list :fileList="commentItem.attachmentFiles" type="detail"></saved-file-list>
 
@@ -36,3 +36,13 @@
     }
   }
 </script>
+
+<style scoped>
+  .media-content {
+    max-width: 100%;
+  }
+  .media-content .content .description {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+</style>

@@ -16,7 +16,7 @@
           <div class="box" v-if="detail.noteDescription !== ''">
             <article class="media">
               <div class="media-content">
-                <div class="content is-large" v-html="escapeDescription"></div>
+                <div class="content is-large description" v-html="escapeDescription"></div>
               </div>
             </article>
           </div>
@@ -56,7 +56,7 @@
 
         </div>
 
-        <div v-if="mode==='comment'">
+        <div v-if="mode === 'comment'">
 
           <div style="margin: 0.5rem 0rem">
             <a class="button" @click="toggleViewNoteDetail">
@@ -479,3 +479,13 @@
     }
   }
 </script>
+
+<style scoped>
+  .media-content {
+    max-width: 100%;
+  }
+  .media-content .description {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+</style>

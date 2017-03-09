@@ -14,7 +14,7 @@
     <div class="card-content">
       <div class="content">
 
-        <div v-html="escapeDescription"></div>
+        <div class="description" v-html="escapeDescription"></div>
 
         <div class="charge-users">
           <template v-for="userId in noteItem.chargedUsers">
@@ -90,6 +90,10 @@
   }
   .card-content {
     padding: 0.75rem;
+  }
+  .card-content .content .description {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
   .charge-users, .fix-date, .last-comment {
     margin-top: 0.5rem;
