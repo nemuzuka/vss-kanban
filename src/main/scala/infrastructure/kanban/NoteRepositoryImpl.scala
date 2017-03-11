@@ -1,7 +1,7 @@
 package infrastructure.kanban
 
 import domain.ApplicationException
-import domain.attachment.{ AttachmentFile, AttachmentFileRow }
+import domain.attachment.{ AttachmentFile, AttachmentFileId, AttachmentFileRow }
 import domain.kanban._
 import domain.user.{ User, UserId }
 import model.{ NoteAttachmentFile, NoteChargedUser, NoteComment, NoteCommentAttachmentFile }
@@ -76,7 +76,7 @@ class NoteRepositoryImpl extends NoteRepository {
   /**
    * @inheritdoc
    */
-  override def store(note: Note, attachmentFileIds: Seq[Long],
+  override def store(note: Note, attachmentFileIds: Seq[AttachmentFileId],
     kanbanId: KanbanId, stageId: StageId, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
 
     val now = CurrentDateUtil.nowDateTime
@@ -148,7 +148,7 @@ class NoteRepositoryImpl extends NoteRepository {
   /**
    * @inheritdoc
    */
-  override def store(stageId: StageId, noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Option[Long] = {
+  override def store(stageId: StageId, noteId: NoteId, comment: String, attachmentFileIds: Seq[AttachmentFileId], loginUser: User)(implicit session: DBSession): Option[Long] = {
 
     moveStage(noteId, stageId)
 
@@ -167,7 +167,7 @@ class NoteRepositoryImpl extends NoteRepository {
         NoteCommentAttachmentFile(
           id = 1L,
           noteCommentId = noteCommentId,
-          attachmentFileId = attachmentFileId
+          attachmentFileId = attachmentFileId.id
         )
       ))
       Option(noteCommentId)
@@ -232,8 +232,8 @@ class NoteRepositoryImpl extends NoteRepository {
   /**
    * @inheritdoc
    */
-  override def updateSortNum(noteIds: Seq[Long])(implicit session: DBSession): Unit = {
-    noteIds.zipWithIndex foreach (v => model.Note.updateSortNum(v._1, v._2))
+  override def updateSortNum(noteIds: Seq[NoteId])(implicit session: DBSession): Unit = {
+    noteIds.zipWithIndex foreach (v => model.Note.updateSortNum(v._1.id, v._2))
   }
 
   /**
@@ -243,13 +243,13 @@ class NoteRepositoryImpl extends NoteRepository {
    * @param attachmentFileIds ふせんに紐付ける添付ファイルIDSeq
    * @param session Session
    */
-  private[this] def saveAttachmentFiles(noteId: Long, attachmentFileIds: Seq[Long])(implicit session: DBSession): Unit = {
+  private[this] def saveAttachmentFiles(noteId: Long, attachmentFileIds: Seq[AttachmentFileId])(implicit session: DBSession): Unit = {
     NoteAttachmentFile.deleteByKanbanId(noteId)
     attachmentFileIds foreach (attachmentFileId => NoteAttachmentFile.create(
       NoteAttachmentFile(
         id = -1L,
         noteId = noteId,
-        attachmentFileId = attachmentFileId
+        attachmentFileId = attachmentFileId.id
       )
     ))
   }

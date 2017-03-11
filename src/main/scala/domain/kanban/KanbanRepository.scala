@@ -53,7 +53,7 @@ trait KanbanRepository extends Repository[Kanban] {
    * @param attachmentFileIdSeq 添付ファイルIDSeq
    * @param session Session
    */
-  def storeKanbanAttachmentFile(kanbanId: Long, attachmentFileIdSeq: Seq[Long])(implicit session: DBSession): Unit
+  def storeKanbanAttachmentFile(kanbanId: KanbanId, attachmentFileIdSeq: Seq[Long])(implicit session: DBSession): Unit
 
   /**
    * かんばんに紐づく添付ファイル一覧取得.

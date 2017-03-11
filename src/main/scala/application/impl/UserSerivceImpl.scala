@@ -29,7 +29,7 @@ class UserSerivceImpl @Inject() (
     idOpt match {
       case Some(id) =>
         for (
-          user <- userRepository.findById(id)
+          user <- userRepository.findById(UserId(id))
         ) yield {
           Edit(
             id = user.userId.get.id.toString,

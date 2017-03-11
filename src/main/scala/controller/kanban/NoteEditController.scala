@@ -2,7 +2,8 @@ package controller.kanban
 
 import application.NoteService
 import controller.{ ApiController, Keys }
-import domain.kanban.{ KanbanId, StageId, NoteId, NoteRepository }
+import domain.attachment.AttachmentFileId
+import domain.kanban.{ KanbanId, NoteId, NoteRepository, StageId }
 import domain.user.User
 import form.kanban.Note
 import scalikejdbc.DB
@@ -119,7 +120,7 @@ class NoteEditController extends ApiController {
 
     DB.localTx { implicit session =>
       val noteRepository = injector.getInstance(classOf[NoteRepository])
-      noteRepository.store(StageId(stageId), NoteId(noteId), comment, attachmentFileIds, userInfo)
+      noteRepository.store(StageId(stageId), NoteId(noteId), comment, attachmentFileIds map AttachmentFileId, userInfo)
     }
     createJsonResult("success")
   }

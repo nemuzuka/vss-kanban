@@ -65,9 +65,9 @@ class UserRepositoryImpl extends UserRepository {
   /**
    * @inheritdoc
    */
-  override def findByIdWithPassword(id: Long, password: String)(implicit session: DBSession): Option[User] = {
+  override def findByIdWithPassword(userId: UserId, password: String)(implicit session: DBSession): Option[User] = {
     for (
-      loginUserInfo <- LoginUserInfo.findById(id);
+      loginUserInfo <- LoginUserInfo.findById(userId.id);
       loginUserPassword <- LoginUserPassword.findById(loginUserInfo.id);
       digestPassword <- Option(PasswordDigestUtil.createHashPassword(password, loginUserInfo.createAt)) if digestPassword == loginUserPassword.password
     ) yield {
@@ -78,9 +78,9 @@ class UserRepositoryImpl extends UserRepository {
   /**
    * @inheritdoc
    */
-  override def findById(id: Long)(implicit session: DBSession): Option[User] = {
+  override def findById(userId: UserId)(implicit session: DBSession): Option[User] = {
     for (
-      loginUserInfo <- LoginUserInfo.findById(id)
+      loginUserInfo <- LoginUserInfo.findById(userId.id)
     ) yield {
       createUser(loginUserInfo)
     }
@@ -148,7 +148,7 @@ class UserRepositoryImpl extends UserRepository {
   /**
    * @inheritdoc
    */
-  override def updateSortNum(userIds: Seq[Long])(implicit session: DBSession): Unit = userIds.zipWithIndex foreach (v => LoginUserAppendix.updateSortNum(v._1, v._2))
+  override def updateSortNum(userIds: Seq[UserId])(implicit session: DBSession): Unit = userIds.zipWithIndex foreach (v => LoginUserAppendix.updateSortNum(v._1.id, v._2))
 
   /**
    * @inheritdoc

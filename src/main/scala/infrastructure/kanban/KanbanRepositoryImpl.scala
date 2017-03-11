@@ -155,14 +155,14 @@ class KanbanRepositoryImpl extends KanbanRepository {
   /**
    * @inheritdoc
    */
-  override def storeKanbanAttachmentFile(kanbanId: Long, attachmentFileIdSeq: Seq[Long])(implicit session: DBSession): Unit = {
+  override def storeKanbanAttachmentFile(kanbanId: KanbanId, attachmentFileIdSeq: Seq[Long])(implicit session: DBSession): Unit = {
     //かんばんIDに紐づく関連を削除
-    KanbanAttachmentFile.deleteByKanbanId(kanbanId)
+    KanbanAttachmentFile.deleteByKanbanId(kanbanId.id)
     //引数の情報を登録
     attachmentFileIdSeq foreach (attachmentFileId => {
       KanbanAttachmentFile.create(KanbanAttachmentFile(
         id = -1L,
-        kanbanId = kanbanId,
+        kanbanId = kanbanId.id,
         attachmentFileId = attachmentFileId
       ))
     })

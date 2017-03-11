@@ -1,6 +1,6 @@
 package domain.kanban
 
-import domain.attachment.AttachmentFileRow
+import domain.attachment.{ AttachmentFileId, AttachmentFileRow }
 import domain.user.User
 import domain.{ ApplicationException, Repository }
 import scalikejdbc.DBSession
@@ -35,7 +35,7 @@ trait NoteRepository extends Repository[Note] {
    * @param session Session
    * @return Right:ふせんID, Left:エラー情報
    */
-  def store(note: Note, attachmentFileIds: Seq[Long],
+  def store(note: Note, attachmentFileIds: Seq[AttachmentFileId],
     kanbanId: KanbanId, stageId: StageId, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long]
 
   /**
@@ -56,7 +56,7 @@ trait NoteRepository extends Repository[Note] {
    * @param session Session
    * @return ふせんコメントID(コメントを登録していない場合、None)
    */
-  def store(stageId: StageId, noteId: NoteId, comment: String, attachmentFileIds: Seq[Long], loginUser: User)(implicit session: DBSession): Option[Long]
+  def store(stageId: StageId, noteId: NoteId, comment: String, attachmentFileIds: Seq[AttachmentFileId], loginUser: User)(implicit session: DBSession): Option[Long]
 
   /**
    * ふせんコメント一覧取得.
@@ -89,7 +89,7 @@ trait NoteRepository extends Repository[Note] {
    * @param noteIds ふせんID
    * @param session Session
    */
-  def updateSortNum(noteIds: Seq[Long])(implicit session: DBSession): Unit
+  def updateSortNum(noteIds: Seq[NoteId])(implicit session: DBSession): Unit
 }
 
 /**

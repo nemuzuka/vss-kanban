@@ -3,7 +3,7 @@ package controller.attachment
 import java.io.File
 
 import controller.ApplicationController
-import domain.attachment.{ AttachmentFileRepository, FileImageType }
+import domain.attachment.{ AttachmentFileId, AttachmentFileRepository, FileImageType }
 import scalikejdbc.DB
 
 /**
@@ -24,8 +24,8 @@ class DownloadController extends ApplicationController {
 
     val result = DB.localTx { implicit session =>
       for {
-        attachmentFile <- attachmentFileRepository.findById(attachmentFileId)
-        file <- attachmentFileRepository.findByAttachmentFileId(attachmentFileId, fileImageType)
+        attachmentFile <- attachmentFileRepository.findById(AttachmentFileId(attachmentFileId))
+        file <- attachmentFileRepository.findByAttachmentFileId(AttachmentFileId(attachmentFileId), fileImageType)
       } yield {
         (attachmentFile, file)
       }

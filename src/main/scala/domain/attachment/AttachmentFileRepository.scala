@@ -2,7 +2,7 @@ package domain.attachment
 
 import java.io.File
 
-import domain.{ ApplicationException, Repository }
+import domain.Repository
 import scalikejdbc.DBSession
 
 /**
@@ -27,7 +27,7 @@ trait AttachmentFileRepository extends Repository[AttachmentFile] {
    * @param attachmentId 添付ファイルID
    * @param session Session
    */
-  def delete(attachmentId: Long)(implicit session: DBSession): Unit
+  def delete(attachmentId: AttachmentFileId)(implicit session: DBSession): Unit
 
   /**
    * 添付ファイルIDとファイルイメージ区分によるFile取得.
@@ -36,7 +36,7 @@ trait AttachmentFileRepository extends Repository[AttachmentFile] {
    * @param session Session
    * @return 該当ファイル(存在しない場合、None)
    */
-  def findByAttachmentFileId(attachmentFileId: Long, fileImageType: FileImageType)(implicit session: DBSession): Option[File]
+  def findByAttachmentFileId(attachmentFileId: AttachmentFileId, fileImageType: FileImageType)(implicit session: DBSession): Option[File]
 
   /**
    * 添付ファイルIDによるドメイン取得.
@@ -44,5 +44,5 @@ trait AttachmentFileRepository extends Repository[AttachmentFile] {
    * @param session Session
    * @return 該当データ
    */
-  def findById(attachmentFileId: Long)(implicit session: DBSession): Option[AttachmentFile]
+  def findById(attachmentFileId: AttachmentFileId)(implicit session: DBSession): Option[AttachmentFile]
 }

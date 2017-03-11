@@ -51,23 +51,23 @@ class AttachmentFileRepositoryImpl extends AttachmentFileRepository {
   /**
    * @inheritdoc
    */
-  override def delete(attachmentId: Long)(implicit session: DBSession): Unit = {
-    model.AttachmentFile.delete(attachmentId)
+  override def delete(attachmentId: AttachmentFileId)(implicit session: DBSession): Unit = {
+    model.AttachmentFile.delete(attachmentId.id)
   }
 
   /**
    * @inheritdoc
    */
-  override def findByAttachmentFileId(attachmentFileId: Long, fileImageType: FileImageType)(implicit session: DBSession): Option[File] = {
-    FileImage.findByParams(attachmentFileId, fileImageType.code)
+  override def findByAttachmentFileId(attachmentFileId: AttachmentFileId, fileImageType: FileImageType)(implicit session: DBSession): Option[File] = {
+    FileImage.findByParams(attachmentFileId.id, fileImageType.code)
   }
 
   /**
    * @inheritdoc
    */
-  override def findById(attachmentFileId: Long)(implicit session: DBSession): Option[AttachmentFile] = {
+  override def findById(attachmentFileId: AttachmentFileId)(implicit session: DBSession): Option[AttachmentFile] = {
     for (
-      attachmentFile <- model.AttachmentFile.findById(attachmentFileId)
+      attachmentFile <- model.AttachmentFile.findById(attachmentFileId.id)
     ) yield {
       AttachmentFile(
         attachmentFileId = Option(AttachmentFileId(attachmentFile.id)),

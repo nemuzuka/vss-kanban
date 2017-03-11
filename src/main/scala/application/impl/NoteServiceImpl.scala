@@ -4,6 +4,7 @@ import javax.inject.Inject
 
 import application.{ JoinedUserDto, NoteDetail, NoteEditDetail, NoteService }
 import domain.ApplicationException
+import domain.attachment.AttachmentFileId
 import domain.kanban._
 import domain.user.User
 import form.kanban.Note
@@ -49,7 +50,7 @@ class NoteServiceImpl @Inject() (
    */
   override def storeNote(form: Note, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
     val note = form.toDomain(loginUser)
-    noteRepository.store(note, form.attachmentFileIds,
+    noteRepository.store(note, form.attachmentFileIds map AttachmentFileId,
       KanbanId(form.kanbanId.toLong), StageId(form.stageId.toLong), loginUser)
   }
 
@@ -90,6 +91,6 @@ class NoteServiceImpl @Inject() (
    */
   override def moveNote(stageId: StageId, noteId: Option[NoteId], noteIds: Seq[Long])(implicit session: DBSession): Unit = {
     noteId foreach (v => noteRepository.moveStage(v, stageId))
-    noteRepository.updateSortNum(noteIds)
+    noteRepository.updateSortNum(noteIds map NoteId)
   }
 }

@@ -2,7 +2,7 @@ package controller.kanban
 
 import application.KanbanService
 import controller.{ ApiController, Keys }
-import domain.kanban.{ KanbanRepository, KanbanStatus }
+import domain.kanban.{ KanbanId, KanbanRepository, KanbanStatus }
 import domain.user.User
 import form.kanban.Edit
 import scalikejdbc.DB
@@ -56,7 +56,7 @@ class EditController extends ApiController {
    * 添付ファイル紐付け.
    */
   def attachmentFile: String = {
-    val kanbanId = params.getAs[Long]("kanbanId").getOrElse(-1L)
+    val kanbanId = KanbanId(params.getAs[Long]("kanbanId").getOrElse(-1L))
     val attachmentFileIds = multiParams.getAs[Long]("attachmentFileIds").getOrElse(Seq())
     DB.localTx { implicit session =>
       val kanbanRepository = injector.getInstance(classOf[KanbanRepository])

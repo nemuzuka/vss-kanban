@@ -20,20 +20,20 @@ trait UserRepository extends Repository[User] {
 
   /**
    * ユーザIDとパスワードが合致するUserの取得.
-   * @param id ユーザID
+   * @param userId ユーザID
    * @param password パスワード
    * @param session Session
    * @return 該当User(存在しない or パスワードが異なる場合None)
    */
-  def findByIdWithPassword(id: Long, password: String)(implicit session: DBSession): Option[User]
+  def findByIdWithPassword(userId: UserId, password: String)(implicit session: DBSession): Option[User]
 
   /**
    * ユーザIDが合致するUserの取得.
-   * @param id ユーザID
+   * @param userId ユーザID
    * @param session Session
    * @return 該当User(存在しない場合None)
    */
-  def findById(id: Long)(implicit session: DBSession): Option[User]
+  def findById(userId: UserId)(implicit session: DBSession): Option[User]
 
   /**
    * 登録.
@@ -75,5 +75,5 @@ trait UserRepository extends Repository[User] {
    * @param userIds ユーザIDSeq
    * @param session Session
    */
-  def updateSortNum(userIds: Seq[Long])(implicit session: DBSession): Unit
+  def updateSortNum(userIds: Seq[UserId])(implicit session: DBSession): Unit
 }
