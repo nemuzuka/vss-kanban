@@ -160,7 +160,7 @@ class UserRepositoryImpl extends UserRepository {
    * @param loginUserInfo ログインユーザ情報
    * @return Userドメイン
    */
-  private def createUser(loginUserInfo: LoginUserInfo): User = {
+  private[this] def createUser(loginUserInfo: LoginUserInfo): User = {
     User(
       userId = Option(UserId(loginUserInfo.id)),
       loginId = loginUserInfo.loginId,
