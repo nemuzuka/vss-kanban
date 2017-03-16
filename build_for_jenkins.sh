@@ -1,5 +1,7 @@
 #!/bin/bash -xe
 
+source var/lib/jenkins/.nvm/nvm.sh
+
 cd ./frontend
 
 if [ -e node_modules ]; then
