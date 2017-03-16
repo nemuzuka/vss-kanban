@@ -11,7 +11,7 @@ import scala.language.postfixOps
 
 val appOrganization = "net.jp.vss"
 val appName = "vss-kanban"
-val appVersion = "0.1.0-SNAPSHOT"
+val appVersion = "0.9.0-SNAPSHOT"
 
 val skinnyVersion = "2.3.4"
 val theScalaVersion = "2.12.1"
