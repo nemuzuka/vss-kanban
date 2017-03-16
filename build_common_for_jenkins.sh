@@ -14,4 +14,3 @@ npm run build
 cd ../
 
 ./skinny db:migrate test
-./skinny package
