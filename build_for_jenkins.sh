@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-source var/lib/jenkins/.nvm/nvm.sh
+source /var/lib/jenkins/.nvm/nvm.sh
 
 cd ./frontend
 
