@@ -1,5 +1,7 @@
 # VSS Kanban 
 
+![VSS Kanban](https://github.com/nemuzuka/vss-kanban/wiki/image/kanban.png)
+
 ## 環境構築手順(とりあえず動かしたい人向け)
 
 ### 事前準備
