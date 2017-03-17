@@ -9,7 +9,8 @@ import scalikejdbc.scalatest._
 import skinny._
 
 /**
- * Created by kazumune on 2017/03/11.
+ * UserRepositoryImplのテスト.
+ * 実際のDBにアクセスするパターン。dbUnit使用。
  */
 class UserRepositoryImplSpec extends fixture.FunSpec with AutoRollback with Matchers with DBSettings with DBTestTrait with BeforeAndAfter {
 
@@ -22,7 +23,6 @@ class UserRepositoryImplSpec extends fixture.FunSpec with AutoRollback with Matc
   }
 
   /**
-   * *
    * テスト用データ登録.
    * @param session DBSession
    */

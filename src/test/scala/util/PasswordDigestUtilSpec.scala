@@ -2,6 +2,9 @@ package util
 
 import org.scalatest._
 
+/**
+ * PasswordDigestUtilのテスト.
+ */
 class PasswordDigestUtilSpec extends FunSpec with Matchers {
 
   describe("createHashPassword") {

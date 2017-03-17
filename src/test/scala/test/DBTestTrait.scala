@@ -10,7 +10,6 @@ import scalikejdbc.DBSession
  */
 trait DBTestTrait {
   /**
-   * *
    * テストデータ登録.
    * 引数のExcelファイルをDBに登録します。
    * @param session DBSession
