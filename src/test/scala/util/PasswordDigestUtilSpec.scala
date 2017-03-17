@@ -10,7 +10,7 @@ class PasswordDigestUtilSpec extends FunSpec with Matchers {
       val baseDate = CurrentDateUtil.nowDateTime
       val beforeStr = PasswordDigestUtil.createHashPassword("hoge", baseDate)
       val afterStr = PasswordDigestUtil.createHashPassword("hoge", baseDate)
-      beforeStr should be (afterStr)
+      beforeStr should be(afterStr)
     }
   }
 
