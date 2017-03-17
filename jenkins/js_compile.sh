@@ -1,5 +1,8 @@
 #!/bin/bash -xe
 
+# jsのコンパイルを実施
+# [前提条件]node.jsがインストール済みであること
+
 source /var/lib/jenkins/.nvm/nvm.sh
 
 cd ./frontend
@@ -12,5 +15,3 @@ fi
 
 npm run build
 cd ../
-
-./skinny db:migrate test
