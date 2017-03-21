@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS attachment_file;
 DROP TABLE IF EXISTS kanban_joined_user;
 DROP TABLE IF EXISTS note_charged_user;
 DROP TABLE IF EXISTS note_comment;
+DROP TABLE IF EXISTS note_history;
 DROP TABLE IF EXISTS note;
 DROP TABLE IF EXISTS stage;
 DROP TABLE IF EXISTS kanban;
@@ -262,6 +263,23 @@ CREATE TABLE note_comment_attachment_file
 ) WITHOUT OIDS;
 
 
+-- ふせん - 履歴
+CREATE TABLE note_history
+(
+	-- id(自動採番)
+	id bigserial NOT NULL,
+	-- ふせんID
+	note_id bigint NOT NULL,
+	-- ステージID
+	stage_id bigint NOT NULL,
+	-- 最終更新ユーザID
+	last_update_login_user_info_id bigint NOT NULL,
+	-- 最終更新日時
+	last_update_at timestamp NOT NULL,
+	PRIMARY KEY (id)
+) WITHOUT OIDS;
+
+
 -- ステージ
 CREATE TABLE stage
 (
@@ -392,6 +410,14 @@ ALTER TABLE note_comment
 ;
 
 
+ALTER TABLE note_history
+	ADD FOREIGN KEY (note_id)
+	REFERENCES note (id)
+	ON UPDATE RESTRICT
+	ON DELETE CASCADE
+;
+
+
 ALTER TABLE note_comment_attachment_file
 	ADD FOREIGN KEY (note_comment_id)
 	REFERENCES note_comment (id)
@@ -508,6 +534,12 @@ COMMENT ON TABLE note_comment_attachment_file IS 'ふせんコメント - 添付
 COMMENT ON COLUMN note_comment_attachment_file.id IS 'id(自動採番)';
 COMMENT ON COLUMN note_comment_attachment_file.note_comment_id IS 'ふせんコメントID';
 COMMENT ON COLUMN note_comment_attachment_file.attachment_file_id IS '添付ファイルID';
+COMMENT ON TABLE note_history IS 'ふせん - 履歴';
+COMMENT ON COLUMN note_history.id IS 'id(自動採番)';
+COMMENT ON COLUMN note_history.note_id IS 'ふせんID';
+COMMENT ON COLUMN note_history.stage_id IS 'ステージID';
+COMMENT ON COLUMN note_history.last_update_login_user_info_id IS '最終更新ユーザID';
+COMMENT ON COLUMN note_history.last_update_at IS '最終更新日時';
 COMMENT ON TABLE stage IS 'ステージ';
 COMMENT ON COLUMN stage.id IS 'id(自動採番)';
 COMMENT ON COLUMN stage.kanban_id IS 'かんばんID';

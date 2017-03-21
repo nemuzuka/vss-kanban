@@ -89,8 +89,8 @@ class NoteServiceImpl @Inject() (
   /**
    * @inheritdoc
    */
-  override def moveNote(stageId: StageId, noteId: Option[NoteId], noteIds: Seq[Long])(implicit session: DBSession): Unit = {
-    noteId foreach (v => noteRepository.moveStage(v, stageId))
+  override def moveNote(stageId: StageId, noteId: Option[NoteId], noteIds: Seq[Long], loginUser: User)(implicit session: DBSession): Unit = {
+    noteId foreach (v => noteRepository.moveStage(v, stageId, loginUser))
     noteRepository.updateSortNum(noteIds map NoteId)
   }
 }

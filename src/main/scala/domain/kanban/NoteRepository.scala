@@ -48,6 +48,7 @@ trait NoteRepository extends Repository[Note] {
 
   /**
    * ふせんコメント永続化.
+   * ステージ移動する場合、履歴に登録します
    * @param stageId ステージID
    * @param noteId ふせんID
    * @param comment コメント文
@@ -77,12 +78,14 @@ trait NoteRepository extends Repository[Note] {
 
   /**
    * ステージ移動.
+   * ステージ移動する場合、履歴に登録します
    * @param noteId ふせんID
    * @param stageId 移動先ステージID
+   * @param loginUser ログインユーザ情報
    * @param session Session
    * @return 移動した場合、移動先のステージID。移動前後が同じステージの場合、None
    */
-  def moveStage(noteId: NoteId, stageId: StageId)(implicit session: DBSession): Option[StageId]
+  def moveStage(noteId: NoteId, stageId: StageId, loginUser: User)(implicit session: DBSession): Option[StageId]
 
   /**
    * ソート順変更.

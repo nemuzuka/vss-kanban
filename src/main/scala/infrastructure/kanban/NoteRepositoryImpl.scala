@@ -4,7 +4,8 @@ import domain.ApplicationException
 import domain.attachment.{ AttachmentFile, AttachmentFileId, AttachmentFileRow }
 import domain.kanban._
 import domain.user.{ User, UserId }
-import model.{ NoteAttachmentFile, NoteChargedUser, NoteComment, NoteCommentAttachmentFile }
+import model.{ Note => _, _ }
+import org.joda.time.DateTime
 import scalikejdbc.DBSession
 import skinny.logging.Logger
 import util.CurrentDateUtil
@@ -84,6 +85,14 @@ class NoteRepositoryImpl extends NoteRepository {
       case Some(noteId) =>
         //変更
         Try {
+
+          //更新前のステージIDと異なる場合、履歴に追加
+          for {
+            note <- model.Note.findById(noteId.id) if note.stageId != stageId.id
+          } yield {
+            saveNoteHistory(noteId.id, stageId.id, loginUser.userId.get.id, now)
+          }
+
           val entity = model.Note(
             id = noteId.id,
             stageId = stageId.id,
@@ -124,7 +133,11 @@ class NoteRepositoryImpl extends NoteRepository {
           lastUpdateAt = now,
           lockVersion = 1L
         )
-        Right(model.Note.create(entity))
+
+        val noteId = model.Note.create(entity)
+        //履歴登録
+        saveNoteHistory(noteId, entity.stageId, entity.createLoginUserInfoId, now)
+        Right(noteId)
     }
 
     for {
@@ -150,7 +163,7 @@ class NoteRepositoryImpl extends NoteRepository {
    */
   override def store(stageId: StageId, noteId: NoteId, comment: String, attachmentFileIds: Seq[AttachmentFileId], loginUser: User)(implicit session: DBSession): Option[Long] = {
 
-    moveStage(noteId, stageId)
+    moveStage(noteId, stageId, loginUser)
 
     if (comment.isEmpty && attachmentFileIds.isEmpty) {
       None
@@ -220,11 +233,12 @@ class NoteRepositoryImpl extends NoteRepository {
   /**
    * @inheritdoc
    */
-  override def moveStage(noteId: NoteId, stageId: StageId)(implicit session: DBSession): Option[StageId] = {
+  override def moveStage(noteId: NoteId, stageId: StageId, loginUser: User)(implicit session: DBSession): Option[StageId] = {
     for {
       note <- model.Note.findById(noteId.id) if note.stageId != stageId.id
     } yield {
       model.Note.updateByStage(noteId.id, stageId.id)
+      saveNoteHistory(noteId.id, stageId.id, loginUser.userId.get.id, CurrentDateUtil.nowDateTime)
       stageId
     }
   }
@@ -271,6 +285,26 @@ class NoteRepositoryImpl extends NoteRepository {
       )
       NoteChargedUser.create(chargeUser)
     }
+  }
+
+  /**
+   * ふせん - 履歴登録.
+   * @param noteId ふせんID
+   * @param stageId ステージID
+   * @param userId 更新ユーザID
+   * @param now 現在時刻
+   * @param session Session
+   */
+  private[this] def saveNoteHistory(noteId: Long, stageId: Long, userId: Long, now: DateTime)(implicit session: DBSession): Unit = {
+    model.NoteHistory.create(
+      NoteHistory(
+        id = -1L,
+        noteId = noteId,
+        stageId = stageId,
+        lastUpdateAt = now,
+        lastUpdateLoginUserInfoId = userId
+      )
+    )
   }
 
   /**

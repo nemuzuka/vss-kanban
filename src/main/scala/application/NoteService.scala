@@ -75,9 +75,10 @@ trait NoteService {
    * @param stageId 対象ステージID
    * @param noteId 対象ステージに移動したふせんID(ステージを移動したふせんが存在しない場合、None)
    * @param noteIds ソート順を変更するふせんIDSeq
+   * @param loginUser ログインユーザ情報
    * @param session Session
    */
-  def moveNote(stageId: StageId, noteId: Option[NoteId], noteIds: Seq[Long])(implicit session: DBSession): Unit
+  def moveNote(stageId: StageId, noteId: Option[NoteId], noteIds: Seq[Long], loginUser: User)(implicit session: DBSession): Unit
 }
 
 /**

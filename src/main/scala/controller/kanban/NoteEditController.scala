@@ -99,8 +99,8 @@ class NoteEditController extends ApiController {
       val noteService = injector.getInstance(classOf[NoteService])
       noteService.deleteById(KanbanId(kanbanId), NoteId(noteId), lockVersion, userInfo)
     } match {
-      case Right(noteId) =>
-        createJsonResult("success", Result(noteId = noteId))
+      case Right(id) =>
+        createJsonResult("success", Result(noteId = id))
       case Left(exception) =>
         val errorMsg = createErrorMsg(Keys.ErrMsg.Key, exception.messageKey, exception.paramKey)
         createJsonResult(errorMsg)
@@ -129,13 +129,15 @@ class NoteEditController extends ApiController {
    * ふせん移動.
    */
   def move: String = {
+    val userInfo = session.getAs[User](Keys.Session.UserInfo).get
+
     val noteId = params.getAs[String]("noteId").getOrElse("")
     val stageId = params.getAs[Long]("stageId").getOrElse(-1L)
     val noteIds = multiParams.getAs[Long]("noteIds").getOrElse(Seq())
 
     DB.localTx { implicit session =>
       val noteService = injector.getInstance(classOf[NoteService])
-      noteService.moveNote(StageId(stageId), if (noteId.isEmpty) None else Option(NoteId(noteId.toLong)), noteIds)
+      noteService.moveNote(StageId(stageId), if (noteId.isEmpty) None else Option(NoteId(noteId.toLong)), noteIds, userInfo)
     }
     createJsonResult("success")
   }
