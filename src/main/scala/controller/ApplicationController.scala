@@ -35,6 +35,7 @@ trait ApplicationController extends SkinnyController
           }
         case _ =>
           //未ログインなので、400の画面表示
+          session += Keys.Session.RedirectURI -> request.getRequestURI
           haltWithBody(400)
       }
     }

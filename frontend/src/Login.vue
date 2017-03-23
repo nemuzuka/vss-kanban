@@ -81,7 +81,9 @@
             if(Utils.writeErrorMsg(self, data, false)) {
                 return;
             }
-            Utils.moveUrl("/top");
+            console.log(data.result);
+            const url = data.result === '' ? '/top' : data.result;
+            Utils.moveUrl(url);
           }
         );
       }

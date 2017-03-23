@@ -26,9 +26,10 @@ class LoginController extends ApiController {
           userRepository.findByLoginId(form.loginId, form.password) match {
             case Some(user) =>
               //成功時、Sessionを破棄して再作成
+              val redirectUri = session.getAsOrElse[String](Keys.Session.RedirectURI, "")
               session.invalidate()
               session += Keys.Session.UserInfo -> user
-              createJsonResult("")
+              createJsonResult("", redirectUri)
             case _ =>
               val errorMsg = createErrorMsg(Keys.ErrMsg.Key, "login", Seq())
               createJsonResult(errorMsg)

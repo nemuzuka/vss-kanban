@@ -11,6 +11,8 @@ object Keys {
   object Session {
     /** ログインユーザ情報格納Key. */
     val UserInfo = "USER_INFO"
+    /** ログイン成功時のリダイレクト先URI. */
+    val RedirectURI = "REDIRECT_URL"
   }
 
   /**
