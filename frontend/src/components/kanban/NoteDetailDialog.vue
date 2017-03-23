@@ -14,15 +14,6 @@
 
         <div v-if="mode==='detail' || (mode==='comment' && comment.viewNoteDetail)">
 
-          <div>
-            <p class="control">
-              <label class="checkbox">
-                <input type="checkbox" v-model="detail.isWatch" @click="changeWatchStatus">
-                このふせんの変更を通知する
-              </label>
-            </p>
-          </div>
-
           <div class="box" v-if="detail.noteDescription !== ''">
             <article class="media">
               <div class="media-content">
@@ -51,6 +42,17 @@
                   </div>
                 </nav>
 
+              </div>
+            </article>
+          </div>
+
+          <div class="box">
+            <article class="media">
+              <div class="media-content">
+                <label class="checkbox">
+                  <input type="checkbox" v-model="detail.isWatch" @click="changeWatchStatus">
+                  このふせんの変更を通知する
+                </label>
               </div>
             </article>
           </div>
