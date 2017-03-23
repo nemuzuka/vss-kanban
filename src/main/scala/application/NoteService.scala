@@ -99,6 +99,7 @@ case class NoteEditDetail(
  * @param chargedUserNames ふせん担当者名Seq
  * @param noteAttachmentFiles ふせん添付ファイルSeq
  * @param isCharged ふせん担当者か？
+ * @param isWatch ウォッチ中のふせんか？
  * @param comments ふせんコメントSeq
  */
 case class NoteDetail(
@@ -107,5 +108,6 @@ case class NoteDetail(
   joinedUsers: Seq[JoinedUserDto],
   noteAttachmentFiles: Seq[AttachmentFileRow],
   isCharged: Boolean,
+  isWatch: Boolean,
   comments: Seq[NoteCommentRow]
 )

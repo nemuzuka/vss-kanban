@@ -143,6 +143,35 @@ class NoteEditController extends ApiController {
   }
 
   /**
+   * ウォッチ設定.
+   */
+  def watch: String = watchSetting(true)
+
+  /**
+   * ウォッチ解除.
+   */
+  def unwatch: String = watchSetting(false)
+
+  /**
+   * ウォッチ設定.
+   * @param isWatch ウォッチ設定の場合、true
+   */
+  private[this] def watchSetting(isWatch: Boolean): String = {
+    val userInfo = session.getAs[User](Keys.Session.UserInfo).get
+    val noteId = params.getAs[Long]("noteId").getOrElse(-1L)
+
+    DB.localTx { implicit session =>
+      val noteRepository = injector.getInstance(classOf[NoteRepository])
+      if (isWatch) {
+        noteRepository.watch(NoteId(noteId), userInfo)
+      } else {
+        noteRepository.unWatch(NoteId(noteId), userInfo)
+      }
+    }
+    createJsonResult("success")
+  }
+
+  /**
    * validate & 入力パラメータ取得.
    *
    * @return Right:入力Form / Left:validateエラーメッセージ

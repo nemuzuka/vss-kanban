@@ -37,7 +37,8 @@ class NoteRepositoryImpl extends NoteRepository {
         lockVersion = note.lockVersion,
         chargedUsers = NoteChargedUser.findByNoteId(noteId.id) map { v =>
           ChargedUser.createChargedUser(v._2.loginUserInfoId, v._1.userName)
-        }
+        },
+        watchUsers = NoteWatchUser.findByNoteIdAndLoginUserInfoId(noteId.id) map { v => UserId(v.loginUserInfoId) }
       )
     }
   }
@@ -248,6 +249,26 @@ class NoteRepositoryImpl extends NoteRepository {
    */
   override def updateSortNum(noteIds: Seq[NoteId])(implicit session: DBSession): Unit = {
     noteIds.zipWithIndex foreach (v => model.Note.updateSortNum(v._1.id, v._2))
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def watch(noteId: NoteId, loginUser: User)(implicit session: DBSession): Unit = {
+    model.Note.findById(noteId.id) foreach (_ =>
+      NoteWatchUser.create(NoteWatchUser(
+        id = -1L,
+        noteId = noteId.id,
+        loginUserInfoId = loginUser.userId.get.id
+      )))
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def unWatch(noteId: NoteId, loginUser: User)(implicit session: DBSession): Unit = {
+    model.Note.findById(noteId.id) foreach (_ =>
+      NoteWatchUser.deleteByNoteIdAndLoginUserInfoId(noteId.id, loginUser.userId.get.id))
   }
 
   /**

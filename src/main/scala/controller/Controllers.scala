@@ -85,6 +85,10 @@ object Controllers {
     val deleteUrl: Route = post("/kanban/note/delete")(delete).as('delete)
     val commentStoreUrl: Route = post("/kanban/note/comment/store")(commentStore()).as('commentStore)
     val moveUrl: Route = post("/kanban/note/move")(move).as('move)
+
+    val watchUrl: Route = post("/kanban/note/:noteId/watch")(watch).as('watch)
+    val unwatchUrl: Route = post("/kanban/note/:noteId/unwatch")(unwatch).as('unwatch)
+
   }
 
   object kanbanListAjax extends _root_.controller.kanban.ListConstoller with Routes {

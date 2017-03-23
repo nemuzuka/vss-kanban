@@ -13,6 +13,16 @@
         </article>
 
         <div v-if="mode==='detail' || (mode==='comment' && comment.viewNoteDetail)">
+
+          <div>
+            <p class="control">
+              <label class="checkbox">
+                <input type="checkbox" v-model="detail.isWatch" @click="changeWatchStatus">
+                このふせんの変更を通知する
+              </label>
+            </p>
+          </div>
+
           <div class="box" v-if="detail.noteDescription !== ''">
             <article class="media">
               <div class="media-content">
@@ -186,7 +196,8 @@
           noteTitle: "",
           noteDescription: "",
           archiveStatus: "0",
-          fixDate: ""
+          fixDate: "",
+          isWatch: false
         },
         comment: {
           comment: "",
@@ -273,6 +284,7 @@
         self.detail.archiveStatus = form.archiveStatus;
         self.detail.fixDate = form.fixDate;
         self.detail.lockVersion = form.lockVersion;
+        self.detail.isWatch = result.isWatch;
 
         self.comments.splice(0, self.comments.length);
         self.comments.push(...result.comments);
@@ -453,6 +465,23 @@
         const self = this;
         self.form.fixDate = "";
         self.fixDate.clear();
+      },
+      changeWatchStatus(e) {
+        const self = this;
+        let url = "/kanban/note/" + self.detail.id + "/";
+        if(self.detail.isWatch === false) {
+          url += "unwatch"
+        } else {
+          url += "watch"
+        }
+
+        Utils.setAjaxDefault();
+        $.ajax({
+          method: 'POST',
+          url: url
+        }).then(
+          function (data) {}
+        );
       }
     },
     computed: {

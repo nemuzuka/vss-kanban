@@ -15,6 +15,7 @@ import org.joda.time.LocalDate
  * @param createUserId ふせん作成者
  * @param lockVersion lockVersion
  * @param chargedUsers ふせん担当者Seq
+ * @param watchUsers ふせんウォッチユーザIDSeq
  */
 case class Note(
     noteId: Option[NoteId],
@@ -25,7 +26,8 @@ case class Note(
     fixDate: Option[LocalDate],
     createUserId: UserId,
     lockVersion: Long = 1L,
-    chargedUsers: Seq[ChargedUser]
+    chargedUsers: Seq[ChargedUser],
+    watchUsers: Seq[UserId]
 ) extends Entity[Note] {
 
   /** ふせん担当者Map. */
@@ -50,6 +52,17 @@ case class Note(
   def isCharged(user: User, kanban: Kanban): Boolean = user.userId match {
     case Some(userId) =>
       createUserId == userId || chargedUserMap.contains(userId) || kanban.isAdministrator(user) || user.authority == UserAuthority.ApplicationAdministrator
+    case _ => false
+  }
+
+  /**
+   * ウォッチしているふせんか？
+   * @param user 対象ユーザ
+   * @return 対象ユーザがウォッチしているふせんの場合、true
+   */
+  def isWatch(user: User): Boolean = user.userId match {
+    case Some(userId) =>
+      watchUsers.contains(userId)
     case _ => false
   }
 }

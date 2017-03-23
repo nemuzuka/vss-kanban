@@ -49,7 +49,8 @@ case class Note(
         ChargedUser(
           userId = UserId(v),
           name = ""
-        ))
+        )),
+      watchUsers = Seq()
     )
   }
 }

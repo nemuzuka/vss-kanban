@@ -93,6 +93,22 @@ trait NoteRepository extends Repository[Note] {
    * @param session Session
    */
   def updateSortNum(noteIds: Seq[NoteId])(implicit session: DBSession): Unit
+
+  /**
+   * ふせんウォッチ.
+   * @param noteId ふせんID
+   * @param loginUser ログインユーザ情報
+   * @param session Session
+   */
+  def watch(noteId: NoteId, loginUser: User)(implicit session: DBSession): Unit
+
+  /**
+   * ふせんウォッチ解除.
+   * @param noteId ふせんID
+   * @param loginUser ログインユーザ情報
+   * @param session Session
+   */
+  def unWatch(noteId: NoteId, loginUser: User)(implicit session: DBSession): Unit
 }
 
 /**
