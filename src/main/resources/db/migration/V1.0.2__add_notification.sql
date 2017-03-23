@@ -9,12 +9,14 @@ CREATE TABLE note_notification
 	id bigserial NOT NULL,
 	-- ふせんID
 	note_id bigint NOT NULL,
+	-- かんばんID
+	kanban_id bigint NOT NULL,
 	-- ログインユーザ情報ID
 	login_user_info_id bigint NOT NULL,
-	-- 通知内容
-	notification_body text NOT NULL,
-	-- 遷移先URL
-	notification_url varchar(512) NOT NULL,
+	-- 操作ラベル
+	action_label varchar(128) NOT NULL,
+	-- 登録ユーザID
+	create_login_user_info_id bigint NOT NULL,
 	-- 作成日時
 	create_at timestamp NOT NULL,
 	PRIMARY KEY (id)
@@ -53,9 +55,10 @@ CREATE INDEX idx_note_notification_01 ON note_notification (login_user_info_id);
 COMMENT ON TABLE note_notification IS 'ふせん通知';
 COMMENT ON COLUMN note_notification.id IS 'id(自動採番)';
 COMMENT ON COLUMN note_notification.note_id IS 'ふせんID';
+COMMENT ON COLUMN note_notification.kanban_id IS 'かんばんID';
 COMMENT ON COLUMN note_notification.login_user_info_id IS 'ログインユーザ情報ID';
-COMMENT ON COLUMN note_notification.notification_body IS '通知内容';
-COMMENT ON COLUMN note_notification.notification_url IS '遷移先URL';
+COMMENT ON COLUMN note_notification.action_label IS '操作ラベル';
+COMMENT ON COLUMN note_notification.create_login_user_info_id IS '登録ユーザID';
 COMMENT ON COLUMN note_notification.create_at IS '作成日時';
 COMMENT ON TABLE note_watch_user IS 'ふせん通知ユーザ';
 COMMENT ON COLUMN note_watch_user.id IS 'id(自動採番)';

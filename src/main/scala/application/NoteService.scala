@@ -48,6 +48,7 @@ trait NoteService {
 
   /**
    * ふせん詳細情報取得.
+   * ふせんに紐づくログインユーザへの通知履歴を削除します。
    * @param kanbanId かんばんID
    * @param stageId ステージID
    * @param noteId ふせんID

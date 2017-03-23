@@ -5,7 +5,7 @@
   <app-header></app-header>
   <div class="container">
     <article class="message is-danger">
-      <div class="message-body">本アプリケーションは、ログインする必要があります</div>
+      <div class="message-body">お手数ですが、もう一度ログインしてから操作を行ってください</div>
     </article>
   </div>
 </div>

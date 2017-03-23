@@ -146,6 +146,9 @@ class NoteRepositoryImpl extends NoteRepository {
     } yield {
       saveChargedUsers(noteId, note.chargedUsers)
       saveAttachmentFiles(noteId, attachmentFileIds)
+      saveNoteNotification(kanbanId, NoteId(noteId),
+        if (note.noteId.isDefined) NoteNotificationType.UpdateNote else NoteNotificationType.CreateNote,
+        loginUser)
       noteId
     }
   }
@@ -164,7 +167,7 @@ class NoteRepositoryImpl extends NoteRepository {
    */
   override def store(stageId: StageId, noteId: NoteId, comment: String, attachmentFileIds: Seq[AttachmentFileId], loginUser: User)(implicit session: DBSession): Option[Long] = {
 
-    moveStage(noteId, stageId, loginUser)
+    val moveResult = moveStage(noteId, stageId, loginUser)
 
     if (comment.isEmpty && attachmentFileIds.isEmpty) {
       None
@@ -184,6 +187,14 @@ class NoteRepositoryImpl extends NoteRepository {
           attachmentFileId = attachmentFileId.id
         )
       ))
+
+      //移動しなかった場合、コメント登録されたことを通知する
+      if (moveResult.isEmpty) {
+        model.Note.findById(noteId.id) foreach { note =>
+          saveNoteNotification(KanbanId(note.kanbanId), noteId, NoteNotificationType.CreateNoteComment, loginUser)
+        }
+      }
+
       Option(noteCommentId)
     }
   }
@@ -240,6 +251,7 @@ class NoteRepositoryImpl extends NoteRepository {
     } yield {
       model.Note.updateByStage(noteId.id, stageId.id)
       saveNoteHistory(noteId.id, stageId.id, loginUser.userId.get.id, CurrentDateUtil.nowDateTime)
+      saveNoteNotification(KanbanId(note.kanbanId), noteId, NoteNotificationType.MoveNote, loginUser)
       stageId
     }
   }
@@ -269,6 +281,13 @@ class NoteRepositoryImpl extends NoteRepository {
   override def unWatch(noteId: NoteId, loginUser: User)(implicit session: DBSession): Unit = {
     model.Note.findById(noteId.id) foreach (_ =>
       NoteWatchUser.deleteByNoteIdAndLoginUserInfoId(noteId.id, loginUser.userId.get.id))
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def deleteNotification(noteId: NoteId, userId: UserId)(implicit session: DBSession): Unit = {
+    NoteNotification.deleteByNoteIdAndLoginUserInfoId(noteId.id, userId.id)
   }
 
   /**
@@ -326,6 +345,43 @@ class NoteRepositoryImpl extends NoteRepository {
         lastUpdateLoginUserInfoId = userId
       )
     )
+  }
+
+  /**
+   * ふせん通知登録.
+   * 1. 対象のふせんに対して既に登録されている通知を削除
+   * 2. ふせんに紐づく担当者、ウォッチユーザを取得
+   * 3. 対象のふせんに対する通知対象者に対して通知データを登録(操作者は除く)
+   * @param kanbanId かんばんID
+   * @param noteId ふせんID
+   * @param notificationType ふせん通知区分
+   * @param loginUser ログインユーザ情報
+   * @param session Session
+   */
+  private[this] def saveNoteNotification(kanbanId: KanbanId, noteId: NoteId,
+    notificationType: NoteNotificationType, loginUser: User)(implicit session: DBSession): Unit = {
+
+    //ふせんに紐づく担当者、ウォッチユーザを取得
+    for {
+      note <- findById(noteId)
+    } yield {
+      NoteNotification.deleteByNoteId(noteId.id)
+
+      val userIds = ((note.watchUsers map (_.id)) ++ (note.chargedUsers map (_.userId.id))).distinct
+      val targetIds = userIds diff Seq(loginUser.userId.get.id)
+      val baseNotification = NoteNotification(
+        id = -1L,
+        noteId = noteId.id,
+        kanbanId = kanbanId.id,
+        loginUserInfoId = -1L,
+        actionLabel = notificationType.label,
+        createLoginUserInfoId = loginUser.userId.get.id,
+        createAt = CurrentDateUtil.nowDateTime
+      )
+      targetIds foreach { v =>
+        NoteNotification.create(baseNotification.copy(loginUserInfoId = v))
+      }
+    }
   }
 
   /**

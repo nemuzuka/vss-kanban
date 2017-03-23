@@ -7,9 +7,10 @@ import org.joda.time._
 case class NoteNotification(
   id: Long,
   noteId: Long,
+  kanbanId: Long,
   loginUserInfoId: Long,
-  notificationBody: String,
-  notificationUrl: String,
+  actionLabel: String,
+  createLoginUserInfoId: Long,
   createAt: DateTime
 )
 
@@ -33,9 +34,10 @@ object NoteNotification extends SkinnyCRUDMapper[NoteNotification] {
   override def extract(rs: WrappedResultSet, rn: ResultName[NoteNotification]): NoteNotification = new NoteNotification(
     id = rs.get(rn.id),
     noteId = rs.get(rn.noteId),
+    kanbanId = rs.get(rn.kanbanId),
     loginUserInfoId = rs.get(rn.loginUserInfoId),
-    notificationBody = rs.get(rn.notificationBody),
-    notificationUrl = rs.get(rn.notificationUrl),
+    actionLabel = rs.get(rn.actionLabel),
+    createLoginUserInfoId = rs.get(rn.createLoginUserInfoId),
     createAt = rs.get(rn.createAt)
   )
 
@@ -48,9 +50,10 @@ object NoteNotification extends SkinnyCRUDMapper[NoteNotification] {
   def create(entity: NoteNotification)(implicit session: DBSession): Long = {
     NoteNotification.createWithAttributes(
       'noteId -> entity.noteId,
+      'kanbanId -> entity.kanbanId,
       'loginUserInfoId -> entity.loginUserInfoId,
-      'notificationBody -> entity.notificationBody,
-      'notificationUrl -> entity.notificationUrl,
+      'actionLabel -> entity.actionLabel,
+      'createLoginUserInfoId -> entity.createLoginUserInfoId,
       'createAt -> entity.createAt
     )
   }

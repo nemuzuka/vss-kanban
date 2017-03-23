@@ -1,8 +1,8 @@
 package domain.kanban
 
 import domain.attachment.{ AttachmentFileId, AttachmentFileRow }
-import domain.user.User
-import domain.{ ApplicationException, Repository }
+import domain.user.{ User, UserId }
+import domain.{ ApplicationException, Enum, EnumEntry, EnumLabelEntry, Repository }
 import scalikejdbc.DBSession
 
 /**
@@ -27,6 +27,7 @@ trait NoteRepository extends Repository[Note] {
 
   /**
    * 永続処理.
+   * 通知データも合わせて作成します。
    * @param note ふせんドメイン
    * @param attachmentFileIds ふせんに紐付ける添付ファイルIDSeq
    * @param kanbanId かんばんID
@@ -49,6 +50,7 @@ trait NoteRepository extends Repository[Note] {
   /**
    * ふせんコメント永続化.
    * ステージ移動する場合、履歴に登録します
+   * 通知データも合わせて作成します。
    * @param stageId ステージID
    * @param noteId ふせんID
    * @param comment コメント文
@@ -79,6 +81,7 @@ trait NoteRepository extends Repository[Note] {
   /**
    * ステージ移動.
    * ステージ移動する場合、履歴に登録します
+   * 通知データも合わせて作成します。
    * @param noteId ふせんID
    * @param stageId 移動先ステージID
    * @param loginUser ログインユーザ情報
@@ -109,6 +112,14 @@ trait NoteRepository extends Repository[Note] {
    * @param session Session
    */
   def unWatch(noteId: NoteId, loginUser: User)(implicit session: DBSession): Unit
+
+  /**
+   * ふせん通知削除.
+   * @param noteId ふせんID
+   * @param userId ユーザID
+   * @param session Session
+   */
+  def deleteNotification(noteId: NoteId, userId: UserId)(implicit session: DBSession): Unit
 }
 
 /**
@@ -120,3 +131,17 @@ case class NoteCondition(
   kanbanId: KanbanId,
   includeArchive: Boolean
 )
+
+//ふせん通知に対する区分
+sealed abstract class NoteNotificationType(override val code: String, override val label: String) extends EnumLabelEntry
+object NoteNotificationType extends Enum[NoteNotificationType] {
+  /** ふせん登録. */
+  case object CreateNote extends NoteNotificationType("add", "ふせん登録")
+  /** ふせん変更. */
+  case object UpdateNote extends NoteNotificationType("update", "ふせん変更")
+  /** ステージ移動. */
+  case object MoveNote extends NoteNotificationType("move", "ステージ移動")
+  /** コメント登録. */
+  case object CreateNoteComment extends NoteNotificationType("addComment", "コメント登録")
+  protected val values = Seq(CreateNote, UpdateNote, MoveNote, CreateNoteComment)
+}

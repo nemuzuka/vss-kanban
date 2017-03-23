@@ -62,6 +62,7 @@ class NoteServiceImpl @Inject() (
       kanban <- kanbanRepository.findById(kanbanId, loginUser) if kanban.isJoined(loginUser)
       note <- noteRepository.findById(noteId)
     } yield {
+      noteRepository.deleteNotification(noteId, loginUser.userId.get)
       NoteDetail(
         form = form.kanban.Note.fromDomain(kanbanId, stageId, note),
         chargedUserNames = note.chargedUsers map (_.name),
