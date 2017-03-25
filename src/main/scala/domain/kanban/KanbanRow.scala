@@ -86,3 +86,27 @@ case class NoteCommentRow(
 ) extends ValueObject[NoteCommentRow] {
   override def sameValueAs(other: NoteCommentRow): Boolean = this.noteCommentId == other.noteCommentId
 }
+
+/**
+ * ふせん通知表示用ValueObject.
+ * @param id ふせん通知ID
+ * @param noteId ふせんID
+ * @param noteTitle ふせんタイトル
+ * @param kanbanId かんばんID
+ * @param kanbanTitle かんばんタイトル
+ * @param actionLabel 操作ラベル
+ * @param createUserName 登録者
+ * @param createAt 登録日時
+ */
+case class NoteNotificationRow(
+    id: Long,
+    noteId: Long,
+    noteTitle: String,
+    kanbanId: Long,
+    kanbanTitle: String,
+    actionLabel: String,
+    createUserName: String,
+    createAt: String
+) extends ValueObject[NoteNotificationRow] {
+  override def sameValueAs(other: NoteNotificationRow): Boolean = this.id == other.id
+}

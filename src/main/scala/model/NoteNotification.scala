@@ -86,11 +86,45 @@ object NoteNotification extends SkinnyCRUDMapper[NoteNotification] {
    * ソート順はidの降順です
    * @param loginUserInfoId ユーザID
    * @param session Session
-   * @return 該当データ
+   * @return 該当データSeq _1: NoteNotification _2: Kanban _3: Note _4: ユーザ情報Option
    */
-  def findByLoginUserInfoId(loginUserInfoId: Long)(implicit session: DBSession): Seq[NoteNotification] = {
-    val nn = defaultAlias
-    NoteNotification.where('loginUserInfoId -> loginUserInfoId).orderBy(nn.id.desc).apply()
+  def findByLoginUserInfoId(loginUserInfoId: Long)(implicit session: DBSession): Seq[(NoteNotification, Kanban, Note, Option[LoginUserInfo])] = {
+    val (nn, k, n, lui) = (defaultAlias, Kanban.defaultAlias, Note.defaultAlias, LoginUserInfo.defaultAlias)
+    withSQL {
+      select.from(NoteNotification as nn).innerJoin(Kanban as k).on(nn.kanbanId, k.id)
+        .innerJoin(Note as n).on(nn.noteId, n.id)
+        .leftJoin(LoginUserInfo as lui).on(nn.createLoginUserInfoId, lui.id)
+        .where.eq(nn.loginUserInfoId, loginUserInfoId).orderBy(nn.id.desc)
+    }.map { rs =>
+      val logunUserInfo = rs.longOpt(lui.resultName.id) map (_ => Option(LoginUserInfo.extract(rs, lui.resultName))) getOrElse None
+      (NoteNotification.extract(rs, nn.resultName), Kanban.extract(rs, k.resultName), Note.extract(rs, n.resultName), logunUserInfo)
+    }.list.apply()
   }
 
+  /**
+   * ユーザIDに紐づくデータが1件以上存在するか？.
+   * @param loginUserInfoId ユーザID
+   * @param session Session
+   * @return 1件以上存在する場合、true
+   */
+  def hasUnreadNotification(loginUserInfoId: Long)(implicit session: DBSession): Boolean = {
+    val list = NoteNotification.where('loginUserInfoId -> loginUserInfoId).limit(1).apply()
+    if (list.length == 1) true else false
+  }
+
+  /**
+   * かんばん参加者に含まれていないかんばんに紐づくふせんの通知情報削除.
+   * @param loginUserInfoId ユーザID
+   * @param session Session
+   */
+  def deleteByNotExistsJoinedUser(loginUserInfoId: Long)(implicit session: DBSession): Unit = {
+    val (k, kju) = (Kanban.defaultAlias, KanbanJoinedUser.defaultAlias)
+    withSQL {
+      delete.from(NoteNotification).where.eq(NoteNotification.column.loginUserInfoId, loginUserInfoId)
+        .and.notIn(
+          NoteNotification.column.kanbanId,
+          select(k.result.id).from(Kanban as k).innerJoin(KanbanJoinedUser as kju).on(k.id, kju.kanbanId).where.eq(kju.loginUserInfoId, loginUserInfoId)
+        )
+    }.update.apply()
+  }
 }

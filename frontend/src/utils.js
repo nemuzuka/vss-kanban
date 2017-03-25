@@ -117,8 +117,11 @@ export default class Utils {
   /**
    * Ajax処理の共通処理.
    */
-  static setAjaxDefault() {
-    const isViewLoadingMsg = true;
+  static setAjaxDefault(param) {
+    let isViewLoadingMsg = true;
+    if(param !== undefined && param.isViewLoadingMsg !== undefined) {
+      isViewLoadingMsg = param.isViewLoadingMsg;
+    }
     $.ajaxSetup({
       timeout: 0,
       ifModified: true,

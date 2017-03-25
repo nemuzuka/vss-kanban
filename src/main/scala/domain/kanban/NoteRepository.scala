@@ -120,6 +120,24 @@ trait NoteRepository extends Repository[Note] {
    * @param session Session
    */
   def deleteNotification(noteId: NoteId, userId: UserId)(implicit session: DBSession): Unit
+
+  /**
+   * 未確認のふせん通知が存在するか？
+   * @param userId ユーザID
+   * @param session Session
+   * @return ふせん通知が存在する場合、true
+   */
+  def hasUnreadNotification(userId: UserId)(implicit session: DBSession): Boolean
+
+  /**
+   * 未確認のふせん通知取得.
+   * 1. 自分がアプリケーション管理者でない場合、自分が参照できないかんばんに紐づくふせんの通知を削除
+   * 2. 自分宛の通知を全件取得
+   * @param loginUser ログインユーザ情報
+   * @param session Session
+   * @return 該当データ
+   */
+  def findByAllUnreadNotification(loginUser: User)(implicit session: DBSession): Seq[NoteNotificationRow]
 }
 
 /**

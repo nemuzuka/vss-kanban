@@ -3,7 +3,7 @@ package infrastructure.kanban
 import domain.ApplicationException
 import domain.attachment.{ AttachmentFile, AttachmentFileId, AttachmentFileRow }
 import domain.kanban._
-import domain.user.{ User, UserId }
+import domain.user.{ User, UserAuthority, UserId }
 import model.{ Note => _, _ }
 import org.joda.time.DateTime
 import scalikejdbc.DBSession
@@ -288,6 +288,36 @@ class NoteRepositoryImpl extends NoteRepository {
    */
   override def deleteNotification(noteId: NoteId, userId: UserId)(implicit session: DBSession): Unit = {
     NoteNotification.deleteByNoteIdAndLoginUserInfoId(noteId.id, userId.id)
+  }
+
+  /**
+   * @inheritdoc
+   */
+  override def hasUnreadNotification(userId: UserId)(implicit session: DBSession): Boolean = NoteNotification.hasUnreadNotification(userId.id)
+
+  /**
+   * @inheritdoc
+   */
+  override def findByAllUnreadNotification(loginUser: User)(implicit session: DBSession): Seq[NoteNotificationRow] = {
+
+    if (loginUser.authority != UserAuthority.ApplicationAdministrator) NoteNotification.deleteByNotExistsJoinedUser(loginUser.userId.get.id)
+
+    NoteNotification.findByLoginUserInfoId(loginUser.userId.get.id) map { v =>
+      val noteNotification = v._1
+      val kanban = v._2
+      val note = v._3
+      val loginUserInfoOpt = v._4
+      NoteNotificationRow(
+        id = noteNotification.id,
+        noteId = note.id,
+        noteTitle = note.noteTitle,
+        kanbanId = kanban.id,
+        kanbanTitle = kanban.kanbanTitle,
+        actionLabel = noteNotification.actionLabel,
+        createUserName = loginUserInfoOpt map { v => v.userName } getOrElse "",
+        createAt = noteNotification.createAt.toString("yyyyMMddHHmmss")
+      )
+    }
   }
 
   /**
