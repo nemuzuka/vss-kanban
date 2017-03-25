@@ -123,3 +123,9 @@
 
 今のところ、IE / Edgeには対応していません。
 CSSフレームワークとして[Bulma](http://bulma.io/ "Bulma")を使用しているのですが、一部IE / Edge で正常に動作しない機能が確認されている為です。
+
+# License
+
+[MIT](https://opensource.org/licenses/MIT "MIT")
+
+Copyright (c) 2017 Kazumune Katagiri
