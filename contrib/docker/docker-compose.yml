@@ -1,0 +1,27 @@
+version: '2'
+services:
+
+  kanban:
+    build: .
+    environment:
+      - TZ=JST-9
+      - DATABASE_HOST=postgres.local
+      - DATABASE_DBNAME=vss_kanban_dev
+      - DATABASE_USER=vss
+      - DATABASE_PASSWORD=vss
+      - PGPASSWORD=vss
+      - SKINNY_ENV=development
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    links:
+      - postgres:postgres.local
+
+  postgres:
+    image: postgres:9.5-alpine
+    environment:
+      - TZ=JST-9
+      - POSTGRES_USER=vss
+      - POSTGRES_PASSWORD=vss
+      - POSTGRES_DB=vss_kanban_dev
