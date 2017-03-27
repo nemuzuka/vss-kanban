@@ -2,7 +2,7 @@ package application
 
 import domain.ApplicationException
 import domain.attachment.AttachmentFileRow
-import domain.kanban.{ KanbanId, StageId, NoteCommentRow, NoteId }
+import domain.kanban._
 import domain.user.User
 import form.kanban.Note
 import scalikejdbc.DBSession
@@ -80,6 +80,15 @@ trait NoteService {
    * @param session Session
    */
   def moveNote(stageId: StageId, noteId: Option[NoteId], noteIds: Seq[Long], loginUser: User)(implicit session: DBSession): Unit
+
+  /**
+   * ふせんに紐づくステージ詳細情報取得.
+   * @param kanbanId かんばんID
+   * @param noteId ふせんID
+   * @param session Session
+   * @return 該当データ(存在しない場合、None)
+   */
+  def getStageDetail(kanbanId: KanbanId, noteId: NoteId)(implicit session: DBSession): Option[StageDetail]
 }
 
 /**
@@ -111,4 +120,14 @@ case class NoteDetail(
   isCharged: Boolean,
   isWatch: Boolean,
   comments: Seq[NoteCommentRow]
+)
+
+/**
+ * ステージ詳細情報.
+ * @param nonArchiveStages アーカイブされていないステージ一覧
+ * @param stageId ステージID
+ */
+case class StageDetail(
+  nonArchiveStages: Seq[StageRow],
+  stageId: Long
 )

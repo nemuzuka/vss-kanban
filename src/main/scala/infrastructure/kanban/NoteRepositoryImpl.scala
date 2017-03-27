@@ -46,6 +46,17 @@ class NoteRepositoryImpl extends NoteRepository {
   /**
    * @inheritdoc
    */
+  override def findStageIdByNoteId(noteId: NoteId)(implicit session: DBSession): Option[StageId] = {
+    for (
+      note <- model.Note.findById(noteId.id)
+    ) yield {
+      StageId(note.stageId)
+    }
+  }
+
+  /**
+   * @inheritdoc
+   */
   override def findByCondition(condition: NoteCondition)(implicit session: DBSession): Seq[NoteRow] = {
     val notes = model.Note.findByKanbanId(condition.kanbanId.id, condition.includeArchive)
     val noteIds = notes map { _.id }

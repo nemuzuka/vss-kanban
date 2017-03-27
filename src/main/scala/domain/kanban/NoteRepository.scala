@@ -17,6 +17,15 @@ trait NoteRepository extends Repository[Note] {
    * @return 該当データ
    */
   def findById(noteId: NoteId)(implicit session: DBSession): Option[Note]
+
+  /**
+   * ふせんが所属するステージID取得.
+   * @param noteId ふせんID
+   * @param session Session
+   * @return 紐づくステージID
+   */
+  def findStageIdByNoteId(noteId: NoteId)(implicit session: DBSession): Option[StageId]
+
   /**
    * 検索条件に紐づく付箋取得.
    * @param condition 検索条件

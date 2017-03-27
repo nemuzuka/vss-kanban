@@ -2,7 +2,7 @@ package application.impl
 
 import javax.inject.Inject
 
-import application.{ JoinedUserDto, NoteDetail, NoteEditDetail, NoteService }
+import application._
 import domain.ApplicationException
 import domain.attachment.AttachmentFileId
 import domain.kanban._
@@ -15,6 +15,7 @@ import scalikejdbc.DBSession
  */
 class NoteServiceImpl @Inject() (
     kanbanRepository: KanbanRepository,
+    stageRepository: StageRepository,
     noteRepository: NoteRepository
 ) extends NoteService {
   /**
@@ -95,4 +96,19 @@ class NoteServiceImpl @Inject() (
     noteId foreach (v => noteRepository.moveStage(v, stageId, loginUser))
     noteRepository.updateSortNum(noteIds map NoteId)
   }
+
+  /**
+   * @inheritdoc
+   */
+  override def getStageDetail(kanbanId: KanbanId, noteId: NoteId)(implicit session: DBSession): Option[StageDetail] = {
+    for {
+      stageId <- noteRepository.findStageIdByNoteId(noteId)
+    } yield {
+      StageDetail(
+        stageId = stageId.id,
+        nonArchiveStages = stageRepository.findByKanbanId(kanbanId, includeArchive = false)
+      )
+    }
+  }
+
 }

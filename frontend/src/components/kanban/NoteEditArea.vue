@@ -68,8 +68,6 @@
 
 <script>
 
-  import 'flatpickr/dist/flatpickr.min.css'
-
   import Utils from '../../utils'
   import Upload from '../attachment/Upload'
   import SavedFileList from '../attachment/List'

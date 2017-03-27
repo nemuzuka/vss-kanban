@@ -91,6 +91,7 @@ object Controllers {
     val watchUrl: Route = post("/kanban/note/:noteId/watch")(watch).as('watch)
     val unwatchUrl: Route = post("/kanban/note/:noteId/unwatch")(unwatch).as('unwatch)
 
+    val stageDetailUrl: Route = get("/kanban/:kanbanId/stage/:noteId")(stageDetail).as('stageDetail)
   }
 
   object kanbanListAjax extends _root_.controller.kanban.ListConstoller with Routes {

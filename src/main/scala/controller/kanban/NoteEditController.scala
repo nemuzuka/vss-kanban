@@ -153,6 +153,25 @@ class NoteEditController extends ApiController {
   def unwatch: String = watchSetting(false)
 
   /**
+   * ふせんに紐づくステージ情報取得.
+   */
+  def stageDetail: String = {
+    val noteId = params.getAs[Long]("noteId").getOrElse(-1L)
+    val kanbanId = params.getAs[Long]("kanbanId").getOrElse(-1L)
+
+    DB.localTx { implicit session =>
+      val noteService = injector.getInstance(classOf[NoteService])
+      noteService.getStageDetail(KanbanId(kanbanId), NoteId(noteId))
+    } match {
+      case Some(detail) =>
+        createJsonResult(detail)
+      case _ =>
+        val errorMsg = createErrorMsg(Keys.ErrMsg.Key, "noData", Seq())
+        createJsonResult(errorMsg)
+    }
+  }
+
+  /**
    * ウォッチ設定.
    * @param isWatch ウォッチ設定の場合、true
    */

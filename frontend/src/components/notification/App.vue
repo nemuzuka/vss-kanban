@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <notification-list :listData="listData" @Refresh="refresh"></notification-list>
+    <notification-list :listData="listData" @Refresh="refresh" @RemoveNotification="removeNotification"></notification-list>
   </div>
 </template>
 
@@ -32,6 +32,19 @@
             }
           }
         );
+      },
+      removeNotification(e, targetId){
+        //対象の行を削除する
+        const self = this;
+        const targetIndex = self.listData.rows.findIndex(function(element, index, array){
+          return element.id === targetId;
+        });
+        if(targetIndex !== -1) {
+          self.listData.rows.splice(targetIndex, 1);
+          if(self.listData.rows.length === 0) {
+            self.listData.msg = '未読の通知はありません';
+          }
+        }
       }
     },
     data() {

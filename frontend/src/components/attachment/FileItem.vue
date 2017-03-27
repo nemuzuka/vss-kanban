@@ -19,7 +19,6 @@
 <script>
 
   import 'lightbox2/dist/js/lightbox.min.js'
-  import 'lightbox2/dist/css/lightbox.css'
 
   export default {
     name: 'file-item',

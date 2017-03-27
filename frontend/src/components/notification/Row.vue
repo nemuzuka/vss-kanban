@@ -17,7 +17,7 @@
     methods: {
       openDetailDialog(e){
         const self = this;
-        self.$emit("OpenDetailDialog", e, self.row.kanbanId, self.row.noteId);
+        self.$emit("OpenDetailDialog", e, self.row);
       }
     },
     computed: {

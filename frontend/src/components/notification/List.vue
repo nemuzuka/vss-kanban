@@ -70,24 +70,45 @@
     data() {
       return {
         kanbanId:null,
+        noteId:null,
+        stageId:null,
         stages:[]
       };
     },
     methods:{
-      openDetailDialog(e, kanbanId, noteId) {
+      openDetailDialog(e, row) {
         const self = this;
-        self.kanbanId = kanbanId;
+        self.kanbanId = row.kanbanId;
 
         //現在ふせんが紐づくステージ情報と、かんばんに紐づくステージ一覧(アーカイブ除)を取得して、呼び出す
+        Utils.setAjaxDefault();
+        $.ajax({
+          method: 'GET',
+          url: "/kanban/" + row.kanbanId + "/stage/" + row.noteId
+        }).then(
+          function (data) {
 
-        //親に対して、対象idの通知情報を削除させる
+            if(Utils.alertErrorMsg(data)) {
+              return;
+            }
 
-        self.$refs.noteDetailDialog.openDialog(e, stageId, noteId);
+            self.stages.splice(0,self.stages.length);
+            self.stages.push(...data.result.nonArchiveStages);
+
+            self.stageId = data.result.stageId;
+            self.noteId = row.noteId;
+            self.$refs.noteDetailDialog.openDialog(e, self.stageId, self.noteId);
+
+            //親に対して、対象idの通知情報を削除させる
+            self.$emit("RemoveNotification", e, row.id);
+          }
+        );
       },
-      refresh(e) {
+      openNoteEditDialog(e) {
         const self = this;
-        self.$emit("Refresh", e);
+        self.$refs.noteEditDialog.openDialog(e, self.stageId, self.noteId);
       },
+      refresh(e) {},
       unreadAll(e) {
         if(!window.confirm("未読の通知を既読にします。本当によろしいですか？")) {
           return;
