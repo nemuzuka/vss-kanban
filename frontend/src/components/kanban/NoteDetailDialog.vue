@@ -50,7 +50,7 @@
             <article class="media">
               <div class="media-content">
                 <label class="checkbox">
-                  <input type="checkbox" v-model="detail.isWatch" @click="changeWatchStatus">
+                  <input type="checkbox" v-model="detail.isWatch">
                   このふせんの変更を通知する
                 </label>
               </div>
@@ -467,8 +467,10 @@
         const self = this;
         self.form.fixDate = "";
         self.fixDate.clear();
-      },
-      changeWatchStatus(e) {
+      }
+    },
+    watch: {
+      'detail.isWatch':function(){
         const self = this;
         let url = "/kanban/note/" + self.detail.id + "/";
         if(self.detail.isWatch === false) {
