@@ -3,11 +3,18 @@
 
 <div id="main-content">
   <app-header></app-header>
-  <div class="container">
-    <article class="message is-danger">
-      <div class="message-body">お手数ですが、もう一度ログインしてから操作を行ってください</div>
-    </article>
+
+  <div class="columns is-mobile">
+    <div class="column is-half is-offset-one-quarter">
+      <div class="container">
+        <article class="message is-warning">
+          <div class="message-body">本アプリケーションをご利用頂くにはログインが必要です</div>
+        </article>
+      </div>
+    </div>
   </div>
+
+  <login></login>
 </div>
 
-<script type="text/javascript" src="/assets/js/error.js?version=${appVersion}"></script>
+<script type="text/javascript" src="/assets/js/index.js?version=${appVersion}"></script>

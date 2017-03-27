@@ -1,0 +1,9 @@
+<%@ val appVersion:String = util.ConfigHelper.appVersion %>
+${include("/WEB-INF/views/loginUser.ssp")}
+
+<div id="main-content">
+    <app-header></app-header>
+    <app></app>
+</div>
+
+<script type="text/javascript" src="/assets/js/notification/index.js?version=${appVersion}"></script>

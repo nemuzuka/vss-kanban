@@ -6,6 +6,13 @@
         <a class="nav-item" @click="moveTop">
           VSS Kanban
         </a>
+
+        <a v-if="hasUnread" class="nav-item notification-link" @click="moveUnreadNotification">
+          <span class="icon">
+            <i class="fa fa-bell"></i>
+          </span>
+        </a>
+
       </div>
 
       <span class="nav-toggle" @click="toggleNavMenu">
@@ -67,18 +74,38 @@
             Utils.moveUrl("/");
           }
         );
+      },
+      checkHasUnread() {
+        const self = this;
+        Utils.setAjaxDefault({
+          isViewLoadingMsg: false
+        });
+        $.ajax({
+          method: 'GET',
+          url: "/notification/hasUnread"
+        }).then(
+          function (data) {
+            self.hasUnread = data.result.hasUnread;
+            setTimeout(function(){self.checkHasUnread()}, 60000);
+          }
+        );
+      },
+      moveUnreadNotification(e) {
+        Utils.moveUrl("/notification/");
       }
     },
     data() {
       return {
         authority:'',
-        isMenuShow:false
+        isMenuShow:false,
+        hasUnread : false
       }
     },
     created() {
       const userInfo = JSON.parse(localStorage.getItem("kanbanUserInfo"));
       const self = this;
       self.authority = userInfo.authority;
+      self.checkHasUnread();
     }
   }
 </script>

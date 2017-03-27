@@ -25,6 +25,11 @@ body {
   display: none !important;
 }
 
+/** ヘッダ部 */
+a.nav-item.notification-link {
+  color: #ff3860;
+}
+
 /** かんばん詳細用のBody部 */
 body.kanban-detail {
   height: 100%;

@@ -17,6 +17,7 @@ module.exports = {
     error: './src/error.js',
     'top/index': './src/top/index.js',
     'user/index': './src/user/index.js',
+    'notification/index': './src/notification/index.js',
   },
   output: {
     path: config.build.assetsRoot,

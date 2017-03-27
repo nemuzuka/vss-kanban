@@ -14,12 +14,14 @@ object Controllers {
     root.mount(ctx)
     top.mount(ctx)
     user.mount(ctx)
+    notification.mount(ctx)
     userListAjax.mount(ctx)
     userEditAjax.mount(ctx)
     kanbanEditAjax.mount(ctx)
     kanbanAdminEditAjax.mount(ctx)
     noteEditAjax.mount(ctx)
     kanbanListAjax.mount(ctx)
+    notificationAjax.mount(ctx)
     maintenanceInit.mount(ctx)
     login.mount(ctx)
     logout.mount(ctx)
@@ -102,6 +104,15 @@ object Controllers {
   object attachmentFileDownload extends _root_.controller.attachment.DownloadController with Routes {
     val executeUrl: Route = get("/attachment/dl")(execute).as('execute)
     val executePostUrl: Route = post("/attachment/dl")(execute).as('execute)
+  }
+
+  object notificationAjax extends _root_.controller.kanban.NotificationController with Routes {
+    val hasUnreadUrl: Route = get("/notification/hasUnread")(hasUnread).as('hasUnread)
+    val listUrl: Route = get("/notification/list")(list).as('list)
+  }
+
+  object notification extends _root_.controller.notification.IndexController with Routes {
+    val indexUrl: Route = get("/notification/")(index).as('index)
   }
 
 }

@@ -41,7 +41,9 @@
     </div>
 
     <div v-if="listData.rows.length <= 0 && listData.msg !== ''">
-      <span>{{listData.msg}}</span>
+      <article class="message is-danger">
+        <div class="message-body">{{listData.msg}}</div>
+      </article>
     </div>
 
   </div>
