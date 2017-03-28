@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%">
-    <div id="kanban-dashboard-area" class="container">
+    <div id="kanban-dashboard-area" class="container hide">
       <div class="content-view">
         <nav class="level">
           <div class="level-left">
@@ -68,6 +68,7 @@
       'other-kanban-list': OtherKanbanList,
       'kanban-main' : KanbanMain
     },
+    props:["targetKanbanId", "targetNoteId"],
     data() {
       return {
         form:{
@@ -116,9 +117,9 @@
           }
         );
       },
-      viewKanbanMain(e, id) {
+      viewKanbanMain(e, kanbanId, noteId) {
         const self = this;
-        self.$refs.kanbanMain.viewContext(e, id, "kanban-dashboard-area");
+        self.$refs.kanbanMain.viewContext(e, kanbanId, noteId, "kanban-dashboard-area");
       }
     },
     created() {
@@ -126,6 +127,14 @@
       const self = this;
       self.authority = userInfo.authority;
       self.refresh();
+    },
+    mounted() {
+      const self = this;
+      if(self.targetKanbanId !== undefined) {
+        self.viewKanbanMain(null, self.targetKanbanId, self.targetNoteId);
+      } else {
+        $("#kanban-dashboard-area").removeClass("hide");
+      }
     }
   }
 </script>

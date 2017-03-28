@@ -33,7 +33,7 @@ class NoteServiceImpl @Inject() (
         ))
       } else {
         for (
-          note <- noteRepository.findById(noteId.get) if note.isCharged(loginUser, kanban)
+          note <- noteRepository.findById(noteId.get, kanbanId) if note.isCharged(loginUser, kanban)
         ) yield {
           NoteEditDetail(
             form = form.kanban.Note.fromDomain(kanbanId, stageId, note),
@@ -61,7 +61,7 @@ class NoteServiceImpl @Inject() (
   override def getDetail(kanbanId: KanbanId, stageId: StageId, noteId: NoteId, loginUser: User)(implicit session: DBSession): Option[NoteDetail] = {
     for {
       kanban <- kanbanRepository.findById(kanbanId, loginUser) if kanban.isJoined(loginUser)
-      note <- noteRepository.findById(noteId)
+      note <- noteRepository.findById(noteId, kanbanId)
     } yield {
       noteRepository.deleteNotification(noteId, loginUser.userId.get)
       NoteDetail(
@@ -82,7 +82,7 @@ class NoteServiceImpl @Inject() (
   override def deleteById(kanbanId: KanbanId, noteId: NoteId, lockVersion: Long, loginUser: User)(implicit session: DBSession): Either[ApplicationException, Long] = {
     val result = for {
       kanban <- kanbanRepository.findById(kanbanId, loginUser) if kanban.isJoined(loginUser)
-      note <- noteRepository.findById(noteId) if note.isCharged(loginUser, kanban)
+      note <- noteRepository.findById(noteId, kanbanId) if note.isCharged(loginUser, kanban)
     } yield {
       noteRepository.deleteById(noteId, lockVersion)
     }

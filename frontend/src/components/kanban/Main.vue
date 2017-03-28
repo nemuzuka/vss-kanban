@@ -59,7 +59,7 @@
       <kanban-attachment-upload-dialog ref="kanbanAttachmentUploadDialog" :kanbanId="kanbanId" @Refresh="refresh"></kanban-attachment-upload-dialog>
       <kanban-attachment-dialog ref="kanbanAttachmentDialog" :kanbanId="kanbanId"></kanban-attachment-dialog>
       <note-edit-dialog ref="noteEditDialog" :kanbanId="kanbanId" @Refresh="refresh"></note-edit-dialog>
-      <note-detail-dialog ref="noteDetailDialog" :kanbanId="kanbanId" @Refresh="refresh" :stages="stages" @OpenEditDialog="openNoteEditDialog"></note-detail-dialog>
+      <note-detail-dialog ref="noteDetailDialog" :kanbanId="kanbanId" @Refresh="refresh" :stages="stages" :isMoveKanban="false" @OpenEditDialog="openNoteEditDialog"></note-detail-dialog>
 
     </div>
 
@@ -107,7 +107,7 @@
       }
     },
     methods: {
-      viewContext(e, kanbanId, hideAreaId) {
+      viewContext(e, kanbanId, noteId, hideAreaId) {
         const self = this;
         self.kanbanId = kanbanId;
         self.hideAreaId = hideAreaId;
@@ -118,6 +118,24 @@
           $("#" + hideAreaId).addClass("hide");
           $('#kanban-main-area').removeClass("hide");
           Utils.moveTop();
+
+          if(noteId !== undefined) {
+            //かんばん表示と同時にふせんの詳細ダイアログを表示する場合
+            Utils.setAjaxDefault();
+            $.ajax({
+              method: 'GET',
+              url: "/kanban/" + kanbanId + "/stage/" + noteId
+            }).then(
+              function (data) {
+
+                if(Utils.alertErrorMsg(data)) {
+                  return;
+                }
+                const stageId = data.result.stageId;
+                self.openNoteDetailDialog(e, stageId, noteId);
+              }
+            );
+          }
         };
 
         self.refresh(e, callBack);

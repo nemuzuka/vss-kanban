@@ -13,10 +13,11 @@ trait NoteRepository extends Repository[Note] {
   /**
    * 付箋取得.
    * @param noteId 付箋ID
+   * @param kanbanId かんばんID
    * @param session Session
    * @return 該当データ
    */
-  def findById(noteId: NoteId)(implicit session: DBSession): Option[Note]
+  def findById(noteId: NoteId, kanbanId: KanbanId)(implicit session: DBSession): Option[Note]
 
   /**
    * ふせんが所属するステージID取得.

@@ -47,7 +47,7 @@
     </div>
 
     <note-edit-dialog ref="noteEditDialog" :kanbanId="kanbanId" @Refresh="refresh"></note-edit-dialog>
-    <note-detail-dialog ref="noteDetailDialog" :kanbanId="kanbanId" @Refresh="refresh" :stages="stages" @OpenEditDialog="openNoteEditDialog"></note-detail-dialog>
+    <note-detail-dialog ref="noteDetailDialog" :kanbanId="kanbanId" @Refresh="refresh" :stages="stages" :isMoveKanban="true" @OpenEditDialog="openNoteEditDialog"></note-detail-dialog>
 
   </div>
 </template>

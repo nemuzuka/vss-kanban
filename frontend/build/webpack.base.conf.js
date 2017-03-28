@@ -18,6 +18,7 @@ module.exports = {
     'top/index': './src/top/index.js',
     'user/index': './src/user/index.js',
     'notification/index': './src/notification/index.js',
+    'kanban/index': './src/kanban/index.js',
   },
   output: {
     path: config.build.assetsRoot,

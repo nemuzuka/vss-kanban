@@ -14,6 +14,7 @@ object Controllers {
     root.mount(ctx)
     top.mount(ctx)
     user.mount(ctx)
+    kanban.mount(ctx)
     notification.mount(ctx)
     userListAjax.mount(ctx)
     userEditAjax.mount(ctx)
@@ -62,6 +63,10 @@ object Controllers {
     val storeUrl: Route = post("/user/store")(store).as('store)
     val deleteUrl: Route = post("/user/delete")(delete).as('delete)
     val updateSortNumUrl: Route = post("/user/update/sort")(updateSortNum()).as('updateSortNum)
+  }
+
+  object kanban extends _root_.controller.kanban.IndexController with Routes {
+    val indexUrl: Route = get("/kanban/:kanbanId/note/:noteId")(index).as('index)
   }
 
   object kanbanEditAjax extends _root_.controller.kanban.EditController with Routes {

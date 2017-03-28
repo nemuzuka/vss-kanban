@@ -22,9 +22,9 @@ class NoteRepositoryImpl extends NoteRepository {
   /**
    * @inheritdoc
    */
-  override def findById(noteId: NoteId)(implicit session: DBSession): Option[Note] = {
+  override def findById(noteId: NoteId, kanbanId: KanbanId)(implicit session: DBSession): Option[Note] = {
     for (
-      note <- model.Note.findById(noteId.id)
+      note <- model.Note.findById(noteId.id) if note.kanbanId == kanbanId.id
     ) yield {
       Note(
         noteId = Option(noteId),
@@ -404,7 +404,7 @@ class NoteRepositoryImpl extends NoteRepository {
 
     //ふせんに紐づく担当者、ウォッチユーザを取得
     for {
-      note <- findById(noteId)
+      note <- findById(noteId, kanbanId)
     } yield {
       NoteNotification.deleteByNoteId(noteId.id)
 

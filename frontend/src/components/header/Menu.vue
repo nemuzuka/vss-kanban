@@ -86,7 +86,7 @@
         }).then(
           function (data) {
             self.hasUnread = data.result.hasUnread;
-            setTimeout(function(){self.checkHasUnread()}, 60000);
+            setTimeout(function(){self.checkHasUnread()}, 60000 * 4);
           }
         );
       },

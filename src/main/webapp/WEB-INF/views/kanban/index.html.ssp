@@ -1,0 +1,15 @@
+<%@ val appVersion:String = util.ConfigHelper.appVersion %>
+<%@ val kanbanId:Long %>
+<%@ val noteId:Long %>
+${include("/WEB-INF/views/loginUser.ssp")}
+<link href="/assets/css/kanban/index.css?version=${appVersion}" rel="stylesheet" type="text/css">
+
+<div id="main-content">
+    <app-header></app-header>
+    <dashboard></dashboard>
+</div>
+
+<input type="hidden" id="notification-target-kanban-id" value="${kanbanId}">
+<input type="hidden" id="notification-target-note-id" value="${noteId}">
+
+<script type="text/javascript" src="/assets/js/kanban/index.js?version=${appVersion}"></script>

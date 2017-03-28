@@ -14,6 +14,15 @@
 
         <div v-if="mode==='detail' || (mode==='comment' && comment.viewNoteDetail)">
 
+          <div v-if="isMoveKanban" style="margin-bottom: 1rem;">
+            <a class="button is-success is-inverted" @click="moveKanban">
+              <span class="icon">
+                <i class="fa fa-share"></i>
+              </span>
+              <span> このかんばんへ移動</span>
+            </a>
+          </div>
+
           <div class="box" v-if="detail.noteDescription !== ''">
             <article class="media">
               <div class="media-content">
@@ -181,7 +190,7 @@
 
   export default {
     name: 'note-detail-dialog',
-    props: ['kanbanId', 'stages'],
+    props: ['kanbanId', 'stages', 'isMoveKanban'],
     components: {
       'saved-file-list':SavedFileList,
       'file-upload':Upload,
@@ -484,6 +493,10 @@
         }).then(
           function (data) {}
         );
+      },
+      moveKanban(e) {
+        const self = this;
+        Utils.moveUrl("/kanban/" + self.kanbanId);
       }
     },
     computed: {
