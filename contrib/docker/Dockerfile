@@ -3,7 +3,7 @@ FROM openjdk:8-jre-alpine
 # ENV
 ENV TZ="JST-9" \
     LANG="ja_JP.UTF-8" \
-    KANBAN_VERSION="0.9.0"
+    KANBAN_VERSION="1.0.0"
 
 # Add Packages
 RUN set -x \
@@ -13,8 +13,8 @@ RUN set -x \
 WORKDIR /vss-kanban
 
 # Download JAR
-RUN curl -OL https://github.com/nemuzuka/vss-kanban/releases/download/v${KANBAN_VERSION}/vss-kanban-standalone-assembly-${KANBAN_VERSION}-SNAPSHOT.jar && \
-    mv vss-kanban-standalone-assembly-${KANBAN_VERSION}-SNAPSHOT.jar kanban.jar
+RUN curl -OL https://github.com/nemuzuka/vss-kanban/releases/download/v${KANBAN_VERSION}/vss-kanban-standalone-assembly-${KANBAN_VERSION}.jar && \
+    mv vss-kanban-standalone-assembly-${KANBAN_VERSION}.jar kanban.jar
 
 # Download tar (for DB setup)
 RUN curl -OL https://github.com/nemuzuka/vss-kanban/archive/v${KANBAN_VERSION}.tar.gz && \
