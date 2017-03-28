@@ -1,6 +1,6 @@
 <%@ val appVersion:String = util.ConfigHelper.appVersion %>
 <%@ val kanbanId:Long %>
-<%@ val noteId:Long %>
+<%@ val noteId:String %>
 ${include("/WEB-INF/views/loginUser.ssp")}
 <link href="/assets/css/kanban/index.css?version=${appVersion}" rel="stylesheet" type="text/css">
 

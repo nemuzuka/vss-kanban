@@ -66,7 +66,8 @@ object Controllers {
   }
 
   object kanban extends _root_.controller.kanban.IndexController with Routes {
-    val indexUrl: Route = get("/kanban/:kanbanId/note/:noteId")(index).as('index)
+    val indexUrl: Route = get("/d/kanban/:kanbanId/note/:noteId")(index).as('index)
+    val kanbanOnlyUrl: Route = get("/d/kanban/:kanbanId")(kanbanOnly).as('kanbanOnly)
   }
 
   object kanbanEditAjax extends _root_.controller.kanban.EditController with Routes {

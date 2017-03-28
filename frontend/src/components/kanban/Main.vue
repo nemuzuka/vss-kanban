@@ -119,7 +119,7 @@
           $('#kanban-main-area').removeClass("hide");
           Utils.moveTop();
 
-          if(noteId !== undefined) {
+          if(noteId !== undefined && noteId !== '') {
             //かんばん表示と同時にふせんの詳細ダイアログを表示する場合
             Utils.setAjaxDefault();
             $.ajax({

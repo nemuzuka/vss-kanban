@@ -496,7 +496,7 @@
       },
       moveKanban(e) {
         const self = this;
-        Utils.moveUrl("/kanban/" + self.kanbanId);
+        Utils.moveUrl("/d/kanban/" + self.kanbanId);
       }
     },
     computed: {
