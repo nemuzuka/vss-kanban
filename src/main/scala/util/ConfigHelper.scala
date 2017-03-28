@@ -8,7 +8,7 @@ import skinny.SkinnyConfig
 object ConfigHelper {
 
   /** アプリケーションversion. */
-  val appVersion = "0.9.0"
+  val appVersion = "1.0.0"
 
   //認証で使用する設定値
   /** pepper値. */
