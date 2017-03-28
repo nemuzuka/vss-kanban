@@ -71,6 +71,17 @@ object NoteNotification extends SkinnyCRUDMapper[NoteNotification] {
   }
 
   /**
+   * ユーザIDによる削除.
+   * @param loginUserInfoId ユーザID
+   * @param session Session
+   */
+  def deleteByLoginUserInfoId(loginUserInfoId: Long)(implicit session: DBSession): Unit = {
+    NoteNotification.deleteBy(
+      sqls.eq(NoteNotification.column.loginUserInfoId, loginUserInfoId)
+    )
+  }
+
+  /**
    * ふせんIDによる削除.
    * @param noteId ふせんID
    * @param session Session

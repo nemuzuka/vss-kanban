@@ -113,6 +113,20 @@
         if(!window.confirm("未読の通知を既読にします。本当によろしいですか？")) {
           return;
         }
+
+        const self = this;
+        Utils.setAjaxDefault();
+        $.ajax({
+          method: 'POST',
+          url: "/notification/allRead"
+        }).then(
+          function (data) {
+            Utils.viewInfoMsg(data);
+            setTimeout(function(){
+              self.$emit("Refresh", e);
+            },1500);
+          }
+        );
       }
     }
   }

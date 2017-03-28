@@ -132,6 +132,14 @@ trait NoteRepository extends Repository[Note] {
   def deleteNotification(noteId: NoteId, userId: UserId)(implicit session: DBSession): Unit
 
   /**
+   * ふせん通知削除.
+   * ユーザに紐づくふせん通知を削除します。
+   * @param userId ユーザID
+   * @param session Session
+   */
+  def deleteNotification(userId: UserId)(implicit session: DBSession): Unit
+
+  /**
    * 未確認のふせん通知が存在するか？
    * @param userId ユーザID
    * @param session Session

@@ -304,6 +304,13 @@ class NoteRepositoryImpl extends NoteRepository {
   /**
    * @inheritdoc
    */
+  override def deleteNotification(userId: UserId)(implicit session: DBSession): Unit = {
+    NoteNotification.deleteByLoginUserInfoId(userId.id)
+  }
+
+  /**
+   * @inheritdoc
+   */
   override def hasUnreadNotification(userId: UserId)(implicit session: DBSession): Boolean = NoteNotification.hasUnreadNotification(userId.id)
 
   /**

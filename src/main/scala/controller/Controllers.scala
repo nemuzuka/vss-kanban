@@ -116,6 +116,7 @@ object Controllers {
   object notificationAjax extends _root_.controller.kanban.NotificationController with Routes {
     val hasUnreadUrl: Route = get("/notification/hasUnread")(hasUnread).as('hasUnread)
     val listUrl: Route = get("/notification/list")(list).as('list)
+    val allReadUrl: Route = post("/notification/allRead")(allRead).as('allRead)
   }
 
   object notification extends _root_.controller.notification.IndexController with Routes {

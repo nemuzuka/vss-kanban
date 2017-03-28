@@ -35,6 +35,18 @@ class NotificationController extends ApiController {
   }
 
   /**
+   * 全て既読にする.
+   */
+  def allRead: String = {
+    val userInfo = session.getAs[User](Keys.Session.UserInfo).get
+    DB localTx { implicit session =>
+      val noteRepository = injector.getInstance(classOf[NoteRepository])
+      noteRepository.deleteNotification(userInfo.userId.get)
+    }
+    createJsonResult("success")
+  }
+
+  /**
    * JSON戻り値.
    * @param hasUnread 未読がある場合、true
    */
