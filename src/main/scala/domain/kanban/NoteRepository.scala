@@ -61,6 +61,7 @@ trait NoteRepository extends Repository[Note] {
    * ふせんコメント永続化.
    * ステージ移動する場合、履歴に登録します
    * 通知データも合わせて作成します。
+   * ログインユーザがそのふせんをウォッチしていない場合、ウォッチ対象にします。
    * @param stageId ステージID
    * @param noteId ふせんID
    * @param comment コメント文
@@ -109,6 +110,7 @@ trait NoteRepository extends Repository[Note] {
 
   /**
    * ふせんウォッチ.
+   * 指定したふせんをユーザがウォッチしていない場合、ウォッチ状態にします
    * @param noteId ふせんID
    * @param loginUser ログインユーザ情報
    * @param session Session

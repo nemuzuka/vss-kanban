@@ -70,4 +70,18 @@ object NoteWatchUser extends SkinnyCRUDMapper[NoteWatchUser] {
     ).apply()
   }
 
+  /**
+   * ウォッチ対象か？
+   * @param noteId ふせんID
+   * @param loginUserInfoId ユーザID
+   * @param session Session
+   * @return 指定したふせんを指定したユーザIDがウォッチ対象の場合、true
+   */
+  def isWatch(noteId: Long, loginUserInfoId: Long)(implicit session: DBSession): Boolean = {
+    val list = NoteWatchUser.where(
+      sqls.eq(NoteWatchUser.column.noteId, noteId).and.eq(NoteWatchUser.column.loginUserInfoId, loginUserInfoId)
+    ).apply()
+    if (list.isEmpty) false else true
+  }
+
 }

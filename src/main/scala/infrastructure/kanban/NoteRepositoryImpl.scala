@@ -199,6 +199,9 @@ class NoteRepositoryImpl extends NoteRepository {
         )
       ))
 
+      //コメントを登録したユーザをウォッチ対象にする
+      watch(noteId, loginUser)
+
       //移動しなかった場合、コメント登録されたことを通知する
       if (moveResult.isEmpty) {
         model.Note.findById(noteId.id) foreach { note =>
@@ -278,12 +281,17 @@ class NoteRepositoryImpl extends NoteRepository {
    * @inheritdoc
    */
   override def watch(noteId: NoteId, loginUser: User)(implicit session: DBSession): Unit = {
-    model.Note.findById(noteId.id) foreach (_ =>
-      NoteWatchUser.create(NoteWatchUser(
-        id = -1L,
-        noteId = noteId.id,
-        loginUserInfoId = loginUser.userId.get.id
-      )))
+    model.Note.findById(noteId.id) foreach { _ =>
+      val noteIdValue = noteId.id
+      val loginUserInfoId = loginUser.userId.get.id
+      if (!NoteWatchUser.isWatch(noteIdValue, loginUserInfoId)) {
+        NoteWatchUser.create(NoteWatchUser(
+          id = -1L,
+          noteId = noteIdValue,
+          loginUserInfoId = loginUserInfoId
+        ))
+      }
+    }
   }
 
   /**
