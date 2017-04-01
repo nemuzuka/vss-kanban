@@ -3,7 +3,7 @@ FROM openjdk:8-jre-alpine
 # ENV
 ENV TZ="JST-9" \
     LANG="ja_JP.UTF-8" \
-    KANBAN_VERSION="1.0.0"
+    KANBAN_VERSION="1.0.1"
 
 # Add Packages
 RUN set -x \
