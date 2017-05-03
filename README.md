@@ -55,19 +55,6 @@
 
 
 
-## Demo Site
-
-<a href="http://vss-kanban.vss.jp.net/" target="_blank">こちらから</a>お試し頂けます。
-
-| ログインID | パスワード |
-|:----------|:----------|
-|kanban@vss.jp.net|abcd1234|
-|trello|more-than-trello|
-|robin|gogo-robin|
-
-**※アプリケーション管理者機能は個別に環境を立ててお試しください**
-
-
 ## 開発環境構築手順
 
 ### 事前準備
